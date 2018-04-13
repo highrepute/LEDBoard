@@ -31,6 +31,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.pbTestLEDs.clicked.connect(self.testLEDs)
         self.lbProblemList.itemSelectionChanged.connect(self.lightProblem)
+        self.tblProblems.doubleClicked.connect(self.lightProblem)
         self.pbMirror.clicked.connect(self.mirrorProb)
         #new problem widgiets
         self.pbDiscard.clicked.connect(self.resetAddProblemTab)
@@ -46,8 +47,20 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #populate problem list
         problemsDB = problemClass.readProblemFile()
         problemList = problemClass.getNameGradeStars(problemsDB)
-        print(problemList)
-        for i in range(len(problemList)):
+        #print(problemList[0][0])
+        #self.tblProblems.setItem(0,0, QtWidgets.QTableWidgetItem(problemList[0][0]))
+        self.tblProblems.setRowCount(len(problemList)-1)
+        self.tblProblems.setColumnCount(4)
+        self.tblProblems.setHorizontalHeaderLabels(problemList[0])
+        for i in range(1,len(problemList),1):
+            for j in range(0,4,1):
+                self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(problemList[i][j]))
+        header = self.tblProblems.horizontalHeader()       
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        for i in range(len(problemList)):    
             self.lbProblemList.addItem('\t'.join(problemList[i]))
         #init new problem globals
         newProbCounter = 0
@@ -216,8 +229,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         print('show')
             
     def lightProblem(self):
-        items = self.lbProblemList.selectedIndexes()[0]
-        rowProb = (items.row())
+        #items = self.lbProblemList.selectedIndexes()[0]
+        items = self.tblProblems.selectedIndexes()[0]
+        rowProb = (items.row()+1)
         startHolds = problemClass.getStartHolds(problemsDB, rowProb)
         finHolds = problemClass.getFinHolds(problemsDB, rowProb)
         probHolds = problemClass.getHolds(problemsDB, rowProb)
@@ -229,7 +243,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def mirrorProb(self):
         print('mirror')
         items = self.lbProblemList.selectedIndexes()[0]
-        rowProb = (items.row())
+        rowProb = (items.row()+1)
         startHolds = problemClass.getStartHolds(problemsDB, rowProb)
         finHolds = problemClass.getFinHolds(problemsDB, rowProb)
         probHolds = problemClass.getHolds(problemsDB, rowProb)
