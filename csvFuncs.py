@@ -66,18 +66,29 @@ class problemClass:#funcs that access information in the problem file
                     finHolds.append(-1)
         return finHolds
     
+    def deleteLastLine():
+        #bodge to delete extra <CR> that appears when a problem is added
+        readFile = open("problems.csv")
+        lines = readFile.readlines()
+        readFile.close()
+        w = open("problems.csv",'w')
+        w.writelines([item for item in lines[:-1]])
+        w.close()
+    
     def addNewProb(newProblem):
         #appends a new problem to the list of problems
         with open('problems.csv', 'a') as f:
             writer = csv.writer(f, dialect='excel')
             writer.writerow(newProblem)
+        f.close()
+        problemClass.deleteLastLine()
             
     def sortProblems(problems, sortBy):
         problems = sorted(problems, key=itemgetter(sortBy), reverse=True)
         return problems
 
 #example of the functions in the FileIO class in use
-problems = problemClass.readProblemFile()
+#problems = problemClass.readProblemFile()
 #print(problems)
 #NameEtc = probFile.getNameGradeStars(problems)
 #oneProblem = probFile.getProblem(problems,3)
@@ -89,7 +100,7 @@ problems = problemClass.readProblemFile()
 
 #print(fin)
             
-#newProblem = ['new', '8a', '3', '1', '', '9', '','3', '1', '5', '9']
+#newProblem = ['new',  '7a',  '3',  '11/04/2018',    '1', '',   '9', '',   '3',     '1', '5', '9']
 #print(newProblem)
-#probFile.addNewProb(newProblem)
+#problemClass.addNewProb(newProblem)
 

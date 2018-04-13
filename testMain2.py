@@ -33,7 +33,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lbProblemList.itemSelectionChanged.connect(self.lightProblem)
         self.pbMirror.clicked.connect(self.mirrorProb)
         #new problem widgiets
-        self.pbDiscard.clicked.connect(self.resetApp)
+        self.pbDiscard.clicked.connect(self.resetAddProblemTab)
         self.pbSave.clicked.connect(self.saveNewProb)
         self.pb1.clicked.connect(self.changeButtonColour)
         self.pb2.clicked.connect(self.changeButtonColour)
@@ -54,13 +54,31 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         newStartHolds = []
         newProbHolds = []
         
-    def resetApp(self):
-        print('reset')
+    def resetAddProblemTab(self):
+        print("reset")
+        global newProbCounter
+        global newStartHolds
+        global newProbHolds
+        #reset button colours
+        self.pb1.setStyleSheet("background-color: #f0f0f0")
+        self.pb2.setStyleSheet("background-color: #f0f0f0")
+        self.pb3.setStyleSheet("background-color: #f0f0f0")
+        self.pb4.setStyleSheet("background-color: #f0f0f0")
+        self.pb5.setStyleSheet("background-color: #f0f0f0")
+        self.pb6.setStyleSheet("background-color: #f0f0f0")
+        self.pb7.setStyleSheet("background-color: #f0f0f0")
+        self.pb8.setStyleSheet("background-color: #f0f0f0")
+        #init new problem globals
+        newProbCounter = 0
+        newStartHolds = []
+        newProbHolds = []                
         
     def saveNewProb(self):
         print('save')
         global newProbCounter
         global newProbHolds
+        global newStartHolds
+        
         #format        name    grade  stars   date        start1 & 2    fin-1 & 2   N-holds   holds
         #newProblem = ['new',  '7a',  '3',  '11/04/2018',    '1', '',   '9', '',   '3',     '1', '5', '9']
               
@@ -113,7 +131,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print(newProblem)
             #save to file
             problemClass.addNewProb(newProblem)
-        
+            MyApp.resetAddProblemTab(self)
+                   
     def changeButtonColour(self):
         global newProbCounter
         global prevPb
