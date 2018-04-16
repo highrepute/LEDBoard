@@ -81,7 +81,7 @@ class problemClass:#funcs that access information in the problem file
             writer = csv.writer(f, dialect='excel')
             writer.writerow(newProblem)
         f.close()
-        problemClass.deleteLastLine()
+        #problemClass.deleteLastLine()
             
     def sortProblems(problems, sortBy):
         problems = sorted(problems, key=itemgetter(sortBy), reverse=True)
