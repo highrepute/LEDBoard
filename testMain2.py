@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, uic
 import re
 import datetime
 
-from neopixel import *
+#from neopixel import *
 
 from csvFuncs import problemClass
 from mirror import mirror
@@ -38,137 +38,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #self.pbTestLEDs.clicked.connect(strandTest.rainbow(strip))
         #self.lbProblemList.itemSelectionChanged.connect(self.lightProblem)
         self.tblProblems.clicked.connect(self.lightProblem)
+        
+        #set pbMirror transparent
         self.pbMirror.clicked.connect(self.mirrorProb)
+        
         #new problem widgiets
         self.pbDiscard.clicked.connect(self.resetAddProblemTab)
         self.pbSave.clicked.connect(self.saveNewProb)
-        self.pb1.clicked.connect(self.changeButtonColour)
-        self.pb2.clicked.connect(self.changeButtonColour)
-        self.pb3.clicked.connect(self.changeButtonColour)
-        self.pb4.clicked.connect(self.changeButtonColour)
-        self.pb5.clicked.connect(self.changeButtonColour)
-        self.pb6.clicked.connect(self.changeButtonColour)
-        self.pb7.clicked.connect(self.changeButtonColour)
-        self.pb8.clicked.connect(self.changeButtonColour)
-        self.pb9.clicked.connect(self.changeButtonColour)
-        self.pb10.clicked.connect(self.changeButtonColour)
-        self.pb11.clicked.connect(self.changeButtonColour)
-        self.pb12.clicked.connect(self.changeButtonColour)
-        self.pb13.clicked.connect(self.changeButtonColour)
-        self.pb14.clicked.connect(self.changeButtonColour)
-        self.pb15.clicked.connect(self.changeButtonColour)
-        self.pb16.clicked.connect(self.changeButtonColour)
-        self.pb17.clicked.connect(self.changeButtonColour)
-        self.pb18.clicked.connect(self.changeButtonColour)
-        self.pb19.clicked.connect(self.changeButtonColour)
-        self.pb20.clicked.connect(self.changeButtonColour)
-        self.pb21.clicked.connect(self.changeButtonColour)
-        self.pb22.clicked.connect(self.changeButtonColour)
-        self.pb23.clicked.connect(self.changeButtonColour)
-        self.pb24.clicked.connect(self.changeButtonColour)
-        self.pb25.clicked.connect(self.changeButtonColour)
-        self.pb26.clicked.connect(self.changeButtonColour)
-        self.pb27.clicked.connect(self.changeButtonColour)
-        self.pb28.clicked.connect(self.changeButtonColour)
-        self.pb29.clicked.connect(self.changeButtonColour)
-        self.pb30.clicked.connect(self.changeButtonColour)
-        self.pb31.clicked.connect(self.changeButtonColour)
-        self.pb32.clicked.connect(self.changeButtonColour)
-        self.pb33.clicked.connect(self.changeButtonColour)
-        self.pb34.clicked.connect(self.changeButtonColour)
-        self.pb35.clicked.connect(self.changeButtonColour)
-        self.pb36.clicked.connect(self.changeButtonColour)
-        self.pb37.clicked.connect(self.changeButtonColour)
-        self.pb38.clicked.connect(self.changeButtonColour)
-        self.pb39.clicked.connect(self.changeButtonColour)
-        self.pb40.clicked.connect(self.changeButtonColour)
-        self.pb41.clicked.connect(self.changeButtonColour)
-        self.pb42.clicked.connect(self.changeButtonColour)
-        self.pb43.clicked.connect(self.changeButtonColour)
-        self.pb44.clicked.connect(self.changeButtonColour)
-        self.pb45.clicked.connect(self.changeButtonColour)
-        self.pb46.clicked.connect(self.changeButtonColour)
-        self.pb47.clicked.connect(self.changeButtonColour)
-        self.pb48.clicked.connect(self.changeButtonColour)
-        self.pb49.clicked.connect(self.changeButtonColour)
-        self.pb50.clicked.connect(self.changeButtonColour)
-        self.pb51.clicked.connect(self.changeButtonColour)
-        self.pb52.clicked.connect(self.changeButtonColour)
-        self.pb53.clicked.connect(self.changeButtonColour)
-        self.pb54.clicked.connect(self.changeButtonColour)
-        self.pb55.clicked.connect(self.changeButtonColour)
-        self.pb56.clicked.connect(self.changeButtonColour)
-        self.pb57.clicked.connect(self.changeButtonColour)
-        self.pb58.clicked.connect(self.changeButtonColour)
-        self.pb59.clicked.connect(self.changeButtonColour)
-        self.pb60.clicked.connect(self.changeButtonColour)
-        self.pb61.clicked.connect(self.changeButtonColour)
-        self.pb62.clicked.connect(self.changeButtonColour)
-        self.pb63.clicked.connect(self.changeButtonColour)
-        self.pb64.clicked.connect(self.changeButtonColour)
-        self.pb65.clicked.connect(self.changeButtonColour)
-        self.pb66.clicked.connect(self.changeButtonColour)
-        self.pb67.clicked.connect(self.changeButtonColour)
-        self.pb68.clicked.connect(self.changeButtonColour)
-        self.pb69.clicked.connect(self.changeButtonColour)
-        self.pb70.clicked.connect(self.changeButtonColour)
-        self.pb71.clicked.connect(self.changeButtonColour)
-        self.pb72.clicked.connect(self.changeButtonColour)
-        self.pb73.clicked.connect(self.changeButtonColour)
-        self.pb74.clicked.connect(self.changeButtonColour)
-        self.pb75.clicked.connect(self.changeButtonColour)
-        self.pb76.clicked.connect(self.changeButtonColour)
-        self.pb77.clicked.connect(self.changeButtonColour)
-        self.pb78.clicked.connect(self.changeButtonColour)
-        self.pb79.clicked.connect(self.changeButtonColour)
-        self.pb80.clicked.connect(self.changeButtonColour)
-        self.pb81.clicked.connect(self.changeButtonColour)
-        self.pb82.clicked.connect(self.changeButtonColour)
-        self.pb83.clicked.connect(self.changeButtonColour)
-        self.pb84.clicked.connect(self.changeButtonColour)
-        self.pb85.clicked.connect(self.changeButtonColour)
-        self.pb86.clicked.connect(self.changeButtonColour)
-        self.pb87.clicked.connect(self.changeButtonColour)
-        self.pb88.clicked.connect(self.changeButtonColour)
-        self.pb89.clicked.connect(self.changeButtonColour)
-        self.pb90.clicked.connect(self.changeButtonColour)
-        self.pb91.clicked.connect(self.changeButtonColour)
-        self.pb92.clicked.connect(self.changeButtonColour)
-        self.pb93.clicked.connect(self.changeButtonColour)
-        self.pb94.clicked.connect(self.changeButtonColour)
-        self.pb95.clicked.connect(self.changeButtonColour)
-        self.pb96.clicked.connect(self.changeButtonColour)
-        self.pb97.clicked.connect(self.changeButtonColour)
-        self.pb98.clicked.connect(self.changeButtonColour)
-        self.pb99.clicked.connect(self.changeButtonColour)
-        self.pb100.clicked.connect(self.changeButtonColour)
-        self.pb101.clicked.connect(self.changeButtonColour)
-        self.pb102.clicked.connect(self.changeButtonColour)
-        self.pb103.clicked.connect(self.changeButtonColour)
-        self.pb104.clicked.connect(self.changeButtonColour)
-        self.pb105.clicked.connect(self.changeButtonColour)
-        self.pb106.clicked.connect(self.changeButtonColour)
-        self.pb107.clicked.connect(self.changeButtonColour)
-        self.pb108.clicked.connect(self.changeButtonColour)
-        self.pb109.clicked.connect(self.changeButtonColour)
-        self.pb110.clicked.connect(self.changeButtonColour)
-        self.pb111.clicked.connect(self.changeButtonColour)
-        self.pb112.clicked.connect(self.changeButtonColour)
-        self.pb113.clicked.connect(self.changeButtonColour)
-        self.pb114.clicked.connect(self.changeButtonColour)
-        self.pb115.clicked.connect(self.changeButtonColour)
-        self.pb116.clicked.connect(self.changeButtonColour)
-        self.pb117.clicked.connect(self.changeButtonColour)
-        self.pb118.clicked.connect(self.changeButtonColour)
-        self.pb119.clicked.connect(self.changeButtonColour)
-        self.pb120.clicked.connect(self.changeButtonColour)
-        self.pb121.clicked.connect(self.changeButtonColour)
-        self.pb122.clicked.connect(self.changeButtonColour)
-        self.pb123.clicked.connect(self.changeButtonColour)
-        self.pb124.clicked.connect(self.changeButtonColour)
-        self.pb125.clicked.connect(self.changeButtonColour)
-        self.pb126.clicked.connect(self.changeButtonColour)
-        
+        for num in range (1,TOTAL_LED_COUNT+1):
+            label = getattr(self, 'pb{}'.format(num))
+            label.clicked.connect(self.changeButtonColour)
+            label.setStyleSheet("background-color: rgba(240, 240, 240, 75%)")
+                
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)
         
@@ -202,15 +83,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global newProbCounter
         global newStartHolds
         global newProbHolds
-        #reset button colours
-        self.pb1.setStyleSheet("background-color: #efebe7")
-        self.pb2.setStyleSheet("background-color: #efebe7")
-        self.pb3.setStyleSheet("background-color: #efebe7")
-        self.pb4.setStyleSheet("background-color: #efebe7")
-        self.pb5.setStyleSheet("background-color: #efebe7")
-        self.pb6.setStyleSheet("background-color: #efebe7")
-        self.pb7.setStyleSheet("background-color: #efebe7")
-        self.pb8.setStyleSheet("background-color: #efebe7")
+        #reset button colours            
+        for num in range (1,TOTAL_LED_COUNT+1):
+            label = getattr(self, 'pb{}'.format(num))
+            label.setStyleSheet("background-color: rgba(240, 240, 240, 75%)")#f0f0f0(240,240,240) #efebe7(239,235,231)
+            font = label.font();
+            font.setPointSize(12);
+            label.setFont(font);
         
         #init new problem globals
         newProbCounter = 0
@@ -285,52 +164,56 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #first check if button already clicked by loading colour
         colour = self.sender().palette().button().color().name()
         print(colour)
-        if (colour != '#efebe7'): #is it NOT the default colour?
+        if (colour != '#f0f0f0'): #is it NOT the default colour? #efebe7
+            ####
+            #### Do Nothing
+            ####
+            
             #get hold number
-            holdString = str(self.sender().objectName())
-            holdNumber = int(re.search(r'\d+', holdString).group())
-            self.sender().setStyleSheet("background-color: #efebe7")
+            #holdString = str(self.sender().objectName())
+            #holdNumber = int(re.search(r'\d+', holdString).group())
+            #set back to gray
+            #self.sender().setStyleSheet("background-color: #f0f0f0")#efebe7
             #delete this hold from problem/start holds
-            if holdNumber in newProbHolds: newProbHolds.remove(holdNumber)
-            if holdNumber in newStartHolds: newStartHolds.remove(holdNumber)
-            #newProbCounter -= 1
+            #if holdNumber in newProbHolds: newProbHolds.remove(holdNumber)
+            #if holdNumber in newStartHolds: newStartHolds.remove(holdNumber)
             print("newProbHolds",newProbHolds)
         else:
             print(newProbCounter)
             if (newProbCounter == 0):
-                self.sender().setStyleSheet("background-color: red")
+                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
                 
             elif (newProbCounter == 1):
-                self.sender().setStyleSheet("background-color: red")
+                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
                 #save prev hold
                 holdString = str(prevPb.objectName())
                 holdNumber = int(re.search(r'\d+', holdString).group())
                 newStartHolds.append(holdNumber)
                 print(newStartHolds)
-                prevPb.setStyleSheet("background-color: green")
+                prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 75%)")#green
             elif (newProbCounter == 2):
                 choice = QtWidgets.QMessageBox.question(self, 'Start Holds',
                                                     "Two start holds?",
                                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                 if (choice == QtWidgets.QMessageBox.Yes):
-                    self.sender().setStyleSheet("background-color: red")
+                    self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
                     #save prev hold
                     holdString = str(prevPb.objectName())
                     newStartHolds.append(int(re.search(r'\d+', holdString).group()))
                     print(newStartHolds)
-                    prevPb.setStyleSheet("background-color: green")
+                    prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 75%)")#green
                 else:
                     newStartHolds.append(0)
                     holdString = str(prevPb.objectName())
                     newProbHolds.append(int(re.search(r'\d+', holdString).group()))
-                    self.sender().setStyleSheet("background-color: red")
-                    prevPb.setStyleSheet("background-color: blue")
+                    self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
+                    prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 75%)")#blue
             elif (newProbCounter >= 3):
                 holdString = str(prevPb.objectName())
                 newProbHolds.append(int(re.search(r'\d+', holdString).group()))
                 print('newProbHolds', newProbHolds)
-                self.sender().setStyleSheet("background-color: red")
-                prevPb.setStyleSheet("background-color: blue")
+                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
+                prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 75%)")#blue
             newProbCounter += 1
             prevPb = self.sender()
         
@@ -351,28 +234,28 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             LEDState = 1
             #for i in range(0,TOTAL_LED_COUNT,1):
              #   strip.setPixelColorRGB(i,int((255/TOTAL_LED_COUNT)*i), 0, 0)
-            for j in range(256*1):
-                for i in range(strip.numPixels()):
-                    strip.setPixelColor(i, MyApp.wheel((i+j) & 255))
-            strip.show()
+            #for j in range(256*1):
+            #    for i in range(strip.numPixels()):
+            #        strip.setPixelColor(i, MyApp.wheel((i+j) & 255))
+            #strip.show()
             print('on')
         else:
             LEDState = 0
-            for i in range(0,TOTAL_LED_COUNT,1):
-                strip.setPixelColorRGB(i, 0, 0, 0)
-                strip.show()
+            #for i in range(0,TOTAL_LED_COUNT,1):
+            #    strip.setPixelColorRGB(i, 0, 0, 0)
+            #    strip.show()
             print('off')
             
     def lightLEDs(startHolds, probHolds, finHolds):
-        for i in range(0,TOTAL_LED_COUNT,1):
-            strip.setPixelColorRGB(i, 0, 0, 0)
-        for hold in probHolds:
-            strip.setPixelColorRGB(hold-1, 0, 0, 50)
-        for hold in startHolds:
-            strip.setPixelColorRGB(hold-1, 0, 50, 0)
-        for hold in finHolds:
-            strip.setPixelColorRGB(hold-1, 50, 0, 0)
-        strip.show()
+        #for i in range(0,TOTAL_LED_COUNT,1):
+        #    strip.setPixelColorRGB(i, 0, 0, 0)
+        #for hold in probHolds:
+        #    strip.setPixelColorRGB(hold-1, 0, 0, 50)
+        #for hold in startHolds:
+        #    strip.setPixelColorRGB(hold-1, 0, 50, 0)
+        #for hold in finHolds:
+        #    strip.setPixelColorRGB(hold-1, 50, 0, 0)
+        #strip.show()
         print('show')
         
     def find(l, elem):
@@ -431,11 +314,11 @@ if __name__ == "__main__":
     window = MyApp()
     window.show()
     LEDState = 0
-    strip = Adafruit_NeoPixel(TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
-    strip.begin()   #only call this once - each call creates new memory instance which
+    #strip = Adafruit_NeoPixel(TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
+    #strip.begin()   #only call this once - each call creates new memory instance which
                     #eventually will crash program
-    strip.setPixelColorRGB(TOTAL_LED_COUNT, 0, 0, 0)
-    strip.show()
+    #strip.setPixelColorRGB(TOTAL_LED_COUNT, 0, 0, 0)
+    #strip.show()
         
     sys.exit(app.exec_())
     

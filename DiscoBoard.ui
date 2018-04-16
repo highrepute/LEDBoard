@@ -33,7 +33,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -161,8 +161,8 @@
     <widget class="QPushButton" name="pbMirror">
      <property name="geometry">
       <rect>
-       <x>730</x>
-       <y>30</y>
+       <x>720</x>
+       <y>190</y>
        <width>101</width>
        <height>31</height>
       </rect>
@@ -295,6 +295,33 @@
      <column/>
      <column/>
     </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>1111</width>
+       <height>751</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Overview diagram updated.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <zorder>label</zorder>
+    <zorder>frame</zorder>
+    <zorder>pbMirror</zorder>
+    <zorder>tbProblemInfo</zorder>
+    <zorder>cbUsers</zorder>
+    <zorder>pbViewUsers</zorder>
+    <zorder>pbTestLEDs</zorder>
+    <zorder>tblProblems</zorder>
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
@@ -2186,12 +2213,6 @@
     <zorder>pb59</zorder>
     <zorder>pb62</zorder>
     <zorder>pb60</zorder>
-    <zorder>pbSave</zorder>
-    <zorder>cbStars_2</zorder>
-    <zorder>pbSave</zorder>
-    <zorder>cbGrade_2</zorder>
-    <zorder>pbDiscard</zorder>
-    <zorder>leProblemName</zorder>
     <zorder>pb65</zorder>
     <zorder>pb72</zorder>
     <zorder>pb69</zorder>
