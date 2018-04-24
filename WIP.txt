@@ -1,0 +1,31 @@
+Work In Progress...
+Priority 1
+Add Problems - handle unselecting the various colours of button
+	- Don't allow unclicking of buttons
+	- implement undo button
+	- Button disabled after clicked, enable if undo clicked
+	- make not greyed out when clicked
+Picture of board in background
+Problem information - Notes, user grade
+	- load info from logged problems DB
+		- grade, stars, repeaters
+Show sequence - button
+Display two problems - button
+	- display last two clicked problems
+	- how should mirror button handle this scenario?
+Add users - database
+	- add user function
+		- name, password, email
+	- login function
+	- encryption???
+Log problems - database
+	- problem name, user, grade, stars, date
+Remote desktop
+On screen instructions and tip strips
+
+
+
+Priority 2
+Mobile App
+Button/LDRs on holds
+Auto-increment problem function.

@@ -161,8 +161,13 @@
     <widget class="QPushButton" name="pbMirror">
      <property name="geometry">
       <rect>
+<<<<<<< HEAD
        <x>730</x>
        <y>30</y>
+=======
+       <x>720</x>
+       <y>190</y>
+>>>>>>> 42af958c9063f6b4e055c52097ee0f877040ee9f
        <width>101</width>
        <height>31</height>
       </rect>
@@ -296,6 +301,33 @@
      <column/>
      <column/>
     </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>1111</width>
+       <height>751</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>Overview diagram updated.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <zorder>label</zorder>
+    <zorder>frame</zorder>
+    <zorder>pbMirror</zorder>
+    <zorder>tbProblemInfo</zorder>
+    <zorder>cbUsers</zorder>
+    <zorder>pbViewUsers</zorder>
+    <zorder>pbTestLEDs</zorder>
+    <zorder>tblProblems</zorder>
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
@@ -2122,6 +2154,7 @@
       <string>113</string>
      </property>
     </widget>
+<<<<<<< HEAD
     <widget class="QPushButton" name="pbUndo">
      <property name="geometry">
       <rect>
@@ -2135,6 +2168,8 @@
       <string>Undo</string>
      </property>
     </widget>
+=======
+>>>>>>> 42af958c9063f6b4e055c52097ee0f877040ee9f
     <zorder>layoutWidget</zorder>
     <zorder>pb1</zorder>
     <zorder>pb2</zorder>
@@ -2262,7 +2297,10 @@
     <zorder>pb124</zorder>
     <zorder>pb125</zorder>
     <zorder>pb113</zorder>
+<<<<<<< HEAD
     <zorder>pbUndo</zorder>
+=======
+>>>>>>> 42af958c9063f6b4e055c52097ee0f877040ee9f
    </widget>
    <widget class="QWidget" name="tab_3">
     <attribute name="title">

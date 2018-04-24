@@ -38,10 +38,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #self.pbTestLEDs.clicked.connect(strandTest.rainbow(strip))
         #self.lbProblemList.itemSelectionChanged.connect(self.lightProblem)
         self.tblProblems.clicked.connect(self.lightProblem)
+<<<<<<< HEAD
+=======
+        
+        #set pbMirror transparent
+>>>>>>> 42af958c9063f6b4e055c52097ee0f877040ee9f
         self.pbMirror.clicked.connect(self.mirrorProb)
+        
         #new problem widgiets
         self.pbDiscard.clicked.connect(self.resetAddProblemTab)
         self.pbSave.clicked.connect(self.saveNewProb)
+<<<<<<< HEAD
         self.pb1.clicked.connect(self.changeButtonColour)
         self.pb2.clicked.connect(self.changeButtonColour)
         self.pb3.clicked.connect(self.changeButtonColour)
@@ -169,6 +176,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pb125.clicked.connect(self.changeButtonColour)
         self.pb126.clicked.connect(self.changeButtonColour)
         
+=======
+        for num in range (1,TOTAL_LED_COUNT+1):
+            label = getattr(self, 'pb{}'.format(num))
+            label.clicked.connect(self.changeButtonColour)
+            label.setStyleSheet("background-color: rgba(240, 240, 240, 75%)")
+                
+>>>>>>> 42af958c9063f6b4e055c52097ee0f877040ee9f
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)
         
@@ -202,6 +216,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global newProbCounter
         global newStartHolds
         global newProbHolds
+<<<<<<< HEAD
         #reset button colours
         self.pb1.setStyleSheet("background-color: #efebe7")
         self.pb2.setStyleSheet("background-color: #efebe7")
@@ -211,6 +226,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pb6.setStyleSheet("background-color: #efebe7")
         self.pb7.setStyleSheet("background-color: #efebe7")
         self.pb8.setStyleSheet("background-color: #efebe7")
+=======
+        #reset button colours            
+        for num in range (1,TOTAL_LED_COUNT+1):
+            label = getattr(self, 'pb{}'.format(num))
+            label.setStyleSheet("background-color: rgba(240, 240, 240, 75%)")#f0f0f0(240,240,240) #efebe7(239,235,231)
+            font = label.font();
+            font.setPointSize(12);
+            label.setFont(font);
+>>>>>>> 42af958c9063f6b4e055c52097ee0f877040ee9f
         
         #init new problem globals
         newProbCounter = 0
@@ -285,6 +309,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #first check if button already clicked by loading colour
         colour = self.sender().palette().button().color().name()
         print(colour)
+<<<<<<< HEAD
         if (colour != '#efebe7'): #is it NOT the default colour?
             #get hold number
             holdString = str(self.sender().objectName())
@@ -294,43 +319,58 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if holdNumber in newProbHolds: newProbHolds.remove(holdNumber)
             if holdNumber in newStartHolds: newStartHolds.remove(holdNumber)
             #newProbCounter -= 1
+=======
+        if (colour != '#f0f0f0'): #is it NOT the default colour? #efebe7
+            ####
+            #### Do Nothing
+            ####
+            
+            #get hold number
+            #holdString = str(self.sender().objectName())
+            #holdNumber = int(re.search(r'\d+', holdString).group())
+            #set back to gray
+            #self.sender().setStyleSheet("background-color: #f0f0f0")#efebe7
+            #delete this hold from problem/start holds
+            #if holdNumber in newProbHolds: newProbHolds.remove(holdNumber)
+            #if holdNumber in newStartHolds: newStartHolds.remove(holdNumber)
+>>>>>>> 42af958c9063f6b4e055c52097ee0f877040ee9f
             print("newProbHolds",newProbHolds)
         else:
             print(newProbCounter)
             if (newProbCounter == 0):
-                self.sender().setStyleSheet("background-color: red")
+                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
                 
             elif (newProbCounter == 1):
-                self.sender().setStyleSheet("background-color: red")
+                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
                 #save prev hold
                 holdString = str(prevPb.objectName())
                 holdNumber = int(re.search(r'\d+', holdString).group())
                 newStartHolds.append(holdNumber)
                 print(newStartHolds)
-                prevPb.setStyleSheet("background-color: green")
+                prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 75%)")#green
             elif (newProbCounter == 2):
                 choice = QtWidgets.QMessageBox.question(self, 'Start Holds',
                                                     "Two start holds?",
                                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                 if (choice == QtWidgets.QMessageBox.Yes):
-                    self.sender().setStyleSheet("background-color: red")
+                    self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
                     #save prev hold
                     holdString = str(prevPb.objectName())
                     newStartHolds.append(int(re.search(r'\d+', holdString).group()))
                     print(newStartHolds)
-                    prevPb.setStyleSheet("background-color: green")
+                    prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 75%)")#green
                 else:
                     newStartHolds.append(0)
                     holdString = str(prevPb.objectName())
                     newProbHolds.append(int(re.search(r'\d+', holdString).group()))
-                    self.sender().setStyleSheet("background-color: red")
-                    prevPb.setStyleSheet("background-color: blue")
+                    self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
+                    prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 75%)")#blue
             elif (newProbCounter >= 3):
                 holdString = str(prevPb.objectName())
                 newProbHolds.append(int(re.search(r'\d+', holdString).group()))
                 print('newProbHolds', newProbHolds)
-                self.sender().setStyleSheet("background-color: red")
-                prevPb.setStyleSheet("background-color: blue")
+                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
+                prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 75%)")#blue
             newProbCounter += 1
             prevPb = self.sender()
         
@@ -351,6 +391,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             LEDState = 1
             #for i in range(0,TOTAL_LED_COUNT,1):
              #   strip.setPixelColorRGB(i,int((255/TOTAL_LED_COUNT)*i), 0, 0)
+<<<<<<< HEAD
             for j in range(256*1):
                 for i in range(strip.numPixels()):
                     strip.setPixelColor(i, MyApp.wheel((i+j) & 255))
@@ -361,6 +402,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             for i in range(0,TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
                 strip.show()
+=======
+            #for j in range(256*1):
+            #    for i in range(strip.numPixels()):
+            #        strip.setPixelColor(i, MyApp.wheel((i+j) & 255))
+            #strip.show()
+            print('on')
+        else:
+            LEDState = 0
+            #for i in range(0,TOTAL_LED_COUNT,1):
+            #    strip.setPixelColorRGB(i, 0, 0, 0)
+            #    strip.show()
+>>>>>>> 42af958c9063f6b4e055c52097ee0f877040ee9f
             print('off')
             
     def lightLEDs(startHolds, probHolds, finHolds):
