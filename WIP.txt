@@ -1,25 +1,33 @@
 Work In Progress...
 Priority 1
-Add Problems - handle unselecting the various colours of button
-	- Don't allow unclicking of buttons
-	- implement undo button
-	- Button disabled after clicked, enable if undo clicked
-	- make not greyed out when clicked
+Add Problems
+	- light leds when choosing holds
 Picture of board in background
-Problem information - Notes, user grade
-	- load info from logged problems DB
-		- grade, stars, repeaters
+Executable
+	- make full screen
+	- make run on startup
+Add problem
+	- add a Notes field
+	- add created by field
+Problem information
+	- who has logged with comments
+	- notes
+	- created by
 Show sequence - button
 Display two problems - button
 	- display last two clicked problems
 	- how should mirror button handle this scenario?
-Add users - database
-	- add user function
-		- name, password, email
-	- login function
+Users
+	- show logbook
 	- encryption???
-Log problems - database
-	- problem name, user, grade, stars, date
+	- auto logout after timeout
+	- clear username and password onced logged in
+	- add a max users logged in limit
+Log problems
+	- comments
+	- each user has a colour
+	- change grade and stars when selecting a problem
+	- change layout so "log problem" button last
 Remote desktop
 On screen instructions and tip strips
 

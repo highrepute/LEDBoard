@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>LEDBoard</class>
+ <widget class="QDialog" name="LEDBoard">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -16,13 +16,13 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>LED Board</string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>10</y>
+     <y>20</y>
      <width>1141</width>
      <height>811</height>
     </rect>
@@ -33,7 +33,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -44,8 +44,8 @@
       <rect>
        <x>20</x>
        <y>500</y>
-       <width>411</width>
-       <height>191</height>
+       <width>691</width>
+       <height>201</height>
       </rect>
      </property>
      <property name="font">
@@ -59,12 +59,98 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QPushButton" name="pbLogProblem">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>20</y>
-        <width>101</width>
+        <y>10</y>
+        <width>451</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QLabel" name="lblLogProb1">
+         <property name="text">
+          <string>Select a -</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblLogProb2">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::RightToLeft</enum>
+         </property>
+         <property name="text">
+          <string>problem</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblLogProb3">
+         <property name="text">
+          <string>Select user -</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblLogProb4">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::RightToLeft</enum>
+         </property>
+         <property name="text">
+          <string>user</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>80</y>
+        <width>281</width>
+        <height>104</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QLabel" name="lblLog_2">
+         <property name="text">
+          <string>Comments</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QTextBrowser" name="tbProblemInfo_2">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QPushButton" name="pbLogProblem">
+      <property name="geometry">
+       <rect>
+        <x>21</x>
+        <y>41</y>
+        <width>131</width>
         <height>31</height>
        </rect>
       </property>
@@ -80,9 +166,9 @@
      <widget class="QComboBox" name="cbStars">
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>60</y>
-        <width>85</width>
+        <x>170</x>
+        <y>40</y>
+        <width>52</width>
         <height>31</height>
        </rect>
       </property>
@@ -91,6 +177,11 @@
         <pointsize>12</pointsize>
        </font>
       </property>
+      <item>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </item>
       <item>
        <property name="text">
         <string>*</string>
@@ -110,9 +201,9 @@
      <widget class="QComboBox" name="cbGrade">
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>100</y>
-        <width>85</width>
+        <x>240</x>
+        <y>40</y>
+        <width>57</width>
         <height>31</height>
        </rect>
       </property>
@@ -162,8 +253,8 @@
      <property name="geometry">
       <rect>
        <x>720</x>
-       <y>190</y>
-       <width>101</width>
+       <y>30</y>
+       <width>121</width>
        <height>31</height>
       </rect>
      </property>
@@ -176,60 +267,12 @@
       <string>Mirror</string>
      </property>
     </widget>
-    <widget class="QTextBrowser" name="tbProblemInfo">
-     <property name="geometry">
-      <rect>
-       <x>840</x>
-       <y>30</y>
-       <width>256</width>
-       <height>192</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="cbUsers">
-     <property name="geometry">
-      <rect>
-       <x>840</x>
-       <y>240</y>
-       <width>161</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pbViewUsers">
-     <property name="geometry">
-      <rect>
-       <x>1010</x>
-       <y>240</y>
-       <width>101</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>View User</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="pbTestLEDs">
      <property name="geometry">
       <rect>
-       <x>1020</x>
-       <y>670</y>
-       <width>101</width>
+       <x>720</x>
+       <y>150</y>
+       <width>121</width>
        <height>31</height>
       </rect>
      </property>
@@ -295,33 +338,592 @@
      <column/>
      <column/>
     </widget>
-    <widget class="QLabel" name="label">
+    <widget class="QPushButton" name="pbSequence">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>1111</width>
-       <height>751</height>
+       <x>720</x>
+       <y>70</y>
+       <width>121</width>
+       <height>31</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap>Overview diagram updated.png</pixmap>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
+      <string>Show Sequence</string>
      </property>
     </widget>
-    <zorder>label</zorder>
-    <zorder>frame</zorder>
-    <zorder>pbMirror</zorder>
-    <zorder>tbProblemInfo</zorder>
-    <zorder>cbUsers</zorder>
-    <zorder>pbViewUsers</zorder>
-    <zorder>pbTestLEDs</zorder>
-    <zorder>tblProblems</zorder>
+    <widget class="QPushButton" name="pbSequence_2">
+     <property name="geometry">
+      <rect>
+       <x>720</x>
+       <y>110</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Display 2 Probs</string>
+     </property>
+    </widget>
+    <widget class="QFrame" name="frame_2">
+     <property name="geometry">
+      <rect>
+       <x>850</x>
+       <y>370</y>
+       <width>271</width>
+       <height>281</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>251</width>
+        <height>260</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="2" column="0">
+        <widget class="QListWidget" name="lbUsers"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QPushButton" name="pbLogout">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Logout</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0">
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Username</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="leUsername"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Password</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="lePassword">
+             <property name="echoMode">
+              <enum>QLineEdit::Password</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="pbLogin">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Login</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_32">
+           <property name="text">
+            <string>Users logged in</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_5">
+     <property name="geometry">
+      <rect>
+       <x>850</x>
+       <y>30</y>
+       <width>271</width>
+       <height>311</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QTextBrowser" name="tbProblemInfo">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>251</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="barStar3">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>100</y>
+        <width>141</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="format">
+       <string>%v</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="barStar2">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>110</y>
+        <width>141</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="format">
+       <string>%v</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="barStar1">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>120</y>
+        <width>141</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="format">
+       <string>%v</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="barStar0">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>130</y>
+        <width>141</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="textVisible">
+       <bool>true</bool>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="format">
+       <string>%v</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="barGrade2">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>160</y>
+        <width>141</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="format">
+       <string>%v</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="barGrade4">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>180</y>
+        <width>141</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="format">
+       <string>%v</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="barGrade1">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>150</y>
+        <width>141</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="format">
+       <string>%v</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="barGrade3">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>170</y>
+        <width>141</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="format">
+       <string>%v</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="barGrade6">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>200</y>
+        <width>141</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="format">
+       <string>%v</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="barGrade5">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>190</y>
+        <width>141</width>
+        <height>10</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="format">
+       <string>%v</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>110</y>
+        <width>67</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Stars</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>96</y>
+        <width>41</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>***</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>106</y>
+        <width>41</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>**</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>116</y>
+        <width>41</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>*</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_12">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>126</y>
+        <width>41</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>-</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblBarGrade4">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>176</y>
+        <width>41</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>6a</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblBarGrade1">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>146</y>
+        <width>41</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>7a</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblBarGrade2">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>156</y>
+        <width>41</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>6c</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblBarGrade3">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>166</y>
+        <width>41</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>6b</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblBarGrade5">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>186</y>
+        <width>41</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>6a</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblBarGrade6">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>196</y>
+        <width>41</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>6a</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_19">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>170</y>
+        <width>67</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Grade</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
@@ -436,93 +1038,6 @@
      <property name="text">
       <string>8</string>
      </property>
-    </widget>
-    <widget class="QWidget" name="layoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>220</x>
-       <y>720</y>
-       <width>671</width>
-       <height>35</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="pbDiscard">
-        <property name="text">
-         <string>Discard</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="leProblemName"/>
-      </item>
-      <item>
-       <widget class="QComboBox" name="cbGrade_2">
-        <item>
-         <property name="text">
-          <string>7a</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>6c+</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>6c</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>6b+</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>6b</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>6a+</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>6a</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="cbStars_2">
-        <item>
-         <property name="text">
-          <string>*</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>**</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>***</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pbSave">
-        <property name="text">
-         <string>Save</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </widget>
     <widget class="QPushButton" name="pb12">
      <property name="geometry">
@@ -2148,7 +2663,138 @@
       <string>113</string>
      </property>
     </widget>
-    <zorder>layoutWidget</zorder>
+    <widget class="QPushButton" name="pbUndo">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>660</y>
+       <width>101</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Undo</string>
+     </property>
+    </widget>
+    <widget class="QFrame" name="frame_3">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>720</y>
+       <width>711</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>675</width>
+        <height>37</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="lblAddProb">
+         <property name="text">
+          <string>Select a user to add a problem</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QPushButton" name="pbDiscard">
+           <property name="text">
+            <string>Discard</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cbGrade_2">
+           <item>
+            <property name="text">
+             <string>7a</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6c+</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6c</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6b+</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6b</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6a+</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6a</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cbStars_2">
+           <item>
+            <property name="text">
+             <string>-</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>*</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>**</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>***</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="leProblemName"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pbSave">
+           <property name="text">
+            <string>Save</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
     <zorder>pb1</zorder>
     <zorder>pb2</zorder>
     <zorder>pb3</zorder>
@@ -2263,7 +2909,6 @@
     <zorder>pb108</zorder>
     <zorder>pb114</zorder>
     <zorder>pb121</zorder>
-    <zorder>pb118</zorder>
     <zorder>pb120</zorder>
     <zorder>pb115</zorder>
     <zorder>pb116</zorder>
@@ -2275,11 +2920,87 @@
     <zorder>pb124</zorder>
     <zorder>pb125</zorder>
     <zorder>pb113</zorder>
+    <zorder>pb118</zorder>
+    <zorder>pbUndo</zorder>
+    <zorder>frame_3</zorder>
    </widget>
    <widget class="QWidget" name="tab_3">
     <attribute name="title">
-     <string>Users</string>
+     <string>Add User</string>
     </attribute>
+    <widget class="QFrame" name="frame_4">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>40</y>
+       <width>271</width>
+       <height>171</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>121</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add a New user</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>246</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Username</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="leAddUsername"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Password</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="leAddPassword"/>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QPushButton" name="pbAddNewUsers">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Add new user</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
    </widget>
   </widget>
  </widget>

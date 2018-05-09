@@ -18,7 +18,7 @@ class problemClass:#funcs that access information in the problem file
     GRADE = 1
     STARS = 3
     DATE = 4
-    
+        
     problemList = []
     
     def readProblemFile():
