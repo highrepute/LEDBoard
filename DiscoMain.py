@@ -1,7 +1,7 @@
 LINUX = 0
 
 import sys
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
+from PyQt5 import QtWidgets, uic, QtCore#, QtGui,
 #import time
 import re
 import datetime
@@ -17,6 +17,7 @@ from logFuncs import logClass
 #from strandtest import strandTest
 
 TOTAL_LED_COUNT = 126
+LED_VALUE = 50
 
 qtCreatorFile = "DiscoBoard.ui" # Enter file here.
  
@@ -75,30 +76,40 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         undoCounter = 0
         usersLoggedIn = []
         
-    def logProblem(self):
+    def logProblem(self):      
         if (self.tblProblems.selectedIndexes() != [])&(self.lbUsers.selectedIndexes() != []):
+            #gather data for new log entry
             rowN = self.lbUsers.selectedIndexes()[0].row()
             user = self.lbUsers.item(rowN).text()
             rowN = self.tblProblems.selectedIndexes()[0].row()
             problem = self.tblProblems.item(rowN,0).text()
             date = datetime.datetime.now().strftime("%Y-%m-%d")
-            logProblem = [user,problem,self.cbGrade.currentText(),self.cbStars.currentText(),date]
+            comments = self.tbComments.toPlainText().replace('\n', ' ')
+            comments = comments.replace(',', '-')
+            #create new log entry
+            logProblem = [user,problem,self.cbGrade.currentText(),self.cbStars.currentText(),date,comments]
             print(logProblem)
             logClass.logProblem(logProblem)
         
     def updateLogLabel(self):        
         rowN = self.tblProblems.selectedIndexes()
         print(rowN)
-        if (rowN != []):
+        if (rowN != []):#if a problem selected
             rowN = rowN[0].row()
             problem = self.tblProblems.item(rowN,0).text()
             self.lblLogProb1.setText("Log")
             self.lblLogProb2.setText(problem)
-            if (len(usersLoggedIn) > 0):
-                self.lblLogProb3.setText("as")
+        if (len(usersLoggedIn) > 0): #if a user logged in
+            self.lblLogProb3.setText("as")
+            try:
                 rowN = self.lbUsers.selectedIndexes()[0].row()
                 user = self.lbUsers.item(rowN).text()
-                self.lblLogProb4.setText(user)
+            except:
+                user = ''
+            self.lblLogProb4.setText(user)
+            string = "Add problem as "
+            string += user
+            self.lblAddProbUser.setText(string)
         
     def addNewUser(self):
         date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -133,6 +144,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 usersLoggedIn.append(username[0])
                 self.lbUsers.clear()
                 self.lbUsers.addItems(usersLoggedIn)
+                self.leUsername.clear()
+                self.lePassword.clear()
                 print("users logged in", usersLoggedIn)
             else:
                 QtWidgets.QMessageBox.warning(self, "Oh no!", "You're already logged in!!")
@@ -182,8 +195,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global newProbCounter
         global newProbHolds
         global newStartHolds
+        global prevPb
+        global usersLoggedIn
         
         print("find - ", MyApp.find(problemsDB,(self.leProblemName.text()))[0])
+        
+        #get user
+        user = ''
+        if (len(usersLoggedIn) > 0):
+            try:
+                rowN = self.lbUsers.selectedIndexes()[0].row()
+                user = self.lbUsers.item(rowN).text()
+            except:
+                user = ''
              
         newProblem = []
         if (self.leProblemName.text() == ''):
@@ -192,6 +216,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
            QtWidgets.QMessageBox.warning(self, "Steady on!", "A problem with this name already exists, choose a new name")    
         elif (newProbCounter < 2):
             QtWidgets.QMessageBox.warning(self, "Easy now!", "You must click at least 2 holds")
+        elif (user == ''):
+            QtWidgets.QMessageBox.warning(self, "Have a word!", "You must login and select a user to add a new problem")
         else:
             #finalise last hold in newProbHolds
             holdString = str(prevPb.objectName())
@@ -204,6 +230,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             newProblem.append(self.cbStars_2.currentText())
             now = datetime.datetime.now()
             newProblem.append(now.strftime("%Y-%m-%d"))
+            
+            #append user
+            newProblem.append(user)
+            
+            #append comments
+            comments = self.tbComments.toPlainText().replace('\n', ' ')
+            comments = comments.replace(',', '-')
+            newProblem.append(comments)
             
             #append start holds
             newProblem.append(str(newStartHolds[0]))
@@ -252,9 +286,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global newStartHolds
         global undoCounter
         
-        if (newProbCounter == 0):#no holds to undo
-             QtWidgets.QMessageBox.warning(self, "Nothing to Undo", "There are no holds to Undo!")      
-        else:#hold to undo
+        if (newProbCounter != 0):
+             #QtWidgets.QMessageBox.warning(self, "Nothing to Undo", "There are no holds to Undo!")          
+        #else:#hold to undo
             prevPb.setStyleSheet("background-color: #f0f0f0")
             newProbCounter -= 1
             undoCounter = 1
@@ -269,6 +303,23 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 
         print("prob", newProbHolds)
         print("start", newStartHolds)
+        
+    def setLEDbyButton(self,button,colour):
+        holdString = str(button.objectName())
+        holdNumber = int(re.search(r'\d+', holdString).group())
+        print("hold Number -", holdNumber, "colour -", colour)
+        if (LINUX == 1):
+            if (colour == "red"):
+                strip.setPixelColorRGB(holdNumber, LED_VALUE, 0, 0)#red
+            elif (colour == "green"):
+                strip.setPixelColorRGB(holdNumber, 0, LED_VALUE, 0)#green
+            elif (colour == "blue"):
+                strip.setPixelColorRGB(holdNumber, 0, 0, LED_VALUE)#blue
+        
+    def getHoldNumberFromButton(self,button):
+        holdString = str(prevPb.objectName())
+        holdNumber = int(re.search(r'\d+', holdString).group())
+        return holdNumber
                    
     def addHoldtoProb(self):
         global newProbCounter
@@ -281,57 +332,47 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         #first check if button already clicked by loading colour
         colour = self.sender().palette().button().color().name()
-        print(colour)
         if (colour != '#f0f0f0'): #is it NOT the default colour? #efebe7
-            ####
-            #### Do Nothing
-            ####
             QtWidgets.QMessageBox.warning(self, "Hold Added", "To remove ho use the Undo button")      
-            #get hold number
-            #holdString = str(self.sender().objectName())
-            #holdNumber = int(re.search(r'\d+', holdString).group())
-            #set back to gray
-            #self.sender().setStyleSheet("background-color: #f0f0f0")#efebe7
-            #delete this hold from problem/start holds
-            #if holdNumber in newProbHolds: newProbHolds.remove(holdNumber)
-            #if holdNumber in newStartHolds: newStartHolds.remove(holdNumber)
-            print("newProbHolds",newProbHolds)
         else:
-            print("new coutn", newProbCounter)
+            print("new count", newProbCounter)
             if (newProbCounter == 0):
                 self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
-                
+                self.setLEDbyButton(self.sender(),"red")
             elif (newProbCounter == 1):
                 self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
-                #save prev hold
-                holdString = str(prevPb.objectName())
-                holdNumber = int(re.search(r'\d+', holdString).group())
-                newStartHolds.append(holdNumber)
+                self.setLEDbyButton(self.sender(),"red")
+                newStartHolds.append(self.getHoldNumberFromButton(prevPb))
                 print("start", newStartHolds)
                 prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 75%)")#green
+                self.setLEDbyButton(prevPb,"green")
             elif (newProbCounter == 2):
                 choice = QtWidgets.QMessageBox.question(self, 'Start Holds',
                                                     "Two start holds?",
                                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                 if (choice == QtWidgets.QMessageBox.Yes):
+                    #two start holds
                     self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
-                    #save prev hold
-                    holdString = str(prevPb.objectName())
-                    newStartHolds.append(int(re.search(r'\d+', holdString).group()))
+                    self.setLEDbyButton(self.sender(),"red")
+                    newStartHolds.append(self.getHoldNumberFromButton(prevPb))
                     print("start", newStartHolds)
                     prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 75%)")#green
+                    self.setLEDbyButton(prevPb,"green")
                 else:
-                    #newStartHolds.append(0)
-                    holdString = str(prevPb.objectName())
-                    newProbHolds.append(int(re.search(r'\d+', holdString).group()))
+                    #only one start hold
                     self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
+                    self.setLEDbyButton(self.sender(),"red")
+                    newProbHolds.append(self.getHoldNumberFromButton(prevPb))
                     prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 75%)")#blue
+                    self.setLEDbyButton(prevPb,"blue")
             elif (newProbCounter >= 3):
-                holdString = str(prevPb.objectName())
-                newProbHolds.append(int(re.search(r'\d+', holdString).group()))
-                print('newProbHolds', newProbHolds)
+                #append hold to newProbHold array and change button and LED colours
                 self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
+                self.setLEDbyButton(self.sender(),"red")
+                newProbHolds.append(self.getHoldNumberFromButton(prevPb))
+                print('newProbHolds', newProbHolds)
                 prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 75%)")#blue
+                self.setLEDbyButton(prevPb,"blue")
             newProbCounter += 1
             prevPb = self.sender()
         
@@ -371,11 +412,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             for i in range(0,TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
             for hold in probHolds:
-                strip.setPixelColorRGB(hold-1, 0, 0, 50)
+                strip.setPixelColorRGB(hold-1, 0, 0, LED_VALUE)
             for hold in startHolds:
-                strip.setPixelColorRGB(hold-1, 0, 50, 0)
+                strip.setPixelColorRGB(hold-1, 0, LED_VALUE, 0)
             for hold in finHolds:
-                strip.setPixelColorRGB(hold-1, 50, 0, 0)
+                strip.setPixelColorRGB(hold-1, LED_VALUE, 0, 0)
             strip.show()
         print('show')
         
@@ -389,15 +430,33 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             return row, column
         return [-1,-1]
     
+    def updateLogProblemDropdowns(self,rowProb):
+        global problemsDB
+        grade = problemsDB[rowProb][1]
+        stars = problemsDB[rowProb][2]
+        
+        index = self.cbStars.findText(stars, QtCore.Qt.MatchFixedString)
+        if index >= 0:
+            self.cbStars.setCurrentIndex(index)
+                    
+        index = self.cbGrade.findText(grade, QtCore.Qt.MatchFixedString)
+        if index >= 0:
+            self.cbGrade.setCurrentIndex(index)   
+
+    
     def updateProbInfo(self,rowProb):
         global problemsDB
-        probName = problemsDB[rowProb][0]
-        Grade = problemsDB[rowProb][1]
-        Stars = problemsDB[rowProb][2]
-        Date = problemsDB[rowProb][3]
-        infoText = probName + "\n" + Grade + "  " + Stars + "\nDate added - " + Date
         
-        #get a present star data of log file
+        probName = problemsDB[rowProb][0]
+        grade = problemsDB[rowProb][1]
+        stars = problemsDB[rowProb][2]
+        date = problemsDB[rowProb][3]
+        setter = problemClass.getUser(problemsDB,rowProb)
+        notes = problemClass.getNotes(problemsDB, rowProb)
+        
+        infoText = probName + "\n   " + grade + "   " + stars + "\nDate added - " + date + "\nSet by - " + setter + "\nComments\n" + notes
+        
+        #get and present star votes
         starVotes = logClass.getStarVotes(probName)
         stars = []
         stars.append(starVotes.count('***'))
@@ -416,13 +475,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.barStar1.setValue(starVotes.count('*'))
         self.barStar0.setValue(starVotes.count('-'))
         
-        #reset all to zero
+        #reset grade bars to zero
         for num in range (1,7):
             label = getattr(self, 'lblBarGrade{}'.format(num))
             bar = getattr(self, 'barGrade{}'.format(num))
             label.setText("-")
             bar.setValue(0)
-        #get a present grade data of log file
+            
+        #get and present gradevotes
         gradeVotes = logClass.getGradeVotes(probName)
         if (len(gradeVotes) > 0):
             print("grade votes",gradeVotes)
@@ -459,6 +519,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         rowProb = MyApp.find(problemsDB,probName)[0]
         #call function to display problem info
         self.updateProbInfo(rowProb)
+        self.updateLogProblemDropdowns(rowProb)
         #load the holds from the problemDB
         startHolds = problemClass.getStartHolds(problemsDB, rowProb)
         finHolds = problemClass.getFinHolds(problemsDB, rowProb)

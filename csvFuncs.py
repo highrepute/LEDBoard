@@ -4,20 +4,24 @@ Created on Wed Feb 14 12:05:16 2018
 
 @author: James.Jacobs
 """
+LINUX = 0
 
 import csv
 from operator import itemgetter
 
+NOHOLDSINDEX = 10
+HOLDSINDEX = 11
+STARTHOLDSINDEX = 6
+FINHOLDSINDEX = 8
+
+NAME = 0
+GRADE = 1
+STARS = 2
+DATE = 3
+USER = 4
+NOTES = 5
+
 class problemClass:#funcs that access information in the problem file
-    NOHOLDSINDEX = 8
-    HOLDSINDEX = 9
-    STARTHOLDSINDEX = 4
-    FINHOLDSINDEX = 6
-    
-    NAME = 0
-    GRADE = 1
-    STARS = 3
-    DATE = 4
         
     problemList = []
     
@@ -30,8 +34,16 @@ class problemClass:#funcs that access information in the problem file
         
     def getNameGradeStars(problems):    
         #extracts just the name, grade & stars
-        problemList = [[i[0],i[1],i[2],i[3]] for i in problems]
+        problemList = [[i[NAME],i[GRADE],i[STARS],i[DATE]] for i in problems]
         return problemList
+    
+    def getUser(problems, problemNumber):
+        user = problems[problemNumber][USER]
+        return user
+    
+    def getNotes(problems, problemNumber):
+        notes = problems[problemNumber][NOTES]
+        return notes
     
     def getProblem(problems, problemNumber):
         #get the details of a problem
@@ -41,15 +53,15 @@ class problemClass:#funcs that access information in the problem file
     def getHolds(problems, problemNumber):
         #create an array of the holds on the problem
         problemHolds = []
-        problemNoHolds = int(problems[problemNumber][problemClass.NOHOLDSINDEX])
-        for i in range(problemClass.HOLDSINDEX,problemClass.HOLDSINDEX+problemNoHolds):
+        problemNoHolds = int(problems[problemNumber][NOHOLDSINDEX])
+        for i in range(HOLDSINDEX,HOLDSINDEX+problemNoHolds):
                 problemHolds.append(int(problems[problemNumber][i]))
         return problemHolds
     
     def getStartHolds(problems, problemNumber):
         #array of the start holds
         startHolds = []
-        for i in range(problemClass.STARTHOLDSINDEX,problemClass.STARTHOLDSINDEX+2):
+        for i in range(STARTHOLDSINDEX,STARTHOLDSINDEX+2):
                 if (problems[problemNumber][i] != ''):
                     startHolds.append(int(problems[problemNumber][i]))
                 else:
@@ -59,7 +71,7 @@ class problemClass:#funcs that access information in the problem file
     def getFinHolds(problems, problemNumber):
         #array of the finish holds
         finHolds = []
-        for i in range(problemClass.FINHOLDSINDEX,problemClass.FINHOLDSINDEX+2):
+        for i in range(FINHOLDSINDEX,FINHOLDSINDEX+2):
                 if (problems[problemNumber][i] != ''):
                     finHolds.append(int(problems[problemNumber][i]))
                 else:
@@ -81,7 +93,8 @@ class problemClass:#funcs that access information in the problem file
             writer = csv.writer(f, dialect='excel')
             writer.writerow(newProblem)
         f.close()
-        #problemClass.deleteLastLine()
+        if (LINUX == 0):
+            problemClass.deleteLastLine()
             
     def sortProblems(problems, sortBy):
         problems = sorted(problems, key=itemgetter(sortBy), reverse=True)
@@ -90,6 +103,9 @@ class problemClass:#funcs that access information in the problem file
 #example of the functions in the FileIO class in use
 #problems = problemClass.readProblemFile()
 #print(problems)
+#print(problemClass.getNotes(problems,1))
+#print(problemClass.getUser(problems,1))
+#print(problemClass.getNameGradeStars(problems))
 #NameEtc = probFile.getNameGradeStars(problems)
 #oneProblem = probFile.getProblem(problems,3)
 #holdz = probFile.getHolds(problems,1)
@@ -100,7 +116,7 @@ class problemClass:#funcs that access information in the problem file
 
 #print(fin)
             
-#newProblem = ['new',  '7a',  '3',  '11/04/2018',    '1', '',   '9', '',   '3',     '1', '5', '9']
+#newProblem = ['new',  '7a',  '3',  '11/04/2018', 'James', 'comments go here',    '1', '',   '9', '',   '3',     '1', '5', '9']
 #print(newProblem)
 #problemClass.addNewProb(newProblem)
 

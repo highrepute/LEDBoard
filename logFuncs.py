@@ -72,5 +72,5 @@ class logClass:
 #print(gradeVotes)
 #print(gradeVotes.count('6a'))
 #print(gradeVotes.count('6c'))
-#newLog = ['Toby','Zeke the Fake','6c','***','2018-05-02']
-#logClass.logProblem(newLog)
+newLog = ['Toby','Zeke the Fake','6c','***','2018-05-02','This problem is aweseome!']
+logClass.logProblem(newLog)
