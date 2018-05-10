@@ -5,9 +5,13 @@ Created on Tue May  8 15:59:36 2018
 @author: James.Jacobs
 """
 
-from collections import Counter
+from threading import Timer
 
-z = ['blue', 'red', 'blue', 'yellow', 'blue', 'red']
-maxOccur = Counter(z).most_common(6)
-for name,count, in maxOccur:
-    print(name, count)
+def hello():
+    print("hello, world")
+
+t = Timer(5.0, hello)
+t.start() # after 30 seconds, "hello, world" will be printed
+t.cancel()
+t = Timer(5.0, hello)
+t.start()

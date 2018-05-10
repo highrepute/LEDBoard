@@ -2,10 +2,12 @@ LINUX = 0
 
 import sys
 from PyQt5 import QtWidgets, uic, QtCore#, QtGui,
+from PyQt5.QtCore import QTimer
 #import time
 import re
 import datetime
 from collections import Counter
+from threading import Timer
 
 if LINUX == 1:
     from neopixel import *
@@ -23,10 +25,7 @@ qtCreatorFile = "DiscoBoard.ui" # Enter file here.
  
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
  
-class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
-    stringlist = ['hello', 'James','one', 'two']
-    
-    
+class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):        
     def __init__(self):
         global problemsDB
         global newStartHolds
@@ -49,6 +48,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbLogout.clicked.connect(self.logout)
         self.lbUsers.clicked.connect(self.updateLogLabel)
         self.pbLogProblem.clicked.connect(self.logProblem)
+        
         
         #new problem widgiets
         self.pbDiscard.clicked.connect(self.resetAddProblemTab)
@@ -115,17 +115,31 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         date = datetime.datetime.now().strftime("%Y-%m-%d")
         userClass.addNewUser([self.leAddUsername.text(), self.leAddPassword.text(),date])
         
+    def mousePressEvent(self):
+        self.start_timer()
+        
+    #log a user out
+    def autoLogout(self, user):
+        global usersLoggedIn
+        
+        if (len(usersLoggedIn) > 0):        
+            index = MyApp.find(usersLoggedIn,user)[0]
+            del usersLoggedIn[index]
+            print("AUTO: users logged in", usersLoggedIn)
+            self.lbUsers.clear()
+            self.lbUsers.addItems(usersLoggedIn)
+        
+    #logout user selected in lbUsers listbox
     def logout(self):
         global usersLoggedIn
         
         rowN = self.lbUsers.selectedIndexes()[0].row()
         user = self.lbUsers.item(rowN).text()
         index = MyApp.find(usersLoggedIn,user)[0]
-        print(index)
         del usersLoggedIn[index]
-        print("users logged in", usersLoggedIn)
         self.lbUsers.clear()
-        self.lbUsers.addItems(usersLoggedIn)
+        if (len(usersLoggedIn) > 0):
+            self.lbUsers.addItems(usersLoggedIn)
     
     def login(self):
         global usersLoggedIn
@@ -149,7 +163,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 print("users logged in", usersLoggedIn)
             else:
                 QtWidgets.QMessageBox.warning(self, "Oh no!", "You're already logged in!!")
-            
+        
+        #start auto logout timer
+        self.start_timer(username)
+        
+    def start_timer(self, username):
+        if self.timer:
+            self.timer.stop()
+            self.timer.deleteLater()
+        self.timer = QTimer()
+        self.timer.timeout.connect(lambda: self.autoLogout(username[0]))
+        self.timer.setSingleShot(True)
+        self.timer.start(5000)        
         
     def populateProblemTable(self):
         global problemsDB
@@ -551,6 +576,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             MyApp.lightLEDs(startHolds, probHolds, finHolds)
         else:
             self.lightProblem()
+            
+    def closeEvent(self, event):
+        print("User has clicked the red x on the main window")
+        event.accept()            
         
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

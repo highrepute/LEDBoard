@@ -12,11 +12,12 @@ Display two problems - button
 	- display last two clicked problems
 	- how should mirror button handle this scenario?
 Users
-	- show logbook
+	- show logbook - Table that can be sorted
 	- encryption???
 	- auto logout after timeout
 	- add a max users logged in limit
 Log problems
+	- number of goes - Flash, 2nd go, Many goes, repeat
 	- each user has a colour
 	- change layout so "log problem" button last
 	- display a users logbook (see users also)

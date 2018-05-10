@@ -61,16 +61,36 @@ class logClass:
             gradeVotes.append(log[item[0]][2])
         return gradeVotes
         
-    #returns the indices of all problems logged by user
-    def getUserProblems(user):
+    #returns list of all problems logged by user
+    def getUserLogbook(user):
         log = logClass.readLogFile()
         matches = logClass.find(user,log)
-        return matches
+        userLogbook = []
+        for row,zero in matches:
+            userLogbook.append(log[row][1:6])
+        return userLogbook
+    
+    #returns list of all ascents logged of a problem
+    #ordered by date, most recent first
+    def getProblemAscents(problem):
+        log = logClass.readLogFile()
+        matches = logClass.find(problem,log)
+        problemAscents = []
+        ascent = []
+        for row,zero in matches:
+            ascent = log[row]
+            del ascent[1]
+            problemAscents.append(ascent)
+        
+        return list(reversed(problemAscents))
         
 #logClass.getUserProblems("James")
 #gradeVotes = logClass.getGradeVotes("Pinch Test")
 #print(gradeVotes)
 #print(gradeVotes.count('6a'))
 #print(gradeVotes.count('6c'))
-newLog = ['Toby','Zeke the Fake','6c','***','2018-05-02','This problem is aweseome!']
-logClass.logProblem(newLog)
+#newLog = ['Toby','Zeke the Fake','6c','***','2018-05-02','This problem is aweseome!','Flash']
+#logClass.logProblem(newLog)
+#print(logClass.getUserLogbook("James"))
+#print(logClass.getProblemAscents("Pinch Test"))
+#print(logClass.getProblemAscents("Zeke the Fake"))
