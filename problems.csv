@@ -1,7 +1,7 @@
 Name,Grade,Stars,Added,User,Comments,Start1,Start2,Fin1,Fin2,HoldNo,,,,,,
 Flatty Test,6b,***,2018-02-05,James,A test of basic flatness!,17,19,122,,5,52,54,72,75,98,
 Crimp Test,6a,*,2018-02-11,James,,6,1,120,124,4,24,63,50,103,,
-Undercuts Test,6a,**,2018-02-12,James,No thumb on Large,3,3,124,120,3,65,61,93,,,
+Undercuts Test,6a,**,2018-02-12,James,No thumb on Large,3,,124,120,3,65,61,93,,,
 Pinch Test,6b,**,2018-02-14,James,,3,9,123,121,6,39,30,83,75,112,116,
 Magic Wood Test,6a,**,2018-04-02,James,,4,8,124,120,4,37,29,67,74,
 Pocket Test,6b,*,2017-11-12,James,,1,6,118,121,6,42,44,66,71,99,116
@@ -18,3 +18,4 @@ Project 4 (Lord of Lock),6c+,**,2018-05-02,James,Must match right foot to hand a
 Project 5 (Boob Job),6c+,**,2018-05-02,James,,3,1,121,118,4,81,77,113,120
 Project 1,6c+,**,2018-05-02,James,,1,8,118,121,4,55,88,116,120
 rdfg,6a,-,2018-05-09,zed,hello old cheese,39,40,86,126,2,59,85
+time in test,6b,*,2018-05-11,zed,Just a test,37,41,123,126,3,63,64,113

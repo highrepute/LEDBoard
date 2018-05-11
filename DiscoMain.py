@@ -6,6 +6,7 @@ from PyQt5.QtCore import QTimer
 #import time
 import re
 import datetime
+import time
 from collections import Counter
 from threading import Timer
 
@@ -34,6 +35,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global mirrorFlag
         global undoCounter
         global usersLoggedIn
+        global showSequenceFlag
+        global showSequenceCounter
+        global startHoldsQ
+        global probHoldsQ
+        global finHoldsQ
+        global shownSequenceCount
+        
         #global prevPb
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
@@ -48,7 +56,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbLogout.clicked.connect(self.logout)
         self.lbUsers.clicked.connect(self.updateLogLabel)
         self.pbLogProblem.clicked.connect(self.logProblem)
-        
+        self.pbSequence.clicked.connect(self.showSequence)
+        self.pbShowTwoProbs.clicked.connect(self.showTwoProbs)
         
         #new problem widgiets
         self.pbDiscard.clicked.connect(self.resetAddProblemTab)
@@ -68,6 +77,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)
         
+        #start timer that logs out inactive users
+        self.start_timer()
+        
         #init new problem globals
         newProbCounter = 0
         newStartHolds = []
@@ -75,12 +87,57 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         mirrorFlag = 0
         undoCounter = 0
         usersLoggedIn = []
+        showSequenceFlag = 0
+        showSequenceCounter = 0
+        shownSequenceCount = 0
+        startHoldsQ = []
+        probHoldsQ = []
+        finHoldsQ = []
         
+    def showTwoProbs(self):
+        print("show two probs")
+        #self.light2LEDs()
+        #change button colour to show "two prob" mode is active
+        
+    def showSequence(self):
+        global mirrorFlag
+        global showSequenceFlag
+        global showSequenceCounter
+        global startHoldsQ
+        global probHoldsQ
+        global finHoldsQ    
+        global shownSequenceCount
+        
+        print("show sequence")
+        #call a version of lightLEDs within an IRQ
+        #use a timer 250ms???
+        #set a flag/counter
+        #timer elapses light next hold in sequence
+        #loop through all holds 10??? times
+        showSequenceFlag = 1 
+        showSequenceCounter = 0
+        shownSequenceCount = 0
+        
+        items = self.tblProblems.selectedIndexes()[0]
+        probName = self.tblProblems.item((items.row()),0).text()
+        rowProb = MyApp.find(problemsDB,probName)[0]
+        #load the holds from the problemDB
+        startHoldsQ = problemClass.getStartHolds(problemsDB, rowProb)
+        probHoldsQ = problemClass.getHolds(problemsDB, rowProb)
+        finHoldsQ = problemClass.getFinHolds(problemsDB, rowProb)
+        
+        if (mirrorFlag == 1):
+            startHoldsQ = mirror.getMirror(startHoldsQ)
+            probHoldsQ = mirror.getMirror(probHoldsQ)
+            finHoldsQ = mirror.getMirror(finHoldsQ)
+                   
     def logProblem(self):      
         if (self.tblProblems.selectedIndexes() != [])&(self.lbUsers.selectedIndexes() != []):
             #gather data for new log entry
             rowN = self.lbUsers.selectedIndexes()[0].row()
             user = self.lbUsers.item(rowN).text()
+            #as user is active, reset login time-in
+            self.resetUserTimeIn(user)
             rowN = self.tblProblems.selectedIndexes()[0].row()
             problem = self.tblProblems.item(rowN,0).text()
             date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -110,24 +167,87 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             string = "Add problem as "
             string += user
             self.lblAddProbUser.setText(string)
+        else:
+            self.lblLogProb3.setText("Select a - ")
+            self.lblLogProb4.setText("user")
+            self.lblAddProbUser.setText("Select a user")
+            
         
     def addNewUser(self):
         date = datetime.datetime.now().strftime("%Y-%m-%d")
         userClass.addNewUser([self.leAddUsername.text(), self.leAddPassword.text(),date])
-        
-    def mousePressEvent(self):
-        self.start_timer()
+              
+    def start_timer(self):
+        print("start timer")
+        #timer with 1 minute timeout
+        self.timer = QTimer()
+        self.timer.timeout.connect(lambda: self.autoLogout())
+        self.timer.start(60000)#change to 1 minute = 60000
+        #timer with 250ms timeout
+        self.timerQuick = QTimer()
+        self.timerQuick.timeout.connect(lambda: self.timerQuickISR())
+        self.timerQuick.start(250)     
         
     #log a user out
-    def autoLogout(self, user):
+    def autoLogout(self):
         global usersLoggedIn
-        
-        if (len(usersLoggedIn) > 0):        
-            index = MyApp.find(usersLoggedIn,user)[0]
-            del usersLoggedIn[index]
-            print("AUTO: users logged in", usersLoggedIn)
-            self.lbUsers.clear()
-            self.lbUsers.addItems(usersLoggedIn)
+        print("auto logout")
+        for user,timeIn in usersLoggedIn:
+            #if time since logged-in is 30mins (1800secs)
+            if ((time.time() - timeIn) > 1800):
+                #log out that user
+                index = MyApp.find(usersLoggedIn,user)[0]
+                del usersLoggedIn[index]
+                self.lbUsers.clear()
+                if (len(usersLoggedIn) > 0):
+                    self.lbUsers.addItems(MyApp.column(usersLoggedIn,0))
+                    
+    def timerQuickISR(self):
+        global startHoldsQ
+        global probHoldsQ
+        global finHoldsQ
+        global showSequenceFlag
+        global showSequenceCounter
+        global shownSequenceCount
+        #do show sequence
+        #and
+        #show two problems routines here
+        print("quick timer", showSequenceFlag, showSequenceCounter, shownSequenceCount)
+        if (showSequenceFlag == 1):   
+            if (shownSequenceCount < 5):
+                if LINUX == 1:
+                    showSequenceCounter = showSequenceCounter + 1
+                    for i in range(0,TOTAL_LED_COUNT,1):
+                        strip.setPixelColorRGB(i, 0, 0, 0)
+                    for i in range(0,showSequenceCounter,1):
+                        print("i",i)
+                        if (i < len(startHoldsQ)):
+                            hold = startHoldsQ[i]
+                            #print(hold)
+                            strip.setPixelColorRGB(hold-1, 0, LED_VALUE, 0)
+                        elif (i < (len(startHoldsQ)+len(probHoldsQ))):
+                            hold = probHoldsQ[i-len(startHoldsQ)]
+                            #print(hold)
+                            strip.setPixelColorRGB(hold-1, 0, 0, LED_VALUE)
+                        elif (i < (len(startHoldsQ)+len(probHoldsQ)+len(finHoldsQ))):
+                            hold = finHoldsQ[i-len(startHoldsQ)-len(probHoldsQ)]
+                            #print(hold)
+                            strip.setPixelColorRGB(hold-1, LED_VALUE, 0, 0)
+                        if (i == (len(startHoldsQ)+len(probHoldsQ)+len(finHoldsQ))):
+                            print("reset")
+                            showSequenceCounter = 0
+                            shownSequenceCount = shownSequenceCount + 1                          
+                    strip.show()
+            else:
+                shownSequenceCount = 0
+                showSequenceFlag = 0
+                showSequenceCounter = 0
+                    
+    def resetUserTimeIn(self,user):
+        global usersLoggedIn
+        index = MyApp.find(usersLoggedIn,user)[0]
+        usersLoggedIn[index][1] = time.time()
+        print("time in",usersLoggedIn)
         
     #logout user selected in lbUsers listbox
     def logout(self):
@@ -139,7 +259,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         del usersLoggedIn[index]
         self.lbUsers.clear()
         if (len(usersLoggedIn) > 0):
-            self.lbUsers.addItems(usersLoggedIn)
+            self.lbUsers.addItems(MyApp.column(usersLoggedIn,0))
+            
+    def column(matrix, i):
+        return [row[i] for row in matrix]
     
     def login(self):
         global usersLoggedIn
@@ -155,26 +278,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #check if already logged in
             if (MyApp.find(usersLoggedIn, username[0])[0] == -1):
                 QtWidgets.QMessageBox.warning(self, "Success!", "Well done, logged in!")
-                usersLoggedIn.append(username[0])
+                usersLoggedIn.append([username[0],time.time()])
+                print("users logged in", MyApp.column(usersLoggedIn,0))
                 self.lbUsers.clear()
-                self.lbUsers.addItems(usersLoggedIn)
+                self.lbUsers.addItems(MyApp.column(usersLoggedIn,0))
                 self.leUsername.clear()
                 self.lePassword.clear()
-                print("users logged in", usersLoggedIn)
             else:
                 QtWidgets.QMessageBox.warning(self, "Oh no!", "You're already logged in!!")
         
-        #start auto logout timer
-        self.start_timer(username)
-        
-    def start_timer(self, username):
-        if self.timer:
-            self.timer.stop()
-            self.timer.deleteLater()
-        self.timer = QTimer()
-        self.timer.timeout.connect(lambda: self.autoLogout(username[0]))
-        self.timer.setSingleShot(True)
-        self.timer.start(5000)        
         
     def populateProblemTable(self):
         global problemsDB
@@ -231,6 +343,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             try:
                 rowN = self.lbUsers.selectedIndexes()[0].row()
                 user = self.lbUsers.item(rowN).text()
+                #as user is active, reset login time-in
+                self.resetUserTimeIn(user)
             except:
                 user = ''
              
@@ -436,12 +550,39 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if LINUX == 1:
             for i in range(0,TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
-            for hold in probHolds:
-                strip.setPixelColorRGB(hold-1, 0, 0, LED_VALUE)
             for hold in startHolds:
                 strip.setPixelColorRGB(hold-1, 0, LED_VALUE, 0)
+            for hold in probHolds:
+                strip.setPixelColorRGB(hold-1, 0, 0, LED_VALUE)
             for hold in finHolds:
                 strip.setPixelColorRGB(hold-1, LED_VALUE, 0, 0)
+            strip.show()
+        print('show')
+        
+    def lightTwoLEDs(startHolds, probHolds, finHolds, startHolds2, probHolds2, finHolds2):
+        global showSequenceFlag
+        showSequenceFlag = 0
+        
+        if LINUX == 1:
+            for i in range(0,TOTAL_LED_COUNT,1):
+                strip.setPixelColorRGB(i, 0, 0, 0)
+            for hold in probHolds:
+                strip.setPixelColorRGB(hold-1, 0, 0, LED_VALUE)#blue
+            for hold in startHolds:
+                strip.setPixelColorRGB(hold-1, 0, LED_VALUE, 0)#green
+            for hold in finHolds:
+                strip.setPixelColorRGB(hold-1, LED_VALUE, 0, 0)#red
+            for hold in probHolds2:
+                strip.setPixelColorRGB(hold-1, LED_VALUE, 0, LED_VALUE)#yellow
+            for hold in startHolds2:
+                strip.setPixelColorRGB(hold-1, 0, LED_VALUE, LED_VALUE)#teal
+            for hold in finHolds2:
+                strip.setPixelColorRGB(hold-1, LED_VALUE, 0,LED_VALUE )#pink
+            #how handle one hold on both problems
+            #second timer with short period 250ms???
+            #toggle LED colour on timer elapse
+            #here find crossover and pass those holds to the timer
+            #flag - set a 2 problem flag that is cleared when two prob mode is exited
             strip.show()
         print('show')
         
@@ -532,9 +673,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             
     def lightProblem(self):
         global mirrorFlag
+        global showSequenceFlag
         
         self.updateLogLabel()
-                
+
+        showSequenceFlag = 0                
         mirrorFlag = 0
         #get index of selected problem in table
         items = self.tblProblems.selectedIndexes()[0]

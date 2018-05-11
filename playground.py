@@ -5,13 +5,13 @@ Created on Tue May  8 15:59:36 2018
 @author: James.Jacobs
 """
 
-from threading import Timer
+import time
+from time import sleep
 
-def hello():
-    print("hello, world")
+now = time.time()
+print(now)
 
-t = Timer(5.0, hello)
-t.start() # after 30 seconds, "hello, world" will be printed
-t.cancel()
-t = Timer(5.0, hello)
-t.start()
+sleep(5)
+
+delta = time.time() - now
+print(delta)

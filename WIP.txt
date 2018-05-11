@@ -5,22 +5,23 @@ Executable
 	- make full screen - see bookmarks
 	- make run on startup - google
 Problem information
-	- who has logged with comments
-	- Tidy how problem info is displayed
-Show sequence - button
+	- who has logged with comments - ordered by date - most recent at the top
+	- Tidy how problem info is displayed - seperate into labels so can change bold etc
+Show sequence - Done - need to test on board
 Display two problems - button
 	- display last two clicked problems
 	- how should mirror button handle this scenario?
 Users
 	- show logbook - Table that can be sorted
 	- encryption???
-	- auto logout after timeout
 	- add a max users logged in limit
 Log problems
-	- number of goes - Flash, 2nd go, Many goes, repeat
+	- number of goes - -,Flash, 2nd go, Many goes, repeat
 	- each user has a colour
 	- change layout so "log problem" button last
 	- display a users logbook (see users also)
+Add problem
+	- make username bold
 Remote desktop
 On screen instructions and tip strips
 
