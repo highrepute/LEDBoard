@@ -15,6 +15,8 @@ Users
 	- show logbook - Table that can be sorted
 	- encryption???
 	- add a max users logged in limit
+	- update labels when logout
+	- checks on username and password for new users
 Log problems
 	- number of goes - -,Flash, 2nd go, Many goes, repeat
 	- each user has a colour

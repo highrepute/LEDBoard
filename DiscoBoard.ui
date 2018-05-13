@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1165</width>
-    <height>837</height>
+    <width>1267</width>
+    <height>911</height>
    </rect>
   </property>
   <property name="font">
@@ -21,10 +21,10 @@
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>20</y>
+     <x>60</x>
+     <y>110</y>
      <width>1141</width>
-     <height>811</height>
+     <height>771</height>
     </rect>
    </property>
    <property name="font">
@@ -33,7 +33,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -44,8 +44,8 @@
       <rect>
        <x>20</x>
        <y>500</y>
-       <width>691</width>
-       <height>201</height>
+       <width>541</width>
+       <height>211</height>
       </rect>
      </property>
      <property name="font">
@@ -64,7 +64,7 @@
        <rect>
         <x>20</x>
         <y>10</y>
-        <width>451</width>
+        <width>501</width>
         <height>23</height>
        </rect>
       </property>
@@ -117,130 +117,185 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="layoutWidget">
+     <widget class="QWidget" name="">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>80</y>
-        <width>281</width>
-        <height>104</height>
+        <y>40</y>
+        <width>501</width>
+        <height>146</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="gridLayout_5">
+      <layout class="QGridLayout" name="gridLayout_8">
        <item row="0" column="0">
-        <widget class="QLabel" name="lblLog_2">
-         <property name="text">
-          <string>Comments</string>
-         </property>
-        </widget>
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="0" column="0">
+          <widget class="QLabel" name="lblLog_2">
+           <property name="text">
+            <string>Comments</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QTextEdit" name="tbLogComments"/>
+         </item>
+        </layout>
        </item>
-       <item row="1" column="0">
-        <widget class="QTextEdit" name="tbLogComments"/>
+       <item row="0" column="1">
+        <layout class="QGridLayout" name="gridLayout_7">
+         <item row="2" column="0">
+          <widget class="QComboBox" name="cbStars">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <item>
+            <property name="text">
+             <string>-</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>*</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>**</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>***</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QComboBox" name="cbStyle">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <item>
+            <property name="text">
+             <string>-</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Flashed</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>2nd Go</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>3rd Go</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Many goes</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Repeat</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>DNF</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>Grade</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QComboBox" name="cbGrade">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <item>
+            <property name="text">
+             <string>7a</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6c+</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6c</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6b+</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6b</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6a+</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>6a</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>Style</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>Stars</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0" colspan="2">
+          <widget class="QPushButton" name="pbLogProblem">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Log Problem</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
-     </widget>
-     <widget class="QPushButton" name="pbLogProblem">
-      <property name="geometry">
-       <rect>
-        <x>340</x>
-        <y>150</y>
-        <width>131</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Log Problem</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="cbStars">
-      <property name="geometry">
-       <rect>
-        <x>60</x>
-        <y>40</y>
-        <width>81</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <item>
-       <property name="text">
-        <string>-</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>*</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>**</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>***</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QComboBox" name="cbGrade">
-      <property name="geometry">
-       <rect>
-        <x>190</x>
-        <y>40</y>
-        <width>81</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <item>
-       <property name="text">
-        <string>7a</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>6c+</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>6c</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>6b+</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>6b</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>6a+</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>6a</string>
-       </property>
-      </item>
      </widget>
     </widget>
     <widget class="QPushButton" name="pbMirror">
@@ -372,7 +427,7 @@
      <property name="geometry">
       <rect>
        <x>850</x>
-       <y>370</y>
+       <y>430</y>
        <width>271</width>
        <height>281</height>
       </rect>
@@ -468,7 +523,7 @@
        <x>850</x>
        <y>30</y>
        <width>271</width>
-       <height>311</height>
+       <height>391</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -483,7 +538,7 @@
         <x>10</x>
         <y>10</y>
         <width>251</width>
-        <height>161</height>
+        <height>211</height>
        </rect>
       </property>
       <property name="font">
@@ -496,7 +551,7 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>184</y>
+        <y>264</y>
         <width>141</width>
         <height>10</height>
        </rect>
@@ -517,7 +572,7 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>194</y>
+        <y>274</y>
         <width>141</width>
         <height>10</height>
        </rect>
@@ -538,7 +593,7 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>204</y>
+        <y>284</y>
         <width>141</width>
         <height>10</height>
        </rect>
@@ -562,7 +617,7 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>214</y>
+        <y>294</y>
         <width>141</width>
         <height>10</height>
        </rect>
@@ -589,7 +644,7 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>244</y>
+        <y>324</y>
         <width>141</width>
         <height>10</height>
        </rect>
@@ -610,7 +665,7 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>264</y>
+        <y>344</y>
         <width>141</width>
         <height>10</height>
        </rect>
@@ -631,7 +686,7 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>234</y>
+        <y>314</y>
         <width>141</width>
         <height>10</height>
        </rect>
@@ -652,7 +707,7 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>254</y>
+        <y>334</y>
         <width>141</width>
         <height>10</height>
        </rect>
@@ -673,7 +728,7 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>284</y>
+        <y>364</y>
         <width>141</width>
         <height>10</height>
        </rect>
@@ -694,7 +749,7 @@
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>274</y>
+        <y>354</y>
         <width>141</width>
         <height>10</height>
        </rect>
@@ -715,7 +770,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>194</y>
+        <y>274</y>
         <width>67</width>
         <height>21</height>
        </rect>
@@ -728,7 +783,7 @@
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>180</y>
+        <y>260</y>
         <width>41</width>
         <height>20</height>
        </rect>
@@ -746,7 +801,7 @@
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>190</y>
+        <y>270</y>
         <width>41</width>
         <height>20</height>
        </rect>
@@ -764,7 +819,7 @@
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>200</y>
+        <y>280</y>
         <width>41</width>
         <height>20</height>
        </rect>
@@ -782,7 +837,7 @@
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>210</y>
+        <y>290</y>
         <width>41</width>
         <height>20</height>
        </rect>
@@ -800,7 +855,7 @@
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>260</y>
+        <y>340</y>
         <width>41</width>
         <height>16</height>
        </rect>
@@ -818,7 +873,7 @@
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>230</y>
+        <y>310</y>
         <width>41</width>
         <height>16</height>
        </rect>
@@ -836,7 +891,7 @@
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>240</y>
+        <y>320</y>
         <width>41</width>
         <height>16</height>
        </rect>
@@ -854,7 +909,7 @@
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>250</y>
+        <y>330</y>
         <width>41</width>
         <height>16</height>
        </rect>
@@ -872,7 +927,7 @@
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>270</y>
+        <y>350</y>
         <width>41</width>
         <height>16</height>
        </rect>
@@ -890,7 +945,7 @@
       <property name="geometry">
        <rect>
         <x>90</x>
-        <y>280</y>
+        <y>360</y>
         <width>41</width>
         <height>16</height>
        </rect>
@@ -908,7 +963,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>254</y>
+        <y>334</y>
         <width>67</width>
         <height>21</height>
        </rect>
@@ -917,6 +972,78 @@
        <string>Grade</string>
       </property>
      </widget>
+     <widget class="QLabel" name="label_15">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>230</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>User votes</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_3">
+     <property name="geometry">
+      <rect>
+       <x>570</x>
+       <y>500</y>
+       <width>271</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QLabel" name="lblInfo">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>251</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Welcome to the Board of High Repute</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QPushButton" name="pbViewLogbook">
+     <property name="geometry">
+      <rect>
+       <x>720</x>
+       <y>640</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>View logbook</string>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab_2">
@@ -3000,6 +3127,84 @@
      </widget>
     </widget>
    </widget>
+   <widget class="QWidget" name="tab_4">
+    <attribute name="title">
+     <string>Logbook</string>
+    </attribute>
+    <widget class="QTableWidget" name="tblLogbook">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>60</y>
+       <width>1011</width>
+       <height>611</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::DoubleClicked</set>
+     </property>
+     <property name="showGrid">
+      <bool>false</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="rowCount">
+      <number>10</number>
+     </property>
+     <property name="columnCount">
+      <number>4</number>
+     </property>
+     <attribute name="horizontalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <column/>
+     <column/>
+     <column/>
+     <column/>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="label_14">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>40</y>
+     <width>471</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>21</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Board of High Repute</string>
+   </property>
   </widget>
  </widget>
  <resources/>

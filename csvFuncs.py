@@ -4,7 +4,7 @@ Created on Wed Feb 14 12:05:16 2018
 
 @author: James.Jacobs
 """
-LINUX = 0
+LINUX = 1
 
 import csv
 from operator import itemgetter

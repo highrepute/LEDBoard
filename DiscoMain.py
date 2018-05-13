@@ -1,4 +1,4 @@
-LINUX = 0
+LINUX = 1
 
 import sys
 from PyQt5 import QtWidgets, uic, QtCore#, QtGui,
@@ -58,6 +58,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbLogProblem.clicked.connect(self.logProblem)
         self.pbSequence.clicked.connect(self.showSequence)
         self.pbShowTwoProbs.clicked.connect(self.showTwoProbs)
+        self.pbViewLogbook.clicked.connect(self.viewLogbook)
         
         #new problem widgiets
         self.pbDiscard.clicked.connect(self.resetAddProblemTab)
@@ -80,6 +81,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #start timer that logs out inactive users
         self.start_timer()
         
+        #self.showFullScreen()
+        #self.LEDBoard.setStyleSheet("background-color: rgba(255, 0, 0, 0%)")
+        
         #init new problem globals
         newProbCounter = 0
         newStartHolds = []
@@ -93,6 +97,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         startHoldsQ = []
         probHoldsQ = []
         finHoldsQ = []
+        
+    def viewLogbook(self):
+        self.tabWidget.setCurrentIndex(3)
+        self.populateLogbook()
         
     def showTwoProbs(self):
         print("show two probs")
@@ -141,12 +149,26 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             rowN = self.tblProblems.selectedIndexes()[0].row()
             problem = self.tblProblems.item(rowN,0).text()
             date = datetime.datetime.now().strftime("%Y-%m-%d")
-            comments = self.tbComments.toPlainText().replace('\n', ' ')
+            comments = self.tbLogComments.toPlainText().replace('\n', ' ')
             comments = comments.replace(',', '-')
+            grade = self.cbGrade.currentText()
+            stars = self.cbStars.currentText()
+            style = self.cbStyle.currentText()
             #create new log entry
-            logProblem = [user,problem,self.cbGrade.currentText(),self.cbStars.currentText(),date,comments]
+            logProblem = [user,problem,grade,stars,date,comments,style]
             print(logProblem)
             logClass.logProblem(logProblem)
+            #clear text
+            self.tbLogComments.clear()
+            self.cbStyle.setCurrentIndex(0)
+            rowProb = self.getRowProb()
+            self.updateLogProblemDropdowns(rowProb)
+            text = problem + " logged to " + user + "'s logbook"
+            self.lblInfo.setText(text)
+        elif (self.tblProblems.selectedIndexes() == []):
+            self.lblInfo.setText("Oh no!\nPlease select a problem")
+        else:
+            self.lblInfo.setText("Oh no!\nPlease select a user, you may need to login")
         
     def updateLogLabel(self):        
         rowN = self.tblProblems.selectedIndexes()
@@ -178,7 +200,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         userClass.addNewUser([self.leAddUsername.text(), self.leAddPassword.text(),date])
               
     def start_timer(self):
-        print("start timer")
         #timer with 1 minute timeout
         self.timer = QTimer()
         self.timer.timeout.connect(lambda: self.autoLogout())
@@ -186,7 +207,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #timer with 250ms timeout
         self.timerQuick = QTimer()
         self.timerQuick.timeout.connect(lambda: self.timerQuickISR())
-        self.timerQuick.start(250)     
+        self.timerQuick.start(400)     
         
     #log a user out
     def autoLogout(self):
@@ -209,18 +230,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global showSequenceFlag
         global showSequenceCounter
         global shownSequenceCount
-        #do show sequence
-        #and
-        #show two problems routines here
-        print("quick timer", showSequenceFlag, showSequenceCounter, shownSequenceCount)
-        if (showSequenceFlag == 1):   
-            if (shownSequenceCount < 5):
+        #print("quick timer", showSequenceFlag, showSequenceCounter, shownSequenceCount)
+        if (showSequenceFlag == 1):
+            text = "Showing sequence " + str(10 - shownSequenceCount)
+            self.lblInfo.setText(text)
+            if (shownSequenceCount < 10):
                 if LINUX == 1:
                     showSequenceCounter = showSequenceCounter + 1
                     for i in range(0,TOTAL_LED_COUNT,1):
                         strip.setPixelColorRGB(i, 0, 0, 0)
                     for i in range(0,showSequenceCounter,1):
-                        print("i",i)
+                        #print("i",i)
                         if (i < len(startHoldsQ)):
                             hold = startHoldsQ[i]
                             #print(hold)
@@ -234,7 +254,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                             #print(hold)
                             strip.setPixelColorRGB(hold-1, LED_VALUE, 0, 0)
                         if (i == (len(startHoldsQ)+len(probHoldsQ)+len(finHoldsQ))):
-                            print("reset")
+                            #print("reset")
                             showSequenceCounter = 0
                             shownSequenceCount = shownSequenceCount + 1                          
                     strip.show()
@@ -242,6 +262,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 shownSequenceCount = 0
                 showSequenceFlag = 0
                 showSequenceCounter = 0
+                self.lblInfo.setText("Welcome to Board of High Repute")
                     
     def resetUserTimeIn(self,user):
         global usersLoggedIn
@@ -270,14 +291,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         usersDB = userClass.readUsersFile()
         login = userClass.checkPassword(usersDB, self.leUsername.text(), self.lePassword.text())
         if (login == -2):
-            QtWidgets.QMessageBox.warning(self, "Oh no!", "I'm sorry this Username is unknown!")
+            #QtWidgets.QMessageBox.warning(self, "Oh no!", "I'm sorry this Username is unknown!")
+            self.lblInfo.setText("Oh no!\nI'm sorry username not recognised")
         elif (login == -1):
-            QtWidgets.QMessageBox.warning(self, "Oh no!", "I'm sorry your password is incorrect!")
+            #QtWidgets.QMessageBox.warning(self, "Oh no!", "I'm sorry your password is incorrect!")
+            self.lblInfo.setText("Oh no!\nI'm sorry your password is incorrect")
         elif (login == 0):
             username = [self.leUsername.text()]
             #check if already logged in
             if (MyApp.find(usersLoggedIn, username[0])[0] == -1):
-                QtWidgets.QMessageBox.warning(self, "Success!", "Well done, logged in!")
+                #QtWidgets.QMessageBox.warning(self, "Success!", "Well done, logged in!")
+                text = "Success!\nYou logged in\nWelcome - " + username[0]
+                self.lblInfo.setText(text)
                 usersLoggedIn.append([username[0],time.time()])
                 print("users logged in", MyApp.column(usersLoggedIn,0))
                 self.lbUsers.clear()
@@ -285,8 +310,38 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.leUsername.clear()
                 self.lePassword.clear()
             else:
-                QtWidgets.QMessageBox.warning(self, "Oh no!", "You're already logged in!!")
-        
+                #QtWidgets.QMessageBox.warning(self, "Oh no!", "You're already logged in!!")
+                self.lblInfo.setText("Oh no!\nYou're already logged in!!")
+                
+    def populateLogbook(self):
+        self.tblLogbook.clear()
+        if (len(usersLoggedIn) > 0): #if a user logged in
+            try:
+                rowN = self.lbUsers.selectedIndexes()[0].row()
+                user = self.lbUsers.item(rowN).text()
+                
+                if (self.lbUsers.selectedIndexes() != []):
+                    logbook = logClass.getUserLogbook(user)
+                    print(user)
+                    self.tblLogbook.setRowCount(len(logbook)-1)
+                    self.tblLogbook.setColumnCount(6)
+                    self.tblLogbook.horizontalHeader().setVisible(True)
+                    self.tblLogbook.setHorizontalHeaderLabels(logbook[0])
+                    for i in range(1,len(logbook),1):
+                        for j in range(0,6,1):
+                            self.tblLogbook.setItem(i-1,j, QtWidgets.QTableWidgetItem(logbook[i][j]))
+                    #set headers and column widths
+                    header = self.tblLogbook.horizontalHeader()       
+                    header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+                    header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+                    header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+                    header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+                    header.setSectionResizeMode(4, QtWidgets.QHeaderView.Stretch)
+                    header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
+                else:
+                    self.lblInfo.setText("Oh no!\nPlease select a user, you may need to login")
+            except:
+                self.lblInfo.setText("Oh no!\nPlease select a user, you may need to login")
         
     def populateProblemTable(self):
         global problemsDB
@@ -670,6 +725,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     
         #display info
         self.tbProblemInfo.setText(infoText)
+        
+    def getRowProb(self):
+        #get index of selected problem in table
+        items = self.tblProblems.selectedIndexes()[0]
+        #get name of problem
+        probName = self.tblProblems.item((items.row()),0).text()
+        #find problem in problemDB using problem name from selected row
+        rowProb = MyApp.find(problemsDB,probName)[0]
+        return rowProb
             
     def lightProblem(self):
         global mirrorFlag
@@ -679,12 +743,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         showSequenceFlag = 0                
         mirrorFlag = 0
-        #get index of selected problem in table
-        items = self.tblProblems.selectedIndexes()[0]
-        #get name of problem
-        probName = self.tblProblems.item((items.row()),0).text()
-        #find problem in problemDB using problem name from selected row
-        rowProb = MyApp.find(problemsDB,probName)[0]
+        rowProb = self.getRowProb()
         #call function to display problem info
         self.updateProbInfo(rowProb)
         self.updateLogProblemDropdowns(rowProb)

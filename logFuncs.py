@@ -4,7 +4,7 @@ Created on Thu May  3 08:07:40 2018
 
 @author: James.Jacobs
 """
-LINUX = 0
+LINUX = 1
 
 import csv
 
@@ -65,9 +65,9 @@ class logClass:
     def getUserLogbook(user):
         log = logClass.readLogFile()
         matches = logClass.find(user,log)
-        userLogbook = []
+        userLogbook = [log[0][1:7]]
         for row,zero in matches:
-            userLogbook.append(log[row][1:6])
+            userLogbook.append(log[row][1:7])
         return userLogbook
     
     #returns list of all ascents logged of a problem
