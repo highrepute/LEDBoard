@@ -6,6 +6,7 @@ Created on Thu May  3 08:07:40 2018
 """
 
 import csv
+from const import const
 
 class logClass:
     

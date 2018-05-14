@@ -12,4 +12,4 @@ class mirror:
                     mirrorHolds.append(holds[1])
         return mirrorHolds
     
-print(mirror.getMirror([2,8]))
+#print(mirror.getMirror([2,8]))

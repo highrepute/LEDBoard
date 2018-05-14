@@ -43,6 +43,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global S2PProbMatches
         global S2PFinMatches
         global toggleLEDFlag
+        global startHolds
+        global probHolds
+        global finHolds        
         
         #global prevPb
         QtWidgets.QMainWindow.__init__(self)
@@ -102,10 +105,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         finHoldsQ = []
         startHoldsS2P = []
         probHoldsS2P = []
-        finHoldsS2P = []   
-        S2PStartMatches = []
+        finHoldsS2P = []
         toggleLEDFlag = 0
-        
+        startHolds = []
+        probHolds = []
+        finHolds = []
+        S2PStartMatches = []    
+        S2PProbMatches = []
+        S2PFinMatches = []
+
     def viewLogbook(self):
         self.tabWidget.setCurrentIndex(3)
         self.populateLogbook()
@@ -129,7 +137,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.pbShowTwoProbs.setStyleSheet("background-color: rgba(0, 128, 0 100%)")#green
             self.lblInfo.setText("Show two problem mode active\nLast two problems clicked will be shown")
             #get holds for both problems
-            self.lightTwoLEDs(startHolds, probHolds, finHolds, startHoldsS2P, probHoldsS2P, finHoldsS2P)
+            MyApp.lightTwoLEDs(startHolds, probHolds, finHolds, startHoldsS2P, probHoldsS2P, finHoldsS2P)
             #figure out any holds that are on both problems
             S2PStartMatches = list(set(startHolds) & set(startHoldsS2P))     
             S2PProbMatches = list(set(probHolds) & set(probHoldsS2P))  
@@ -144,33 +152,32 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global mirrorFlag
         global showSequenceFlag
         global showSequenceCounter
-        global startHoldsQ
-        global probHoldsQ
-        global finHoldsQ    
+        global startHolds
+        global probHolds
+        global finHolds   
         global shownSequenceCount
         
         print("show sequence")
-        #call a version of lightLEDs within an IRQ
-        #use a timer 250ms???
-        #set a flag/counter
-        #timer elapses light next hold in sequence
-        #loop through all holds 10??? times
+        
+        if showTwoProbsFlag == 1:
+            self.showTwoProbs()
+            
         showSequenceFlag = 1 
         showSequenceCounter = 0
         shownSequenceCount = 0
         
-        items = self.tblProblems.selectedIndexes()[0]
-        probName = self.tblProblems.item((items.row()),0).text()
-        rowProb = MyApp.find(problemsDB,probName)[0]
+        #items = self.tblProblems.selectedIndexes()[0]
+        #probName = self.tblProblems.item((items.row()),0).text()
+        #rowProb = MyApp.find(problemsDB,probName)[0]
         #load the holds from the problemDB
-        startHoldsQ = problemClass.getStartHolds(problemsDB, rowProb)
-        probHoldsQ = problemClass.getHolds(problemsDB, rowProb)
-        finHoldsQ = problemClass.getFinHolds(problemsDB, rowProb)
+        #startHoldsQ = problemClass.getStartHolds(problemsDB, rowProb)
+        #probHoldsQ = problemClass.getHolds(problemsDB, rowProb)
+        #finHoldsQ = problemClass.getFinHolds(problemsDB, rowProb)
         
-        if (mirrorFlag == 1):
-            startHoldsQ = mirror.getMirror(startHoldsQ)
-            probHoldsQ = mirror.getMirror(probHoldsQ)
-            finHoldsQ = mirror.getMirror(finHoldsQ)
+        #if (mirrorFlag == 1):
+            #startHolds = mirror.getMirror(startHolds)
+            #probHolds = mirror.getMirror(probHolds)
+            #finHolds = mirror.getMirror(finHolds)
                    
     def logProblem(self):      
         if (self.tblProblems.selectedIndexes() != [])&(self.lbUsers.selectedIndexes() != []):
@@ -226,7 +233,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lblLogProb3.setText("Select a - ")
             self.lblLogProb4.setText("user")
             self.lblAddProbUser.setText("Select a user")
-            
+        self.populateLogbook()    
         
     def addNewUser(self):
         date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -287,19 +294,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                         strip.setPixelColorRGB(i, 0, 0, 0)
                     for i in range(0,showSequenceCounter,1):
                         #print("i",i)
-                        if (i < len(startHoldsQ)):
-                            hold = startHoldsQ[i]
+                        if (i < len(startHolds)):
+                            hold = startHolds[i]
                             #print(hold)
                             strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)
-                        elif (i < (len(startHoldsQ)+len(probHoldsQ))):
-                            hold = probHoldsQ[i-len(startHoldsQ)]
+                        elif (i < (len(startHolds)+len(probHolds))):
+                            hold = probHolds[i-len(startHolds)]
                             #print(hold)
                             strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)
-                        elif (i < (len(startHoldsQ)+len(probHoldsQ)+len(finHoldsQ))):
-                            hold = finHoldsQ[i-len(startHoldsQ)-len(probHoldsQ)]
+                        elif (i < (len(startHolds)+len(probHolds)+len(finHolds))):
+                            hold = finHolds[i-len(startHolds)-len(probHolds)]
                             #print(hold)
                             strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)
-                        if (i == (len(startHoldsQ)+len(probHoldsQ)+len(finHoldsQ))):
+                        if (i == (len(startHolds)+len(probHolds)+len(finHolds))):
                             #print("reset")
                             showSequenceCounter = 0
                             shownSequenceCount = shownSequenceCount + 1                          
@@ -542,11 +549,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         print("hold Number -", holdNumber, "colour -", colour)
         if (const.LINUX == 1):
             if (colour == "red"):
-                strip.setPixelColorRGB(holdNumber, const.LED_VALUE, 0, 0)#red
+                strip.setPixelColorRGB(holdNumber-1, const.LED_VALUE, 0, 0)#red
             elif (colour == "green"):
-                strip.setPixelColorRGB(holdNumber, 0, const.LED_VALUE, 0)#green
+                strip.setPixelColorRGB(holdNumber-1, 0, const.LED_VALUE, 0)#green
             elif (colour == "blue"):
-                strip.setPixelColorRGB(holdNumber, 0, 0, const.LED_VALUE)#blue
+                strip.setPixelColorRGB(holdNumber-1, 0, 0, const.LED_VALUE)#blue
             strip.show()
         
     def getHoldNumberFromButton(self,button):
@@ -657,16 +664,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if const.LINUX == 1:
             for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
-            for hold in probHolds:
-                strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#blue
             for hold in startHolds:
                 strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)#green
+            for hold in probHolds:
+                strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#blue
             for hold in finHolds:
                 strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)#red
-            for hold in probHolds2:
-                strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, const.LED_VALUE)#yellow
             for hold in startHolds2:
-                strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, const.LED_VALUE)#teal
+                strip.setPixelColorRGB(hold-1, 0,const.LED_VALUE, const.LED_VALUE)#teal
+            for hold in probHolds2:
+                strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE,0)#teal
             for hold in finHolds2:
                 strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0,const.LED_VALUE )#pink
             strip.show()
@@ -677,20 +684,20 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if const.LINUX == 1:
             if toggleLEDFlag == 0:
                 toggleLEDFlag = 1
-                print("toggle 0")
-                for hold in probHolds:
-                    strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#blue
+                #print("toggle 0")
                 for hold in startHolds:
-                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)#green
+                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)#blue
+                for hold in probHolds:
+                    strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#green
                 for hold in finHolds:
                     strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)#red
             elif toggleLEDFlag == 1:
                 toggleLEDFlag = 0
-                print("toggle 1")
-                for hold in probHolds:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, const.LED_VALUE)#yellow
+                #print("toggle 1")
                 for hold in startHolds:
-                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, const.LED_VALUE)#teal
+                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, const.LED_VALUE)#yellow
+                for hold in probHolds:
+                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE,0)#teal
                 for hold in finHolds:
                     strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0,const.LED_VALUE )#pink
             strip.show()
@@ -833,6 +840,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global probHoldsS2P
         global finHoldsS2P        
         global mirrorFlag
+        
+        if showTwoProbsFlag == 1:
+            self.showTwoProbs()
         
         #store the previous problem before loading the next
         startHoldsS2P = startHolds
