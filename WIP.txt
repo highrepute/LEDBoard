@@ -2,30 +2,23 @@ Work In Progress...
 Priority 1
 Picture of board in background
 Executable
-	- make full screen - see bookmarks
 	- make run on startup - google
 Problem information
-	- who has logged with comments - ordered by date - most recent at the top
+	- table of ascents
 	- Tidy how problem info is displayed - seperate into labels so can change bold etc
-Show sequence - Done - need to test on board
-Display two problems - button
-	- display last two clicked problems
-	- how should mirror button handle this scenario?
+Display two problems - done need to test on board
 Users
-	- show logbook - Table that can be sorted
-	- encryption???
-	- add a max users logged in limit
-	- update labels when logout
-	- checks on username and password for new users
+	- logbook text - Logbook for user...
 Log problems
-	- number of goes - -,Flash, 2nd go, Many goes, repeat
 	- each user has a colour
-	- change layout so "log problem" button last
-	- display a users logbook (see users also)
 Add problem
 	- make username bold
 Remote desktop
 On screen instructions and tip strips
+Appearance
+	- make look good!
+RaspPi
+	- try on RaspPi W
 
 
 

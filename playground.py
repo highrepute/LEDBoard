@@ -5,13 +5,6 @@ Created on Tue May  8 15:59:36 2018
 @author: James.Jacobs
 """
 
-import time
-from time import sleep
-
-now = time.time()
-print(now)
-
-sleep(5)
-
-delta = time.time() - now
-print(delta)
+a = [8, 2, 3, 4, 5]
+b = [9, 8, 7, 6, 5]
+print(list(set(a) & set(b)))

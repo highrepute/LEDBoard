@@ -4,7 +4,6 @@ Created on Thu May  3 08:07:40 2018
 
 @author: James.Jacobs
 """
-LINUX = 1
 
 import csv
 
@@ -39,7 +38,7 @@ class logClass:
             writer = csv.writer(f, dialect='excel')
             writer.writerow(newLogProb)
         f.close()
-        if LINUX == 0:
+        if const.LINUX == 0:
             #delete line seems to be required in windows but not in linux!
             logClass.deleteLastLine()
        

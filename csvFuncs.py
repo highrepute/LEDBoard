@@ -4,7 +4,6 @@ Created on Wed Feb 14 12:05:16 2018
 
 @author: James.Jacobs
 """
-LINUX = 1
 
 import csv
 from operator import itemgetter
@@ -93,7 +92,7 @@ class problemClass:#funcs that access information in the problem file
             writer = csv.writer(f, dialect='excel')
             writer.writerow(newProblem)
         f.close()
-        if (LINUX == 0):
+        if (const.LINUX == 0):
             problemClass.deleteLastLine()
             
     def sortProblems(problems, sortBy):

@@ -4,8 +4,6 @@ Created on Wed Feb 14 12:05:16 2018
 
 @author: James.Jacobs
 """
-LINUX = 1
-
 import csv
 #from operator import itemgetter
 
@@ -63,7 +61,7 @@ class userClass:#funcs that access information in the users file
             writer = csv.writer(f, dialect='excel')
             writer.writerow(newUser)
         f.close()
-        if LINUX == 0:
+        if const.LINUX == 0:
             #delete line seems to be required in windows but not in linux!
             userClass.deleteLastLine()
             
