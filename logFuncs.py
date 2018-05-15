@@ -65,10 +65,11 @@ class logClass:
     def getUserLogbook(user):
         log = logClass.readLogFile()
         matches = logClass.find(user,log)
-        userLogbook = [log[0][1:7]]
+        userLogbook = []
         for row,zero in matches:
             userLogbook.append(log[row][1:7])
-        return userLogbook
+        userLogbook.append([log[0][1:7]])
+        return list(reversed(userLogbook))
     
     #returns list of all ascents logged of a problem
     #ordered by date, most recent first
@@ -76,12 +77,14 @@ class logClass:
         log = logClass.readLogFile()
         matches = logClass.find(problem,log)
         problemAscents = []
-        ascent = []
         for row,zero in matches:
             ascent = log[row]
             del ascent[1]
             problemAscents.append(ascent)
-        
+        ascent = log[0][0:7]
+        print(ascent)
+        del ascent[1]
+        problemAscents.append(ascent)       
         return list(reversed(problemAscents))
         
 #logClass.getUserProblems("James")
@@ -93,4 +96,4 @@ class logClass:
 #logClass.logProblem(newLog)
 #print(logClass.getUserLogbook("James"))
 #print(logClass.getProblemAscents("Pinch Test"))
-#print(logClass.getProblemAscents("Zeke the Fake"))
+#print(logClass.getProblemAscents("Crimp Test"))

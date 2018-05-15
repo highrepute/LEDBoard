@@ -5,13 +5,16 @@ from PyQt5.QtCore import QTimer
 import re
 import datetime
 import time
+
 from collections import Counter
 
-from csvFuncs import problemClass
+from problemFuncs import problemClass
 from mirror import mirror
 from usersFuncs import userClass
 from logFuncs import logClass
 from const import const
+
+from qrangeslider import QRangeSlider
 
 if const.LINUX == 1:
     from neopixel import *
@@ -22,7 +25,6 @@ Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
  
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):        
     def __init__(self):
-        global problemsDB
         global newStartHolds
         global newProbHolds
         global newProbCounter
@@ -46,12 +48,24 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global startHolds
         global probHolds
         global finHolds        
+        global S2PProbName
+        global probName
+        global sliderFlag
         
         #global prevPb
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         #LED Board widgets
         self.setupUi(self)
+        
+        #init slider
+        self.slider = QRangeSlider(self)
+        self.slider.setMax(6)
+        self.slider.setMin(0)
+        self.slider.setRange(0,6)
+        self.QVBLayoutSlider.addWidget(self.slider)
+        self.slider.endValueChanged.connect(self.sliderChange)
+        self.slider.startValueChanged.connect(self.sliderChange)    
         
         #Connect buttons to functions
         self.pbTestLEDs.clicked.connect(self.testLEDs)        
@@ -64,6 +78,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbSequence.clicked.connect(self.showSequence)
         self.pbShowTwoProbs.clicked.connect(self.showTwoProbs)
         self.pbViewLogbook.clicked.connect(self.viewLogbook)
+        self.tabWidget.currentChanged.connect(self.populateLogbook)
         
         #new problem widgiets
         self.pbDiscard.clicked.connect(self.resetAddProblemTab)
@@ -100,9 +115,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         showSequenceCounter = 0
         shownSequenceCount = 0
         showTwoProbsFlag = 0
-        startHoldsQ = []
-        probHoldsQ = []
-        finHoldsQ = []
         startHoldsS2P = []
         probHoldsS2P = []
         finHoldsS2P = []
@@ -113,6 +125,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         S2PStartMatches = []    
         S2PProbMatches = []
         S2PFinMatches = []
+        S2PProbName = ""
+        probName = ""
+        sliderFlag = 0
+        
+    def sliderChange(self):
+        global sliderFlag
+        sliderFlag = 1
 
     def viewLogbook(self):
         self.tabWidget.setCurrentIndex(3)
@@ -133,9 +152,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         if showTwoProbsFlag == 0:
             showTwoProbsFlag = 1
+            text = "Show two problems\n" + probName + " and " + S2PProbName + " are shown"
+            self.lblInfo.setText(text)
             #change button colour to show "two prob" mode is active
             self.pbShowTwoProbs.setStyleSheet("background-color: rgba(0, 128, 0 100%)")#green
-            self.lblInfo.setText("Show two problem mode active\nLast two problems clicked will be shown")
+            self.lblInfo.setText("Show two problems\nLast two problems clicked are be shown")
             #get holds for both problems
             MyApp.lightTwoLEDs(startHolds, probHolds, finHolds, startHoldsS2P, probHoldsS2P, finHoldsS2P)
             #figure out any holds that are on both problems
@@ -156,8 +177,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global probHolds
         global finHolds   
         global shownSequenceCount
+        global S2PProbName
         
-        print("show sequence")
+        #get index of selected problem in table
+        items = self.tblProblems.selectedIndexes()[0]
+        #get name of problem
+        probName = self.tblProblems.item((items.row()),0).text()
+        text = "Show Sequence\nSequence of " + probName + " is shown" + S2PProbName
+        self.lblInfo.setText(text)
         
         if showTwoProbsFlag == 1:
             self.showTwoProbs()
@@ -165,19 +192,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         showSequenceFlag = 1 
         showSequenceCounter = 0
         shownSequenceCount = 0
-        
-        #items = self.tblProblems.selectedIndexes()[0]
-        #probName = self.tblProblems.item((items.row()),0).text()
-        #rowProb = MyApp.find(problemsDB,probName)[0]
-        #load the holds from the problemDB
-        #startHoldsQ = problemClass.getStartHolds(problemsDB, rowProb)
-        #probHoldsQ = problemClass.getHolds(problemsDB, rowProb)
-        #finHoldsQ = problemClass.getFinHolds(problemsDB, rowProb)
-        
-        #if (mirrorFlag == 1):
-            #startHolds = mirror.getMirror(startHolds)
-            #probHolds = mirror.getMirror(probHolds)
-            #finHolds = mirror.getMirror(finHolds)
                    
     def logProblem(self):      
         if (self.tblProblems.selectedIndexes() != [])&(self.lbUsers.selectedIndexes() != []):
@@ -246,6 +260,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             text = "New user " + username + " added, you may now login"
             QtWidgets.QMessageBox.warning(self, "Easy now!", text)
+            self.lblInfo.setText(text)
             userClass.addNewUser([username, password,date])
               
     def start_timer(self):
@@ -272,17 +287,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 if (len(usersLoggedIn) > 0):
                     self.lbUsers.addItems(MyApp.column(usersLoggedIn,0))
                 self.updateLogLabel()
+                text = user + " automatically logged out"
+                self.lblInfo.setText(text)
                     
     def timerQuickISR(self):
-        global startHoldsQ
-        global probHoldsQ
-        global finHoldsQ
         global showSequenceFlag
         global showSequenceCounter
         global shownSequenceCount
         global S2PStartMatches        
         global S2PProbMatches
-        global S2PFinMatches        
+        global S2PFinMatches 
+        global sliderFlag
         #print("quick timer", showSequenceFlag, showSequenceCounter, shownSequenceCount)
         if (showSequenceFlag == 1):
             text = "Showing sequence " + str(10 - shownSequenceCount)
@@ -318,6 +333,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.lblInfo.setText("Welcome to Board of High Repute")
         if (showTwoProbsFlag == 1):
             MyApp.toggleLEDs(S2PStartMatches, S2PProbMatches, S2PFinMatches)
+        if (sliderFlag == 1):
+            sliderFlag = 0
+            print("slider")
+            self.populateProblemTable()
                     
     def resetUserTimeIn(self,user):
         global usersLoggedIn
@@ -337,6 +356,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if (len(usersLoggedIn) > 0):
             self.lbUsers.addItems(MyApp.column(usersLoggedIn,0))
         self.updateLogLabel()
+        text = user + " logged out"
+        self.lblInfo.setText(text)
     
     #returns a column from a list - list must be a matrix in dimensions
     def column(matrix, i):
@@ -401,10 +422,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.lblInfo.setText("Oh no!\nPlease select a user, you may need to login")
         
     def populateProblemTable(self):
-        global problemsDB
         #populate problem list
-        problemsDB = problemClass.readProblemFile()
-        problemList = problemClass.getNameGradeStars(problemsDB)
+        start = self.slider.getRange()[0]
+        end = self.slider.getRange()[1]        
+        problemList = problemClass.getGradeFilteredProblems(start, end)
         self.tblProblems.setRowCount(len(problemList)-1)
         self.tblProblems.setColumnCount(4)
         self.tblProblems.horizontalHeader().setVisible(True)
@@ -447,6 +468,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global prevPb
         global usersLoggedIn
         
+        problemsDB = problemClass.readProblemFile()
+        
         #get user
         user = ''
         if (len(usersLoggedIn) > 0):
@@ -473,7 +496,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             newProbHolds.append(int(re.search(r'\d+', holdString).group()))
             print('probHolds', newProbHolds)            
             #append name, grade, stars & date
-            newProblem.append(self.leProblemName.text())
+            probName = self.leProblemName.text()
+            newProblem.append(probName)
             newProblem.append(self.cbGrade_2.currentText())
             newProblem.append(self.cbStars_2.currentText())
             now = datetime.datetime.now()
@@ -497,13 +521,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                                                 "Two Finish holds?",
                                                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
             if (choice == QtWidgets.QMessageBox.Yes)&(len(newProbHolds) >= 2):
-                #if (len(newProbHolds) == 2):
                 newProblem.append(str(newProbHolds[-2]))#second to last hold
                 newProblem.append(str(newProbHolds[-1]))#last hold
                 del newProbHolds[-1]
-                #else:
-                #    newProblem.append(str(newProbHolds[-1]))#last hold
-                #    newProblem.append('')
                 del newProbHolds[-1]
             else:
                 newProblem.append(str(newProbHolds[-1]))
@@ -520,6 +540,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.populateProblemTable()
             QtWidgets.QMessageBox.warning(self, "Bon Effort!", "Well Done! New problem added!")
             self.tabWidget.setCurrentIndex(0)
+            text = "New problem added - " + probName + "\n by user - " + user
+            self.lblInfo.setText(text)
             
     def undo(self):#undo the last hold added
         global newProbCounter
@@ -628,6 +650,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             return Color(0, pos * 3, 255 - pos * 3)
     
     def testLEDs(self):
+        text = "Test LEDs button pressed\nAll LEDs lit"
+        self.lblInfo.setText(text)
         global LEDState
         if (LEDState == 0):
             LEDState = 1
@@ -713,7 +737,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         return [-1,-1]
     
     def updateLogProblemDropdowns(self,rowProb):
-        global problemsDB
+        problemsDB = problemClass.readProblemFile()
+        
         grade = problemsDB[rowProb][1]
         stars = problemsDB[rowProb][2]
         
@@ -727,14 +752,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     
     def updateProbInfo(self,rowProb):
-        global problemsDB
+        problemsDB = problemClass.readProblemFile()
         
         probName = problemsDB[rowProb][0]
         grade = problemsDB[rowProb][1]
         stars = problemsDB[rowProb][2]
         date = problemsDB[rowProb][3]
-        setter = problemClass.getUser(problemsDB,rowProb)
-        notes = problemClass.getNotes(problemsDB, rowProb)
+        setter = problemClass.getUser(rowProb)
+        notes = problemClass.getNotes(rowProb)
         
         infoText = probName + "\n   " + grade + "   " + stars + "\nDate added - " + date + "\nSet by - " + setter + "\nComments\n" + notes
         
@@ -787,15 +812,40 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #get problem ascents
         ascents = logClass.getProblemAscents(probName)
         #display in a table
-                    
+        self.populateAscents(ascents)
+        
         #display info
         self.tbProblemInfo.setText(infoText)
         
+    def populateAscents(self, ascents):
+        
+        self.tblAscents.setRowCount(len(ascents)-1)
+        self.tblAscents.setColumnCount(6)
+        self.tblAscents.horizontalHeader().setVisible(True)
+        self.tblAscents.setHorizontalHeaderLabels(ascents[0])
+        for i in range(1,len(ascents),1):
+            for j in range(0,6,1):
+                self.tblAscents.setItem(i-1,j, QtWidgets.QTableWidgetItem(ascents[i][j]))
+        #set headers and column widths
+        header = self.tblAscents.horizontalHeader()       
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(4, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)     
+        
     def getRowProb(self):
+        global S2PProbName
+        global probName
+        
+        problemsDB = problemClass.readProblemFile()
+        #store previous problem name
+        S2PProbName = probName
         #get index of selected problem in table
         items = self.tblProblems.selectedIndexes()[0]
         #get name of problem
-        probName = self.tblProblems.item((items.row()),0).text()
+        probName = self.tblProblems.item((items.row()),0).text()        
         #find problem in problemDB using problem name from selected row
         rowProb = MyApp.find(problemsDB,probName)[0]
         return rowProb
@@ -810,6 +860,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global probHolds
         global finHolds
         global showTwoProbsFlag
+        global probName
         
         showSequenceFlag = 0                
         mirrorFlag = 0
@@ -825,10 +876,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.updateProbInfo(rowProb)
         self.updateLogProblemDropdowns(rowProb)
         #load the holds from the problemDB
-        startHolds = problemClass.getStartHolds(problemsDB, rowProb)
-        finHolds = problemClass.getFinHolds(problemsDB, rowProb)
-        probHolds = problemClass.getHolds(problemsDB, rowProb)   
+        startHolds = problemClass.getStartHolds(rowProb)
+        finHolds = problemClass.getFinHolds(rowProb)
+        probHolds = problemClass.getHolds(rowProb)   
         MyApp.lightLEDs(startHolds, probHolds, finHolds)
+        text = "Problem displayed on board - " + probName 
+        self.lblInfo.setText(text)
         if showTwoProbsFlag == 1:
             self.showTwoProbs()
     
@@ -840,6 +893,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global probHoldsS2P
         global finHoldsS2P        
         global mirrorFlag
+        global probName
         
         if showTwoProbsFlag == 1:
             self.showTwoProbs()
@@ -855,6 +909,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             probHolds = mirror.getMirror(probHolds)
             finHolds = mirror.getMirror(finHolds)
             MyApp.lightLEDs(startHolds, probHolds, finHolds)
+            text = "Mirror displayed on board - " + probName 
+            self.lblInfo.setText(text)
         else:
             self.lightProblem()
             

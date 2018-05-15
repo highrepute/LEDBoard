@@ -3,8 +3,12 @@ Priority 1
 Picture of board in background
 Executable
 	- make run on startup - google
+Filter problems
+	- by grade
+	- created by user
+		const list of grades - used to loop through a grade range and filter problems
 Problem information
-	- table of ascents
+	- table of ascents - DONE - but not sure about it - may need to tweak layout to make it worthwhile
 	- Tidy how problem info is displayed - seperate into labels so can change bold etc
 Display two problems - done need to test on board
 Users
@@ -19,6 +23,10 @@ Appearance
 	- make look good!
 RaspPi
 	- try on RaspPi W
+Admin
+	- edit mirror array
+	- edit logs, users, problems
+	- add new holds?
 
 
 

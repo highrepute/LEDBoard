@@ -22,8 +22,6 @@ USER = 4
 NOTES = 5
 
 class problemClass:#funcs that access information in the problem file
-        
-    problemList = []
     
     def readProblemFile():
         #this gets the contents of the csv file into a list
@@ -32,25 +30,31 @@ class problemClass:#funcs that access information in the problem file
             problems = list(filereader)
         return problems
         
-    def getNameGradeStars(problems):    
+    def getNameGradeStars():  
+        problems = problemClass.readProblemFile()
+        problemList = []
         #extracts just the name, grade & stars
         problemList = [[i[NAME],i[GRADE],i[STARS],i[DATE]] for i in problems]
         return problemList
     
-    def getUser(problems, problemNumber):
+    def getUser(problemNumber):
+        problems = problemClass.readProblemFile()
         user = problems[problemNumber][USER]
         return user
     
-    def getNotes(problems, problemNumber):
+    def getNotes(problemNumber):
+        problems = problemClass.readProblemFile()
         notes = problems[problemNumber][NOTES]
         return notes
     
-    def getProblem(problems, problemNumber):
+    def getProblem(problemNumber):
+        problems = problemClass.readProblemFile()
         #get the details of a problem
         problem = problems[problemNumber][:]
         return problem
    
-    def getHolds(problems, problemNumber):
+    def getHolds(problemNumber):
+        problems = problemClass.readProblemFile()
         #create an array of the holds on the problem
         problemHolds = []
         problemNoHolds = int(problems[problemNumber][NOHOLDSINDEX])
@@ -58,7 +62,8 @@ class problemClass:#funcs that access information in the problem file
                 problemHolds.append(int(problems[problemNumber][i]))
         return problemHolds
     
-    def getStartHolds(problems, problemNumber):
+    def getStartHolds(problemNumber):
+        problems = problemClass.readProblemFile()
         #array of the start holds
         startHolds = []
         for i in range(STARTHOLDSINDEX,STARTHOLDSINDEX+2):
@@ -68,7 +73,8 @@ class problemClass:#funcs that access information in the problem file
                     startHolds.append(-1)
         return startHolds
      
-    def getFinHolds(problems, problemNumber):
+    def getFinHolds(problemNumber):
+        problems = problemClass.readProblemFile()
         #array of the finish holds
         finHolds = []
         for i in range(FINHOLDSINDEX,FINHOLDSINDEX+2):
@@ -96,16 +102,45 @@ class problemClass:#funcs that access information in the problem file
         if (const.LINUX == 0):
             problemClass.deleteLastLine()
             
-    def sortProblems(problems, sortBy):
+    def sortProblems(sortBy):
+        problems = problemClass.readProblemFile()
         problems = sorted(problems, key=itemgetter(sortBy), reverse=True)
         return problems
+    
+    #returns the indices of all items matching c in ml
+    def find(c,ml):
+        indices = [(i, item.index(c))
+        for i, item in enumerate(ml)
+        if c in item]
+        return indices   
+    
+    #returns a column from a list - list must be a matrix in dimensions
+    def column(matrix, i):
+        return [row[i] for row in matrix]    
+    
+    #returns list of all problems logged by user
+    def getGradeFilteredProblems(start, end):
+        problems = problemClass.readProblemFile()
+        #print(len(problems))
+        matches = []
+        for grade in const.GRADES[start:end+1]:
+            matches += (problemClass.find(grade,problems))
+        matches = problemClass.column(matches,0)
+        matches.sort()
+        fitleredProblems = []
+        fitleredProblems.append(problems[0][0:4])
+        for match in matches:
+            fitleredProblems.append(problems[match][0:4])
+        return fitleredProblems
+        
 
 #example of the functions in the FileIO class in use
+print(problemClass.getGradeFilteredProblems(0,6))
 #problems = problemClass.readProblemFile()
 #print(problems)
 #print(problemClass.getNotes(problems,1))
 #print(problemClass.getUser(problems,1))
-#print(problemClass.getNameGradeStars(problems))
+#print(problemClass.getNameGradeStars())
 #NameEtc = probFile.getNameGradeStars(problems)
 #oneProblem = probFile.getProblem(problems,3)
 #holdz = probFile.getHolds(problems,1)
