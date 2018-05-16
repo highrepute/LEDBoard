@@ -1,5 +1,5 @@
 import sys
-from PyQt5 import QtWidgets, uic, QtCore#, QtGui,
+from PyQt5 import QtWidgets, uic, QtCore#, QtGui
 from PyQt5.QtCore import QTimer
 #import time
 import re
@@ -62,7 +62,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.slider = QRangeSlider(self)
         self.slider.setMax(8)
         self.slider.setMin(0)
-        self.slider.setRange(0,8)
+        self.slider.setRange(0,7)
         self.QVBLayoutSlider.addWidget(self.slider)
         self.slider.endValueChanged.connect(self.sliderChange)
         self.slider.startValueChanged.connect(self.sliderChange)    
@@ -77,8 +77,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbLogProblem.clicked.connect(self.logProblem)
         self.pbSequence.clicked.connect(self.showSequence)
         self.pbShowTwoProbs.clicked.connect(self.showTwoProbs)
-        self.pbViewLogbook.clicked.connect(self.viewLogbook)
-        self.tabWidget.currentChanged.connect(self.populateLogbook)
+        #self.tabWidget.currentChanged.connect(self.populateLogbook)
         
         #new problem widgiets
         self.pbDiscard.clicked.connect(self.resetAddProblemTab)
@@ -103,6 +102,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         #self.showFullScreen()
         #self.LEDBoard.setStyleSheet("background-color: rgba(255, 0, 0, 0%)")
+        
+        #default message
+        self.lblInfo.setText(const.DEFAULTMSG)
+        
+        #make tables read only
+        self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         
         #init new problem globals
         newProbCounter = 0
@@ -133,8 +140,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global sliderFlag
         sliderFlag = 1
         
-        end = const.GRADES[self.slider.getRange()[1]-1]
         start = const.GRADES[self.slider.getRange()[0]]
+        end = const.GRADES[self.slider.getRange()[1]-1]
         self.lblMax.setText(str(end))
         self.lblMin.setText(str(start))
 
@@ -183,13 +190,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global finHolds   
         global shownSequenceCount
         global S2PProbName
-        
-        #get index of selected problem in table
-        items = self.tblProblems.selectedIndexes()[0]
-        #get name of problem
-        probName = self.tblProblems.item((items.row()),0).text()
-        text = "Show Sequence\nSequence of " + probName + " is shown" + S2PProbName
-        self.lblInfo.setText(text)
         
         if showTwoProbsFlag == 1:
             self.showTwoProbs()
@@ -305,11 +305,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global sliderFlag
         #print("quick timer", showSequenceFlag, showSequenceCounter, shownSequenceCount)
         if (showSequenceFlag == 1):
-            text = "Showing sequence " + str(10 - shownSequenceCount)
+            #get index of selected problem in table
+            items = self.tblProblems.selectedIndexes()[0]
+            #get name of problem
+            probName = self.tblProblems.item((items.row()),0).text()
+            text = "Showing sequence of " + probName + "\n" + str(10 - shownSequenceCount)
             self.lblInfo.setText(text)
             if (shownSequenceCount < 10):
+                showSequenceCounter = showSequenceCounter + 1
                 if const.LINUX == 1:
-                    showSequenceCounter = showSequenceCounter + 1
                     for i in range(0,const.TOTAL_LED_COUNT,1):
                         strip.setPixelColorRGB(i, 0, 0, 0)
                     for i in range(0,showSequenceCounter,1):
@@ -325,17 +329,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                         elif (i < (len(startHolds)+len(probHolds)+len(finHolds))):
                             hold = finHolds[i-len(startHolds)-len(probHolds)]
                             #print(hold)
-                            strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)
-                        if (i == (len(startHolds)+len(probHolds)+len(finHolds))):
-                            #print("reset")
-                            showSequenceCounter = 0
-                            shownSequenceCount = shownSequenceCount + 1                          
+                            strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)                       
                     strip.show()
+                    if (i == (len(startHolds)+len(probHolds)+len(finHolds))):
+                        #print("reset")
+                        showSequenceCounter = 0
+                        shownSequenceCount = shownSequenceCount + 1   
             else:
                 shownSequenceCount = 0
                 showSequenceFlag = 0
                 showSequenceCounter = 0
-                self.lblInfo.setText("Welcome to Board of High Repute")
+                self.lblInfo.setText(const.DEFAULTMSG)
         if (showTwoProbsFlag == 1):
             MyApp.toggleLEDs(S2PStartMatches, S2PProbMatches, S2PFinMatches)
         if (sliderFlag == 1):
@@ -362,6 +366,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.updateLogLabel()
         text = user + " logged out"
         self.lblInfo.setText(text)
+        rowN = self.lbUsers.selectedIndexes()[0].row()
+        self.lblLogbook.setText("Login and select a user to view logbook")
     
     #returns a column from a list - list must be a matrix in dimensions
     def column(matrix, i):
@@ -383,10 +389,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #check if already logged in
             if (MyApp.find(usersLoggedIn, username[0])[0] == -1):
                 #QtWidgets.QMessageBox.warning(self, "Success!", "Well done, logged in!")
-                text = "Success!\nYou logged in\nWelcome - " + username[0]
+                text = username[0] +  " logged in"
                 self.lblInfo.setText(text)
                 usersLoggedIn.append([username[0],time.time()])
-                print("users logged in", MyApp.column(usersLoggedIn,0))
                 self.lbUsers.clear()
                 self.lbUsers.addItems(MyApp.column(usersLoggedIn,0))
                 self.leUsername.clear()
@@ -404,7 +409,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 
                 if (self.lbUsers.selectedIndexes() != []):
                     logbook = logClass.getUserLogbook(user)
-                    print(user)
                     self.tblLogbook.setRowCount(len(logbook)-1)
                     self.tblLogbook.setColumnCount(6)
                     self.tblLogbook.horizontalHeader().setVisible(True)
@@ -420,6 +424,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
                     header.setSectionResizeMode(4, QtWidgets.QHeaderView.Stretch)
                     header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
+                    text = "Showing logbook for - " + user
+                    self.lblLogbook.setText(text)
                 else:
                     self.lblInfo.setText("Oh no!\nPlease select a user, you may need to login")
             except:
@@ -428,7 +434,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def populateProblemTable(self):
         #populate problem list
         start = self.slider.getRange()[0]
-        end = self.slider.getRange()[1] - 1        
+        end = self.slider.getRange()[1] - 1
         problemList = problemClass.getGradeFilteredProblems(start, end)
         self.tblProblems.setRowCount(len(problemList)-1)
         self.tblProblems.setColumnCount(4)
@@ -443,6 +449,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        text = "Showing problems between grades - " + const.GRADES[start] + " and " + const.GRADES[end]
+        self.lblInfo.setText(text)
         
     def resetAddProblemTab(self):
         print("reset")

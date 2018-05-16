@@ -1027,24 +1027,6 @@
       </property>
      </widget>
     </widget>
-    <widget class="QPushButton" name="pbViewLogbook">
-     <property name="geometry">
-      <rect>
-       <x>720</x>
-       <y>760</y>
-       <width>121</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>View logbook</string>
-     </property>
-    </widget>
     <widget class="QWidget" name="verticalLayoutWidget">
      <property name="geometry">
       <rect>
@@ -1102,6 +1084,15 @@
        <pointsize>8</pointsize>
       </font>
      </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOn</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="autoScroll">
+      <bool>true</bool>
+     </property>
      <property name="autoScrollMargin">
       <number>10</number>
      </property>
@@ -1115,10 +1106,10 @@
       <bool>true</bool>
      </property>
      <property name="rowCount">
-      <number>10</number>
+      <number>1</number>
      </property>
      <property name="columnCount">
-      <number>4</number>
+      <number>6</number>
      </property>
      <attribute name="horizontalHeaderVisible">
       <bool>false</bool>
@@ -1127,15 +1118,8 @@
       <bool>false</bool>
      </attribute>
      <row/>
-     <row/>
-     <row/>
-     <row/>
-     <row/>
-     <row/>
-     <row/>
-     <row/>
-     <row/>
-     <row/>
+     <column/>
+     <column/>
      <column/>
      <column/>
      <column/>
@@ -3280,23 +3264,23 @@
      <column/>
      <column/>
     </widget>
+    <widget class="QLabel" name="lblLogbook">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>20</y>
+       <width>381</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Login and select a user to view Logbook</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </widget>
-  </widget>
-  <widget class="QFrame" name="frmSlider">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>10</y>
-     <width>251</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
   </widget>
  </widget>
  <resources/>

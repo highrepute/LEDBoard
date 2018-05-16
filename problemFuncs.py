@@ -135,7 +135,7 @@ class problemClass:#funcs that access information in the problem file
         
 
 #example of the functions in the FileIO class in use
-print(problemClass.getGradeFilteredProblems(0,6))
+#print(problemClass.getGradeFilteredProblems(0,6))
 #problems = problemClass.readProblemFile()
 #print(problems)
 #print(problemClass.getNotes(problems,1))

@@ -19,6 +19,10 @@ Remote desktop
 On screen instructions and tip strips
 Appearance
 	- make look good!
+	- coloured/image background
+	- logo and name
+	- space for wall logo
+	- space for board name
 RaspPi
 	- try on RaspPi W - worked fine - was a little slower but still smooth
 Admin

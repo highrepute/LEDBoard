@@ -68,7 +68,8 @@ class logClass:
         userLogbook = []
         for row,zero in matches:
             userLogbook.append(log[row][1:7])
-        userLogbook.append([log[0][1:7]])
+            
+        userLogbook.append(log[0][1:7])
         return list(reversed(userLogbook))
     
     #returns list of all ascents logged of a problem
@@ -82,7 +83,7 @@ class logClass:
             del ascent[1]
             problemAscents.append(ascent)
         ascent = log[0][0:7]
-        print(ascent)
+        #print(ascent)
         del ascent[1]
         problemAscents.append(ascent)       
         return list(reversed(problemAscents))
@@ -94,6 +95,6 @@ class logClass:
 #print(gradeVotes.count('6c'))
 #newLog = ['Toby','Zeke the Fake','6c','***','2018-05-02','This problem is aweseome!','Flash']
 #logClass.logProblem(newLog)
-#print(logClass.getUserLogbook("James"))
+print(logClass.getUserLogbook("zed"))
 #print(logClass.getProblemAscents("Pinch Test"))
 #print(logClass.getProblemAscents("Crimp Test"))
