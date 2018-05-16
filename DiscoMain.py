@@ -60,9 +60,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         #init slider
         self.slider = QRangeSlider(self)
-        self.slider.setMax(6)
+        self.slider.setMax(8)
         self.slider.setMin(0)
-        self.slider.setRange(0,6)
+        self.slider.setRange(0,8)
         self.QVBLayoutSlider.addWidget(self.slider)
         self.slider.endValueChanged.connect(self.sliderChange)
         self.slider.startValueChanged.connect(self.sliderChange)    
@@ -132,6 +132,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def sliderChange(self):
         global sliderFlag
         sliderFlag = 1
+        
+        end = const.GRADES[self.slider.getRange()[1]-1]
+        start = const.GRADES[self.slider.getRange()[0]]
+        self.lblMax.setText(str(end))
+        self.lblMin.setText(str(start))
 
     def viewLogbook(self):
         self.tabWidget.setCurrentIndex(3)
@@ -335,7 +340,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             MyApp.toggleLEDs(S2PStartMatches, S2PProbMatches, S2PFinMatches)
         if (sliderFlag == 1):
             sliderFlag = 0
-            print("slider")
             self.populateProblemTable()
                     
     def resetUserTimeIn(self,user):
@@ -424,7 +428,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def populateProblemTable(self):
         #populate problem list
         start = self.slider.getRange()[0]
-        end = self.slider.getRange()[1]        
+        end = self.slider.getRange()[1] - 1        
         problemList = problemClass.getGradeFilteredProblems(start, end)
         self.tblProblems.setRowCount(len(problemList)-1)
         self.tblProblems.setColumnCount(4)

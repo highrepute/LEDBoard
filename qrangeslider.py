@@ -157,7 +157,7 @@ class Head(Element):
     def drawText(self, event, qp):
         qp.setPen(self.textColor())
         qp.setFont(QtGui.QFont('Arial', 10))
-        qp.drawText(event.rect(), QtCore.Qt.AlignLeft, str(self.main.min()))
+        #qp.drawText(event.rect(), QtCore.Qt.AlignLeft, str(self.main.min()))
 
 
 class Tail(Element):
@@ -167,7 +167,7 @@ class Tail(Element):
     def drawText(self, event, qp):
         qp.setPen(self.textColor())
         qp.setFont(QtGui.QFont('Arial', 10))
-        qp.drawText(event.rect(), QtCore.Qt.AlignRight, str(self.main.max()))
+        #qp.drawText(event.rect(), QtCore.Qt.AlignRight, str(self.main.max()))
 
 
 class Handle(Element):
@@ -177,8 +177,8 @@ class Handle(Element):
     def drawText(self, event, qp):
         qp.setPen(self.textColor())
         qp.setFont(QtGui.QFont('Arial', 10))
-        qp.drawText(event.rect(), QtCore.Qt.AlignLeft, str(self.main.start()))
-        qp.drawText(event.rect(), QtCore.Qt.AlignRight, str(self.main.end()))
+        #qp.drawText(event.rect(), QtCore.Qt.AlignLeft, str(self.main.start()))
+        #qp.drawText(event.rect(), QtCore.Qt.AlignRight, str(self.main.end()))
 
     def mouseMoveEvent(self, event):
         event.accept()
