@@ -71,6 +71,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #Connect buttons to functions
         self.pbTestLEDs.clicked.connect(self.testLEDs)        
         self.tblProblems.clicked.connect(self.lightProblem)
+        self.tblProblems.selectionModel().selectionChanged.connect(self.lightProblem)
         self.pbMirror.clicked.connect(self.mirrorProb)
         self.pbLogin.clicked.connect(self.login)
         self.pbLogout.clicked.connect(self.logout)
@@ -208,7 +209,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         if showTwoProbsFlag == 0:
             showTwoProbsFlag = 1
-            text = "Showing two problems\n" + probName + "and\n" + S2PProbName
+            text = "Showing two problems\n" + probName + "\nand\n" + S2PProbName
             self.lblInfo.setText(text)
             #change button colour to show "two prob" mode is active
             self.pbShowTwoProbs.setStyleSheet("background-color: rgba(0, 128, 0 100%)")#green
@@ -326,7 +327,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global usersLoggedIn
         print("auto logout")
         for user,timeIn in usersLoggedIn:
-            #if time since logged-in is 30mins (1800secs)
+            #if time since logged-in is 30mins (1800sec)
+            print(time.time() - timeIn)
             if ((time.time() - timeIn) > 1800):
                 #log out that user
                 index = MyApp.find(usersLoggedIn,user)[0]
@@ -609,6 +611,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
              #QtWidgets.QMessageBox.warning(self, "Nothing to Undo", "There are no holds to Undo!")          
         #else:#hold to undo
             prevPb.setStyleSheet("background-color: #f0f0f0")
+            self.setLEDbyButton(prevPb,"off")
             newProbCounter -= 1
             undoCounter = 1
             #set prevPb (previously pushed button) back one
@@ -621,8 +624,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 del(newStartHolds[-1])
         
     def setLEDbyButton(self,button,colour):
-        holdString = str(button.objectName())
-        holdNumber = int(re.search(r'\d+', holdString).group())
+        holdNumber = self.getHoldNumberFromButton(button)
         print("hold Number -", holdNumber, "colour -", colour)
         if (const.LINUX == 1):
             if (colour == "red"):
@@ -631,10 +633,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 strip.setPixelColorRGB(holdNumber-1, 0, const.LED_VALUE, 0)#green
             elif (colour == "blue"):
                 strip.setPixelColorRGB(holdNumber-1, 0, 0, const.LED_VALUE)#blue
+            elif (colour == "off"):
+                strip.setPixelColorRGB(holdNumber-1, 0, 0, 0)#off
             strip.show()
         
     def getHoldNumberFromButton(self,button):
-        holdString = str(prevPb.objectName())
+        holdString = str(button.objectName())
         holdNumber = int(re.search(r'\d+', holdString).group())
         return holdNumber
                    
@@ -654,6 +658,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             print("new count", newProbCounter)
             if (newProbCounter == 0):
+                self.offLEDs()
                 self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
                 self.setLEDbyButton(self.sender(),"red")
             elif (newProbCounter == 1):
@@ -728,10 +733,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 strip.show()
         else:
             LEDState = 0
-            if const.LINUX == 1:
-                for i in range(0,const.TOTAL_LED_COUNT,1):
-                    strip.setPixelColorRGB(i, 0, 0, 0)
-                    strip.show()
+            self.offLEDs()
+            
+    def offLEDs(self):
+        if const.LINUX == 1:
+            for i in range(0,const.TOTAL_LED_COUNT,1):
+                strip.setPixelColorRGB(i, 0, 0, 0)
+                strip.show()
             
     def lightLEDs(startHolds, probHolds, finHolds):
         if const.LINUX == 1:

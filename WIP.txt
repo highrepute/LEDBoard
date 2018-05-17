@@ -19,6 +19,9 @@ Admin
 	- edit mirror array
 	- edit logs, users, problems
 	- add new holds?
+	- delete problems
+Save problem
+	- clear the boxes when saved
 
 Priority 2
 Mobile App
