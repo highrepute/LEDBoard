@@ -51,6 +51,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global S2PProbName
         global probName
         global sliderFlag
+        global adminFlag
         
         #global prevPb
         QtWidgets.QMainWindow.__init__(self)
@@ -77,7 +78,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbLogProblem.clicked.connect(self.logProblem)
         self.pbSequence.clicked.connect(self.showSequence)
         self.pbShowTwoProbs.clicked.connect(self.showTwoProbs)
-        #self.tabWidget.currentChanged.connect(self.populateLogbook)
         
         #new problem widgiets
         self.pbDiscard.clicked.connect(self.resetAddProblemTab)
@@ -86,6 +86,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         #Add user tab
         self.pbAddNewUsers.clicked.connect(self.addNewUser)
+        
+        #admin tab
+        self.pbAdminLogin.clicked.connect(self.adminLogin)
+        self.pbEditUsers.clicked.connect(self.editUsers)
+        #self.pbEditLogs.clicked.connect(self.editLogs)
+        #self.pbEditProblems.clicked.connect(self.editProblems)
+        #self.pbEditSave.clicked.connect(self.editSave)
+        self.tabWidget.currentChanged.connect(self.adminLogout)
         
         #link hold buttons to the changeButtonColour function
         for num in range (1,const.TOTAL_LED_COUNT+1):
@@ -135,7 +143,43 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         S2PProbName = ""
         probName = ""
         sliderFlag = 0
+        adminFlag = 0#0-logged out, 1-logged in, 2-editUsers, 3-editlogs, 4-editproblems
         
+    def editUsers(self):
+        global adminFlag
+        
+        if adminFlag > 0:
+            adminFlag = 2
+            users = userClass.readUsersFile()
+            self.populateEditTable(users)
+            self.lblAdminState.setText("Loaded users database")
+            
+    def populateEditTable(self, data):
+        self.tblLogbook.setRowCount(len(data)-1)
+        maxRows = len(max(data,key=len))
+        self.tblEdit.setColumnCount(maxRows)
+        self.tblEdit.horizontalHeader().setVisible(True)
+        self.tblEdit.setHorizontalHeaderLabels(data[0])
+        for i in range(1,len(data),1):
+            for j in range(0,maxRows,1):
+                    self.tblEdit.setItem(i-1,j, QtWidgets.QTableWidgetItem(data[i][j]))
+    
+    def adminLogout(self):
+        global adminFlag
+        adminFlag = 0
+        self.lblAdminState.setText("Logged Out")
+    
+    def adminLogin(self):
+        global adminFlag
+        
+        if adminFlag == 0:
+            if self.leAdminPassword.text() == "admin":#CHANGE THIS!!!
+                adminFlag = 1
+                self.lblInfo.setText("Logged In!\nLogged In. You may now edit the databassed. Be careful!")
+                self.lblAdminState.setText("Logged In")
+            else:
+                self.lblInfo.setText("Oh no!\nI'm sorry your password is incorrect")
+    
     def sliderChange(self):
         global sliderFlag
         sliderFlag = 1
@@ -164,11 +208,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         if showTwoProbsFlag == 0:
             showTwoProbsFlag = 1
-            text = "Show two problems\n" + probName + " and " + S2PProbName + " are shown"
+            text = "Showing two problems\n" + probName + "and\n" + S2PProbName
             self.lblInfo.setText(text)
             #change button colour to show "two prob" mode is active
             self.pbShowTwoProbs.setStyleSheet("background-color: rgba(0, 128, 0 100%)")#green
-            self.lblInfo.setText("Show two problems\nLast two problems clicked are be shown")
             #get holds for both problems
             MyApp.lightTwoLEDs(startHolds, probHolds, finHolds, startHoldsS2P, probHoldsS2P, finHoldsS2P)
             #figure out any holds that are on both problems
@@ -662,9 +705,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             return Color(0, pos * 3, 255 - pos * 3)
     
     def testLEDs(self):
+        global showSequenceFlag
+        global LEDState
+        global showTwoProbsFlag
+        
         text = "Test LEDs button pressed\nAll LEDs lit"
         self.lblInfo.setText(text)
-        global LEDState
+
+        showSequenceFlag = 0     
+        
+        if showTwoProbsFlag == 1:
+            self.showTwoProbs()
+        
         if (LEDState == 0):
             LEDState = 1
             if const.LINUX == 1:

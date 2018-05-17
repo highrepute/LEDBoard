@@ -29,6 +29,16 @@ class problemClass:#funcs that access information in the problem file
             filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
             problems = list(filereader)
         return problems
+    
+    def saveProblemFile(problems):
+        #appends a new user to the list of users
+        with open('problems.csv', 'w') as f:
+            writer = csv.writer(f, dialect='excel')
+            for row in problems:
+                writer.writerow(row)
+                if const.LINUX == 0:
+                    #delete line seems to be required in windows but not in linux!
+                    problemClass.deleteLastLine()    
         
     def getNameGradeStars():  
         problems = problemClass.readProblemFile()

@@ -17,6 +17,16 @@ class logClass:
             log = list(filereader)
         return log
     
+    def saveLogFile(log):
+        #appends a new user to the list of users
+        with open('logs.csv', 'w') as f:
+            writer = csv.writer(f, dialect='excel')
+            for row in log:
+                writer.writerow(row)
+                if const.LINUX == 0:
+                    #delete line seems to be required in windows but not in linux!
+                    logClass.deleteLastLine()
+    
     #returns the indices of all matching items
     def find(c,ml):
         indices = [(i, item.index(c))
@@ -95,6 +105,10 @@ class logClass:
 #print(gradeVotes.count('6c'))
 #newLog = ['Toby','Zeke the Fake','6c','***','2018-05-02','This problem is aweseome!','Flash']
 #logClass.logProblem(newLog)
-print(logClass.getUserLogbook("zed"))
+#print(logClass.getUserLogbook("zed"))
 #print(logClass.getProblemAscents("Pinch Test"))
 #print(logClass.getProblemAscents("Crimp Test"))
+#log = [['Username', 'Problem', 'Grade', 'Stars', 'Ascent Date', 'Comments', 'Attempts'], ['James', 'Flatty Test', '6a', '**', '2018-05-03', 'Flat', 'Flash'], ['James', 'Crimp Test', '6a', '*', '2018-05-03', '', 'Flash'], ['James', 'Pinch Test', '6a', '*', '2018-05-03', '', '2nd go'], ['James', 'Pinch Test', '6c', '**', '2018-05-03', '', 'Repeat'], ['James', 'Big Move Test', '6b', '*', '2018-05-03', '', 'Many goes'], ['James', 'Zeke the Fake', '6c', '***', '2018-05-02', '', '-'], ['Toby', 'Zeke the Fake', '6c', '***', '2018-05-02', '', '-']]
+#logClass.saveLogFile(log)
+log = logClass.readLogFile()
+print(log)

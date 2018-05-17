@@ -4,27 +4,17 @@ Picture of board in background
 Executable
 	- make run on startup - google
 Filter problems
-	- created by user
+	- created by user - dropdown populated with users? (not great as could get too big) - scrollable 		listbox, main screen getting too cluttered.
 Problem information
 	- table of ascents - DONE - but not sure about it - may need to tweak layout to make it worthwhile
 	- Tidy how problem info is displayed - seperate into labels so can change bold etc
-Display two problems - done need to test on board
-Users
-	- logbook text - Logbook for user...
-Log problems
-	- each user has a colour
-Add problem
-	- make username bold
 Remote desktop
-On screen instructions and tip strips
 Appearance
 	- make look good!
 	- coloured/image background
 	- logo and name
 	- space for wall logo
 	- space for board name
-RaspPi
-	- try on RaspPi W - worked fine - was a little slower but still smooth
 Admin
 	- edit mirror array
 	- edit logs, users, problems

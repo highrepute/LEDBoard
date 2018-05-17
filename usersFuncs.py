@@ -16,6 +16,16 @@ class userClass:#funcs that access information in the users file
             filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
             users = list(filereader)
         return users
+    
+    def saveUsersFile(users):
+        #appends a new user to the list of users
+        with open('users.csv', 'w') as f:
+            writer = csv.writer(f, dialect='excel')
+            for row in users:
+                writer.writerow(row)
+                if const.LINUX == 0:
+                    #delete line seems to be required in windows but not in linux!
+                    userClass.deleteLastLine()
         
     def getUserNames(users):    
         #extracts just the name
