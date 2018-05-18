@@ -3354,12 +3354,12 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>370</x>
+       <x>260</x>
        <y>720</y>
-       <width>395</width>
+       <width>601</width>
        <height>41</height>
       </rect>
      </property>
@@ -3386,15 +3386,22 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pdEditSave">
+       <widget class="QPushButton" name="pbEditSave">
         <property name="text">
          <string>Save</string>
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="pbDeleteRow">
+        <property name="text">
+         <string>Delete row</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>290</x>

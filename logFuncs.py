@@ -110,5 +110,5 @@ class logClass:
 #print(logClass.getProblemAscents("Crimp Test"))
 #log = [['Username', 'Problem', 'Grade', 'Stars', 'Ascent Date', 'Comments', 'Attempts'], ['James', 'Flatty Test', '6a', '**', '2018-05-03', 'Flat', 'Flash'], ['James', 'Crimp Test', '6a', '*', '2018-05-03', '', 'Flash'], ['James', 'Pinch Test', '6a', '*', '2018-05-03', '', '2nd go'], ['James', 'Pinch Test', '6c', '**', '2018-05-03', '', 'Repeat'], ['James', 'Big Move Test', '6b', '*', '2018-05-03', '', 'Many goes'], ['James', 'Zeke the Fake', '6c', '***', '2018-05-02', '', '-'], ['Toby', 'Zeke the Fake', '6c', '***', '2018-05-02', '', '-']]
 #logClass.saveLogFile(log)
-log = logClass.readLogFile()
-print(log)
+#log = logClass.readLogFile()
+#print(log)

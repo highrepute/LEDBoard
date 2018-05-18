@@ -91,10 +91,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #admin tab
         self.pbAdminLogin.clicked.connect(self.adminLogin)
         self.pbEditUsers.clicked.connect(self.editUsers)
-        #self.pbEditLogs.clicked.connect(self.editLogs)
-        #self.pbEditProblems.clicked.connect(self.editProblems)
-        #self.pbEditSave.clicked.connect(self.editSave)
+        self.pbEditLogs.clicked.connect(self.editLogs)
+        self.pbEditProblems.clicked.connect(self.editProblems)
+        self.pbEditSave.clicked.connect(self.editSave)
         self.tabWidget.currentChanged.connect(self.adminLogout)
+        self.pbDeleteRow.clicked.connect(self.deleteRow)
         
         #link hold buttons to the changeButtonColour function
         for num in range (1,const.TOTAL_LED_COUNT+1):
@@ -146,6 +147,61 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         sliderFlag = 0
         adminFlag = 0#0-logged out, 1-logged in, 2-editUsers, 3-editlogs, 4-editproblems
         
+    def deleteRow(self):
+        model = self.tblEdit.model()
+        indices = [self.tblEdit.selectedIndexes()[0]]
+        print("delete", indices)
+        for index in sorted(indices):
+            model.removeRow(index.row())
+        
+    def editSave(self):
+        global adminFlag
+        
+        if adminFlag > 1:
+            model = self.tblEdit.model()
+            
+            data=[]
+            #need to add headers to the data - get from original data
+            if adminFlag == 2:
+                data = userClass.readUsersFile()[0]
+            elif adminFlag == 3:
+                data = logClass.readLogFile()[0]
+            elif adminFlag == 4:
+                data = problemClass.readProblemFile()[0]
+            print(data)
+            #get the data from the table
+            for row in range(model.rowCount()):
+              data.append([])
+              for column in range(model.columnCount()):
+                index = model.index(row, column)
+                data[row].append(str(model.data(index)))  
+            print(data)
+            #save the data to the correct file
+            if adminFlag == 2:
+                userClass.saveUsersFile(data)
+            elif adminFlag == 3:
+                logClass.saveLogFile(data)
+            elif adminFlag == 4:
+                problemClass.saveProblemFile(data)
+                
+    def editProblems(self):
+        global adminFlag
+        
+        if adminFlag > 0:
+            adminFlag = 4
+            problems = problemClass.readProblemFile()
+            self.populateEditTable(problems)
+            self.lblAdminState.setText("Loaded problems database")    
+    
+    def editLogs(self):
+        global adminFlag
+        
+        if adminFlag > 0:
+            adminFlag = 3
+            log = logClass.readLogFile()
+            self.populateEditTable(log)
+            self.lblAdminState.setText("Loaded logbooks")
+    
     def editUsers(self):
         global adminFlag
         
@@ -156,19 +212,31 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lblAdminState.setText("Loaded users database")
             
     def populateEditTable(self, data):
-        self.tblLogbook.setRowCount(len(data)-1)
-        maxRows = len(max(data,key=len))
-        self.tblEdit.setColumnCount(maxRows)
+        self.tblEdit.setRowCount(len(data)-1)
+        maxCols = len(max(data,key=len))
+        self.tblEdit.setColumnCount(maxCols)
         self.tblEdit.horizontalHeader().setVisible(True)
         self.tblEdit.setHorizontalHeaderLabels(data[0])
         for i in range(1,len(data),1):
-            for j in range(0,maxRows,1):
-                    self.tblEdit.setItem(i-1,j, QtWidgets.QTableWidgetItem(data[i][j]))
+            for j in range(0,maxCols,1):
+                try:
+                    item = QtWidgets.QTableWidgetItem(data[i][j])
+                    self.tblEdit.setItem(i-1,j, item)
+                except:
+                    self.tblEdit.setItem(i-1,j, QtWidgets.QTableWidgetItem(''))
+                    
+        #set column widths - difficult to do well here but doesn't matter so much
+        #header = self.tblEdit.horizontalHeader()                     
+        #if maxCols > 0:
+        #    header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        #if maxCols > 4:
+        #    header.setSectionResizeMode(5, QtWidgets.QHeaderView.Stretch)
     
     def adminLogout(self):
         global adminFlag
         adminFlag = 0
         self.lblAdminState.setText("Logged Out")
+        self.tblEdit.clear()
     
     def adminLogin(self):
         global adminFlag
@@ -176,6 +244,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if adminFlag == 0:
             if self.leAdminPassword.text() == "admin":#CHANGE THIS!!!
                 adminFlag = 1
+                self.leAdminPassword.clear()
                 self.lblInfo.setText("Logged In!\nLogged In. You may now edit the databassed. Be careful!")
                 self.lblAdminState.setText("Logged In")
             else:
@@ -510,6 +579,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             font = label.font();
             font.setPointSize(12);
             label.setFont(font);
+            
+        #reset inputs
+        self.leProblemName.clear()
+        self.cbGrade_2.setCurrentIndex(0)
+        self.cbStars_2.setCurrentIndex(0)
+        self.tbComments.clear()
         
         #init new problem globals
         newProbCounter = 0
