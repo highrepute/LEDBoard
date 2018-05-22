@@ -4,10 +4,14 @@ Picture of board in background
 Executable
 	- make run on startup - google
 Filter problems
-	- created by user - dropdown populated with users? (not great as could get too big) - scrollable 		listbox, main screen getting too cluttered.
+	- check filter slider - 6c returns 6c and 6c+ etc. same on rasppi?
+	- set by users
+	- inlcude/exclude my ascents
+	- just show my logged ascents
+	- grade (mirror slider in filter tab?) - Maybe?
 Problem information
-	- table of ascents - DONE - but not sure about it - may need to tweak layout to make it worthwhile
 	- Tidy how problem info is displayed - seperate into labels so can change bold etc
+	- Number of repeats - display in table to allow sorting by
 Remote desktop
 Appearance
 	- make look good!
@@ -15,14 +19,6 @@ Appearance
 	- logo and name
 	- space for wall logo
 	- space for board name
-Admin
-	- edit mirror array
-	- edit logs, users, problems
-	- add new holds?
-	- delete problems
-Save problem
-	- clear the boxes when saved
-
 Priority 2
 Mobile App
 Button/LDRs on holds

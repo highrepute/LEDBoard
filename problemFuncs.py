@@ -131,22 +131,49 @@ class problemClass:#funcs that access information in the problem file
     #returns list of all problems logged by user
     def getGradeFilteredProblems(start, end):
         problems = problemClass.readProblemFile()
-        #print(len(problems))
         matches = []
         for grade in const.GRADES[start:end+1]:
-            matches += (problemClass.find(grade,problems))
+            matches += (problemClass.find(grade,problemClass.column(problems,1)))
+        matches = problemClass.column(matches,0)
+        #matches.sort()
+        fitleredProblems = []
+        fitleredProblems.append(problems[0][0:5])
+        for match in matches:
+            fitleredProblems.append(problems[match][0:5])
+        return fitleredProblems
+    
+    def getUserFilteredProblems(problems,user):
+        header = problems[0]
+        del problems[0]
+        matches = []
+        matches += (problemClass.find(user,problemClass.column(problems,4)))
         matches = problemClass.column(matches,0)
         matches.sort()
-        fitleredProblems = []
-        fitleredProblems.append(problems[0][0:4])
+        fitleredProblems = [header]
         for match in matches:
-            fitleredProblems.append(problems[match][0:4])
-        return fitleredProblems
-        
+            fitleredProblems.append(problems[match][0:5])
+        return fitleredProblems 
+
+    def getStarFilteredProblems(problems,stars):
+        header = problems[0]
+        del problems[0]
+        matches = []
+        matches += (problemClass.find(stars,problemClass.column(problems,2)))
+        matches = problemClass.column(matches,0)
+        matches.sort()
+        fitleredProblems = [header]
+        for match in matches:
+            fitleredProblems.append(problems[match][0:5])
+        return fitleredProblems      
 
 #example of the functions in the FileIO class in use
-#print(problemClass.getGradeFilteredProblems(0,6))
-#problems = problemClass.readProblemFile()
+#print(problemClass.getGradeFilteredProblems(4,4))
+problems = problemClass.getGradeFilteredProblems(4,4)
+#print(problems)
+problems = problemClass.getStarFilteredProblems(problems, '***')
+problems = problemClass.getUserFilteredProblems(problems,"Robyn")
+print(problems)
+
 #print(problems)
 #print(problemClass.getNotes(problems,1))
 #print(problemClass.getUser(problems,1))

@@ -27,9 +27,11 @@ class userClass:#funcs that access information in the users file
                     #delete line seems to be required in windows but not in linux!
                     userClass.deleteLastLine()
         
-    def getUserNames(users):    
+    def getUserNames():    
         #extracts just the name
-        userList = [[i[0]] for i in users]
+        users = userClass.readUsersFile()
+        userList = [i[0] for i in users]
+        del userList[0]
         return userList
     
     def checkPassword(users, username, password):
@@ -83,3 +85,4 @@ class userClass:#funcs that access information in the users file
 #print(usersDB)
 #login = userClass.checkPassword(usersDB, 'EllieP', 'Highball_Pygall')
 #print(login)
+#print(userClass.getUserNames())

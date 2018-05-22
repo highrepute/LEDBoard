@@ -52,6 +52,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global probName
         global sliderFlag
         global adminFlag
+        global userFilter
         
         #global prevPb
         QtWidgets.QMainWindow.__init__(self)
@@ -97,30 +98,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tabWidget.currentChanged.connect(self.adminLogout)
         self.pbDeleteRow.clicked.connect(self.deleteRow)
         
+        #filter tab
+        self.tabWidget.currentChanged.connect(self.populateFilterTab)
+        self.pbFilterByUser.clicked.connect(self.filterByUser)
+        
         #link hold buttons to the changeButtonColour function
         for num in range (1,const.TOTAL_LED_COUNT+1):
             label = getattr(self, 'pb{}'.format(num))
             label.clicked.connect(self.addHoldtoProb)
             #make them transparent???
             label.setStyleSheet("background-color: rgba(240, 240, 240, 75%)")
-                
-        self.populateProblemTable()
-        self.tabWidget.setCurrentIndex(0)
-        
-        #start timer that logs out inactive users
-        self.start_timer()
-        
-        #self.showFullScreen()
-        #self.LEDBoard.setStyleSheet("background-color: rgba(255, 0, 0, 0%)")
-        
-        #default message
-        self.lblInfo.setText(const.DEFAULTMSG)
-        
-        #make tables read only
-        self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        
+            
         #init new problem globals
         newProbCounter = 0
         newStartHolds = []
@@ -146,6 +134,44 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         probName = ""
         sliderFlag = 0
         adminFlag = 0#0-logged out, 1-logged in, 2-editUsers, 3-editlogs, 4-editproblems
+        userFilter = ""            
+                
+        self.populateProblemTable()
+        self.tabWidget.setCurrentIndex(0)
+        
+        #start timer that logs out inactive users
+        self.start_timer()
+        
+        #self.showFullScreen()
+        #self.LEDBoard.setStyleSheet("background-color: rgba(255, 0, 0, 0%)")
+        
+        #default message
+        self.lblInfo.setText(const.DEFAULTMSG)
+        
+        #make tables read only
+        self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        
+        
+        
+    def filterByUser(self):
+        global userFilter
+        print("fitlerbyuser")
+        try:
+            rowN = self.lbUsers.selectedIndexes()[0].row()
+            user = self.lbUsers.item(rowN).text()
+            userFilter = user
+        except:
+            userFilter = ""
+        self.populateProblemTable()
+        print(userFilter)
+        
+    def populateFilterTab(self):
+        users = userClass.getUserNames()
+        self.lbUserFilter.clear()
+        if (len(users) > 0):
+            self.lbUserFilter.addItems(users)
         
     def deleteRow(self):
         model = self.tblEdit.model()
@@ -160,22 +186,20 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if adminFlag > 1:
             model = self.tblEdit.model()
             
-            data=[]
+            #data=[]
             #need to add headers to the data - get from original data
             if adminFlag == 2:
-                data = userClass.readUsersFile()[0]
+                data = [userClass.readUsersFile()[0]]
             elif adminFlag == 3:
-                data = logClass.readLogFile()[0]
+                data = [logClass.readLogFile()[0]]
             elif adminFlag == 4:
-                data = problemClass.readProblemFile()[0]
-            print(data)
+                data = [problemClass.readProblemFile()[0]]
             #get the data from the table
-            for row in range(model.rowCount()):
+            for row in range(model.rowCount()-1):
               data.append([])
               for column in range(model.columnCount()):
-                index = model.index(row, column)
-                data[row].append(str(model.data(index)))  
-            print(data)
+                index = model.index(row+1, column)
+                data[row+1].append(str(model.data(index)))  
             #save the data to the correct file
             if adminFlag == 2:
                 userClass.saveUsersFile(data)
@@ -546,16 +570,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.lblInfo.setText("Oh no!\nPlease select a user, you may need to login")
         
     def populateProblemTable(self):
+        global userFilter
         #populate problem list
         start = self.slider.getRange()[0]
         end = self.slider.getRange()[1] - 1
         problemList = problemClass.getGradeFilteredProblems(start, end)
+        problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
         self.tblProblems.setRowCount(len(problemList)-1)
-        self.tblProblems.setColumnCount(4)
+        self.tblProblems.setColumnCount(5)
         self.tblProblems.horizontalHeader().setVisible(True)
         self.tblProblems.setHorizontalHeaderLabels(problemList[0])
         for i in range(1,len(problemList),1):
-            for j in range(0,4,1):
+            for j in range(0,5,1):
                 self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(problemList[i][j]))
         #set headers and column widths
         header = self.tblProblems.horizontalHeader()       
@@ -563,6 +589,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
         text = "Showing problems between grades - " + const.GRADES[start] + " and " + const.GRADES[end]
         self.lblInfo.setText(text)
         
