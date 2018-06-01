@@ -71,7 +71,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         #Connect buttons to functions
         self.pbTestLEDs.clicked.connect(self.testLEDs)        
-        self.tblProblems.clicked.connect(self.lightProblem)
+        #self.tblProblems.clicked.connect(self.lightProblem)
         self.tblProblems.selectionModel().selectionChanged.connect(self.lightProblem)
         self.pbMirror.clicked.connect(self.mirrorProb)
         self.pbLogin.clicked.connect(self.login)
@@ -99,8 +99,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbDeleteRow.clicked.connect(self.deleteRow)
         
         #filter tab
-        self.tabWidget.currentChanged.connect(self.populateFilterTab)
+        #self.tabWidget.currentChanged.connect(self.populateFilterTab)
         self.pbFilterByUser.clicked.connect(self.filterByUser)
+        self.lbUserFilter.selectionModel().selectionChanged.connect(self.filterUserChange)
         
         #link hold buttons to the changeButtonColour function
         for num in range (1,const.TOTAL_LED_COUNT+1):
@@ -139,6 +140,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)
         
+        self.populateFilterTab()
+        
         #start timer that logs out inactive users
         self.start_timer()
         
@@ -153,25 +156,55 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         
-        
+    def filterUserChange(self):
+        global userFilter 
+        if userFilter != "":
+            rowN = self.lbUserFilter.selectedIndexes()[0].row()
+            user = self.lbUserFilter.item(rowN).text()
+            userFilter = user
+            text = "Filtering by user - " + user
+            self.lblUserFilter.setText(text)
+            self.lblInfo.setText(text)
+            self.populateProblemTable()
         
     def filterByUser(self):
         global userFilter
         print("fitlerbyuser")
-        try:
-            rowN = self.lbUsers.selectedIndexes()[0].row()
-            user = self.lbUsers.item(rowN).text()
-            userFilter = user
-        except:
+        if userFilter == "":
+            try:
+                rowN = self.lbUserFilter.selectedIndexes()[0].row()
+                user = self.lbUserFilter.item(rowN).text()
+                userFilter = user
+                self.pbFilterByUser.setStyleSheet("background-color: rgba(0, 128, 0 100%)")#green 
+                text = "Filtering by user - " + user
+                self.lblUserFilter.setText(text)
+                self.lblInfo.setText(text)                 
+            except:
+                userFilter = ""
+                self.pbFilterByUser.setStyleSheet("background-color: rgba(240, 240, 240 100%)")#gray
+                self.lblUserFilter.setText("Select a user before filtering")
+                self.lblInfo.setText("Not filtering by user")
+        else:
+            self.pbFilterByUser.setStyleSheet("background-color: rgba(240, 240, 240 100%)")#gray
+            self.lblUserFilter.setText("Not filtering by user")
+            self.lblInfo.setText("Not filtering by user")
             userFilter = ""
         self.populateProblemTable()
         print(userFilter)
         
     def populateFilterTab(self):
-        users = userClass.getUserNames()
-        self.lbUserFilter.clear()
-        if (len(users) > 0):
-            self.lbUserFilter.addItems(users)
+        try:
+            rowN = self.lbUserFilter.selectedIndexes()[0].row()
+            users = userClass.getUserNames()
+            self.lbUserFilter.clear()
+            if (len(users) > 0):
+                self.lbUserFilter.addItems(users)
+            self.lbUserFilter.setCurrentRow(rowN)
+        except:
+            users = userClass.getUserNames()
+            self.lbUserFilter.clear()
+            if (len(users) > 0):
+                self.lbUserFilter.addItems(users)            
         
     def deleteRow(self):
         model = self.tblEdit.model()
@@ -404,6 +437,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             QtWidgets.QMessageBox.warning(self, "Easy now!", text)
             self.lblInfo.setText(text)
             userClass.addNewUser([username, password,date])
+            self.populateFilterTab()
               
     def start_timer(self):
         #timer with 1 minute timeout
@@ -483,6 +517,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if (sliderFlag == 1):
             sliderFlag = 0
             self.populateProblemTable()
+            start = self.slider.getRange()[0]
+            end = self.slider.getRange()[1] - 1
+            text = "Showing problems between grades - " + const.GRADES[start] + " and " + const.GRADES[end]
+            self.lblInfo.setText(text)
                     
     def resetUserTimeIn(self,user):
         global usersLoggedIn
@@ -590,8 +628,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
-        text = "Showing problems between grades - " + const.GRADES[start] + " and " + const.GRADES[end]
-        self.lblInfo.setText(text)
+        #text = "Showing problems between grades - " + const.GRADES[start] + " and " + const.GRADES[end]
+        #self.lblInfo.setText(text)
         
     def resetAddProblemTab(self):
         print("reset")
@@ -966,7 +1004,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #get and present gradevotes
         gradeVotes = logClass.getGradeVotes(probName)
         if (len(gradeVotes) > 0):
-            print("grade votes",gradeVotes)
             maxGradeVotes = Counter(gradeVotes).most_common(1)[0][1]
             self.barGrade1.setRange(0,maxGradeVotes)
             self.barGrade2.setRange(0,maxGradeVotes)
@@ -1017,11 +1054,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #store previous problem name
         S2PProbName = probName
         #get index of selected problem in table
-        items = self.tblProblems.selectedIndexes()[0]
-        #get name of problem
-        probName = self.tblProblems.item((items.row()),0).text()        
-        #find problem in problemDB using problem name from selected row
-        rowProb = MyApp.find(problemsDB,probName)[0]
+        try:
+            #get index of selected problem in table
+            items = self.tblProblems.selectedIndexes()[0]
+            #get name of problem
+            probName = self.tblProblems.item((items.row()),0).text()        
+            #find problem in problemDB using problem name from selected row
+            rowProb = MyApp.find(problemsDB,probName)[0]
+        except:
+            rowProb = -1
         return rowProb
             
     def lightProblem(self):
@@ -1083,10 +1124,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             probHolds = mirror.getMirror(probHolds)
             finHolds = mirror.getMirror(finHolds)
             MyApp.lightLEDs(startHolds, probHolds, finHolds)
-            text = "Mirror displayed on board - " + probName 
-            self.lblInfo.setText(text)
+            #check we have a problem selected before lighting
+            if (self.getRowProb() != -1):
+                self.lightProblem()
+                text = "Mirror displayed on board - " + probName 
+                self.lblInfo.setText(text)
+            else:
+                self.lblInfo.setText("Select a problem before Mirroring")
         else:
-            self.lightProblem()
+            #check we have a problem selected before lighting
+            if (self.getRowProb() != -1):
+                self.lightProblem()
             
     def closeEvent(self, event):
         print("User has clicked the red x on the main window")

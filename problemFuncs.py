@@ -168,11 +168,11 @@ class problemClass:#funcs that access information in the problem file
 
 #example of the functions in the FileIO class in use
 #print(problemClass.getGradeFilteredProblems(4,4))
-problems = problemClass.getGradeFilteredProblems(4,4)
+#problems = problemClass.getGradeFilteredProblems(4,4)
 #print(problems)
-problems = problemClass.getStarFilteredProblems(problems, '***')
-problems = problemClass.getUserFilteredProblems(problems,"Robyn")
-print(problems)
+#problems = problemClass.getStarFilteredProblems(problems, '***')
+#problems = problemClass.getUserFilteredProblems(problems,"Robyn")
+#print(problems)
 
 #print(problems)
 #print(problemClass.getNotes(problems,1))
