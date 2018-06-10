@@ -133,7 +133,7 @@ class problemClass:#funcs that access information in the problem file
         problems = problemClass.readProblemFile()
         matches = []
         for grade in const.GRADES[start:end+1]:
-            matches += (problemClass.find(grade,problemClass.column(problems,1)))
+            matches += (problemClass.find(grade,problems))
         matches = problemClass.column(matches,0)
         #matches.sort()
         fitleredProblems = []
@@ -146,7 +146,7 @@ class problemClass:#funcs that access information in the problem file
         header = problems[0]
         del problems[0]
         matches = []
-        matches += (problemClass.find(user,problemClass.column(problems,4)))
+        matches += (problemClass.find(user,problems))
         matches = problemClass.column(matches,0)
         matches.sort()
         fitleredProblems = [header]
@@ -158,7 +158,7 @@ class problemClass:#funcs that access information in the problem file
         header = problems[0]
         del problems[0]
         matches = []
-        matches += (problemClass.find(stars,problemClass.column(problems,2)))
+        matches += (problemClass.find(stars,problems))
         matches = problemClass.column(matches,0)
         matches.sort()
         fitleredProblems = [header]

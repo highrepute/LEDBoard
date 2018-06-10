@@ -1123,10 +1123,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             startHolds = mirror.getMirror(startHolds)
             probHolds = mirror.getMirror(probHolds)
             finHolds = mirror.getMirror(finHolds)
-            MyApp.lightLEDs(startHolds, probHolds, finHolds)
             #check we have a problem selected before lighting
             if (self.getRowProb() != -1):
-                self.lightProblem()
+                MyApp.lightLEDs(startHolds, probHolds, finHolds)
                 text = "Mirror displayed on board - " + probName 
                 self.lblInfo.setText(text)
             else:
