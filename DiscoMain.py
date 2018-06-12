@@ -108,7 +108,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             label = getattr(self, 'pb{}'.format(num))
             label.clicked.connect(self.addHoldtoProb)
             #make them transparent???
-            label.setStyleSheet("background-color: rgba(240, 240, 240, 75%)")
+            label.setStyleSheet("background-color: rgba(240, 240, 240, 10%)")
             
         #init new problem globals
         newProbCounter = 0
@@ -302,7 +302,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if self.leAdminPassword.text() == "admin":#CHANGE THIS!!!
                 adminFlag = 1
                 self.leAdminPassword.clear()
-                self.lblInfo.setText("Logged In!\nLogged In. You may now edit the databassed. Be careful!")
+                #self.lblInfo.setText("Logged In!\nLogged In. You may now edit the databassed. Be careful!")
                 self.lblAdminState.setText("Logged In")
             else:
                 self.lblInfo.setText("Oh no!\nI'm sorry your password is incorrect")
@@ -380,8 +380,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             date = datetime.datetime.now().strftime("%Y-%m-%d")
             comments = self.tbLogComments.toPlainText().replace('\n', ' ')
             comments = comments.replace(',', '-')
-            grade = self.cbGrade.currentText()
-            stars = self.cbStars.currentText()
+            #get grade and stars - index of lookup table is value
+            grade = MyApp.find(const.GRADES,self.cbGrade.currentText())[0]
+            stars = MyApp.find(const.STARS,self.cbStars.currentText())[0]
             style = self.cbStyle.currentText()
             #create new log entry
             logProblem = [user,problem,grade,stars,date,comments,style]
@@ -428,6 +429,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         date = datetime.datetime.now().strftime("%Y-%m-%d")
         username = self.leAddUsername.text()
         password = self.leAddPassword.text()
+        realName = self.leAddRealName.text()
+        email = self.leAddEmail.text()
+        
         if (len(username) < 3):
             QtWidgets.QMessageBox.warning(self, "Easy now!", "Username must be at least 3 characters")
         elif (len(password) < 3):
@@ -436,7 +440,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             text = "New user " + username + " added, you may now login"
             QtWidgets.QMessageBox.warning(self, "Easy now!", text)
             self.lblInfo.setText(text)
-            userClass.addNewUser([username, password,date])
+            userClass.addNewUser([username,password,date,realName,email])
+            self.leAddUsername.clear()
+            self.leAddPassword.clear()
+            self.leAddRealName.clear()
+            self.leAddEmail.clear()
             self.populateFilterTab()
               
     def start_timer(self):
@@ -591,7 +599,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.tblLogbook.setHorizontalHeaderLabels(logbook[0])
                     for i in range(1,len(logbook),1):
                         for j in range(0,6,1):
-                            self.tblLogbook.setItem(i-1,j, QtWidgets.QTableWidgetItem(logbook[i][j]))
+                            #self.tblLogbook.setItem(i-1,j, QtWidgets.QTableWidgetItem(logbook[i][j]))
+                            if j == 1:#convert grade for display
+                                grade = const.GRADES[int(logbook[i][j])]
+                                self.tblLogbook.setItem(i-1,j, QtWidgets.QTableWidgetItem(grade))    
+                            elif j == 2:#convert stars for display
+                                star = const.STARS[int(logbook[i][j])]
+                                self.tblLogbook.setItem(i-1,j, QtWidgets.QTableWidgetItem(star))                    
+                            else:
+                                self.tblLogbook.setItem(i-1,j, QtWidgets.QTableWidgetItem(logbook[i][j]))                           
                     #set headers and column widths
                     header = self.tblLogbook.horizontalHeader()       
                     header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
@@ -620,7 +636,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblProblems.setHorizontalHeaderLabels(problemList[0])
         for i in range(1,len(problemList),1):
             for j in range(0,5,1):
-                self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(problemList[i][j]))
+                if j == 1:#convert grade for display
+                    grade = const.GRADES[int(problemList[i][j])]
+                    self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(grade))    
+                elif j == 2:#convert stars for display
+                    star = const.STARS[int(problemList[i][j])]
+                    self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(star))                    
+                else:
+                    self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(problemList[i][j]))
         #set headers and column widths
         header = self.tblProblems.horizontalHeader()       
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
@@ -632,7 +655,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #self.lblInfo.setText(text)
         
     def resetAddProblemTab(self):
-        print("reset")
+        #print("reset")
         global newProbCounter
         global newStartHolds
         global newProbHolds
@@ -640,7 +663,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #reset button colours            
         for num in range (1,const.TOTAL_LED_COUNT+1):
             label = getattr(self, 'pb{}'.format(num))
-            label.setStyleSheet("background-color: rgba(240, 240, 240, 75%)")#f0f0f0(240,240,240) #efebe7(239,235,231)
+            label.setStyleSheet("background-color: rgba(240, 240, 240, 10%)")#f0f0f0(240,240,240) #efebe7(239,235,231)
             font = label.font();
             font.setPointSize(12);
             label.setFont(font);
@@ -658,7 +681,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         undoCounter = 0
         
     def saveNewProb(self):
-        print('save')
+        #print('save')
         global newProbCounter
         global newProbHolds
         global newStartHolds
@@ -691,12 +714,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #finalise last hold in newProbHolds
             holdString = str(prevPb.objectName())
             newProbHolds.append(int(re.search(r'\d+', holdString).group()))
-            print('probHolds', newProbHolds)            
+            #print('probHolds', newProbHolds)            
             #append name, grade, stars & date
             probName = self.leProblemName.text()
             newProblem.append(probName)
-            newProblem.append(self.cbGrade_2.currentText())
-            newProblem.append(self.cbStars_2.currentText())
+            newProblem.append(MyApp.find(const.GRADES,self.cbGrade_2.currentText()))
+            newProblem.append(MyApp.find(const.STARS,self.cbStars_2.currentText()))
             now = datetime.datetime.now()
             newProblem.append(now.strftime("%Y-%m-%d"))        
             #append user
@@ -709,10 +732,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             newProblem.append(str(newStartHolds[0]))
             if (len(newStartHolds) == 2):
                 newProblem.append(str(newStartHolds[1]))
-                print("N start holds", 2)
+                #print("N start holds", 2)
             else:
                 newProblem.append('')
-                print("N start holds", 1)
+                #print("N start holds", 1)
             #append finish holds
             choice = QtWidgets.QMessageBox.question(self, 'Finish Holds',
                                                 "Two Finish holds?",
@@ -730,7 +753,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             newProblem.append(str(len(newProbHolds)))
             for hold in newProbHolds:
                 newProblem.append(str(hold))
-            print(newProblem)
+            #print(newProblem)
             #save to file
             problemClass.addNewProb(newProblem)
             self.resetAddProblemTab()
@@ -750,7 +773,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if (newProbCounter != 0):
              #QtWidgets.QMessageBox.warning(self, "Nothing to Undo", "There are no holds to Undo!")          
         #else:#hold to undo
-            prevPb.setStyleSheet("background-color: #f0f0f0")
+            prevPb.setStyleSheet("background-color: rgba(240, 240, 240, 10%)")
             self.setLEDbyButton(prevPb,"off")
             newProbCounter -= 1
             undoCounter = 1
@@ -796,17 +819,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if (colour != '#f0f0f0'): #is it NOT the default colour? #efebe7
             QtWidgets.QMessageBox.warning(self, "Hold Added", "To remove ho use the Undo button")      
         else:
-            print("new count", newProbCounter)
+            #print("new count", newProbCounter)
             if (newProbCounter == 0):
                 self.offLEDs()
-                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
+                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
                 self.setLEDbyButton(self.sender(),"red")
             elif (newProbCounter == 1):
-                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
+                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
                 self.setLEDbyButton(self.sender(),"red")
                 newStartHolds.append(self.getHoldNumberFromButton(prevPb))
-                print("start", newStartHolds)
-                prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 75%)")#green
+                #print("start", newStartHolds)
+                prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 50%)")#green
                 self.setLEDbyButton(prevPb,"green")
             elif (newProbCounter == 2):
                 choice = QtWidgets.QMessageBox.question(self, 'Start Holds',
@@ -814,26 +837,26 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                 if (choice == QtWidgets.QMessageBox.Yes):
                     #two start holds
-                    self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
+                    self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
                     self.setLEDbyButton(self.sender(),"red")
                     newStartHolds.append(self.getHoldNumberFromButton(prevPb))
-                    print("start", newStartHolds)
-                    prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 75%)")#green
+                    #print("start", newStartHolds)
+                    prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 50%)")#green
                     self.setLEDbyButton(prevPb,"green")
                 else:
                     #only one start hold
-                    self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
+                    self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
                     self.setLEDbyButton(self.sender(),"red")
                     newProbHolds.append(self.getHoldNumberFromButton(prevPb))
-                    prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 75%)")#blue
+                    prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 25%)")#blue
                     self.setLEDbyButton(prevPb,"blue")
             elif (newProbCounter >= 3):
                 #append hold to newProbHold array and change button and LED colours
-                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 75%)")#red
+                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
                 self.setLEDbyButton(self.sender(),"red")
                 newProbHolds.append(self.getHoldNumberFromButton(prevPb))
-                print('newProbHolds', newProbHolds)
-                prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 75%)")#blue
+                #print('newProbHolds', newProbHolds)
+                prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 25%)")#blue
                 self.setLEDbyButton(prevPb,"blue")
             newProbCounter += 1
             prevPb = self.sender()
@@ -951,24 +974,24 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def updateLogProblemDropdowns(self,rowProb):
         problemsDB = problemClass.readProblemFile()
         
-        grade = problemsDB[rowProb][1]
-        stars = problemsDB[rowProb][2]
+        grade = int(problemsDB[rowProb][1])
+        stars = int(problemsDB[rowProb][2])
         
-        index = self.cbStars.findText(stars, QtCore.Qt.MatchFixedString)
-        if index >= 0:
-            self.cbStars.setCurrentIndex(index)
+        #index = self.cbStars.findText(stars, QtCore.Qt.MatchFixedString)
+        if stars >= 0:
+            self.cbStars.setCurrentIndex(stars)
                     
-        index = self.cbGrade.findText(grade, QtCore.Qt.MatchFixedString)
-        if index >= 0:
-            self.cbGrade.setCurrentIndex(index)   
+        #index = self.cbGrade.findText(grade, QtCore.Qt.MatchFixedString)
+        if grade >= 0:
+            self.cbGrade.setCurrentIndex(grade)   
 
     
     def updateProbInfo(self,rowProb):
         problemsDB = problemClass.readProblemFile()
         
         probName = problemsDB[rowProb][0]
-        grade = problemsDB[rowProb][1]
-        stars = problemsDB[rowProb][2]
+        grade = const.GRADES[int(problemsDB[rowProb][1])]
+        stars = const.STARS[int(problemsDB[rowProb][2])]
         date = problemsDB[rowProb][3]
         setter = problemClass.getUser(rowProb)
         notes = problemClass.getNotes(rowProb)
@@ -978,10 +1001,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #get and present star votes
         starVotes = logClass.getStarVotes(probName)
         stars = []
-        stars.append(starVotes.count('***'))
-        stars.append(starVotes.count('**'))
-        stars.append(starVotes.count('*'))
-        stars.append(starVotes.count('-'))
+        stars.append(starVotes.count('3'))
+        stars.append(starVotes.count('2'))
+        stars.append(starVotes.count('1'))
+        stars.append(starVotes.count('0'))
         barRange = max(stars)
         if (barRange < 1):
             barRange = 1
@@ -989,10 +1012,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.barStar2.setRange(0,barRange)
         self.barStar1.setRange(0,barRange)
         self.barStar0.setRange(0,barRange)
-        self.barStar3.setValue(starVotes.count('***'))
-        self.barStar2.setValue(starVotes.count('**'))
-        self.barStar1.setValue(starVotes.count('*'))
-        self.barStar0.setValue(starVotes.count('-'))
+        self.barStar3.setValue(starVotes.count('3'))
+        self.barStar2.setValue(starVotes.count('2'))
+        self.barStar1.setValue(starVotes.count('1'))
+        self.barStar0.setValue(starVotes.count('0'))
         
         #reset grade bars to zero
         for num in range (1,7):
@@ -1017,7 +1040,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 label = getattr(self, 'lblBarGrade{}'.format(num))
                 bar = getattr(self, 'barGrade{}'.format(num))
                 num += 1
-                label.setText(grade)
+                label.setText(const.GRADES[int(grade)])
                 bar.setValue(count)
                 
         #get problem ascents
@@ -1036,7 +1059,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblAscents.setHorizontalHeaderLabels(ascents[0])
         for i in range(1,len(ascents),1):
             for j in range(0,6,1):
-                self.tblAscents.setItem(i-1,j, QtWidgets.QTableWidgetItem(ascents[i][j]))
+                    #self.tblAscents.setItem(i-1,j, QtWidgets.QTableWidgetItem(ascents[i][j]))
+                if j == 1:#convert grade for display
+                    grade = const.GRADES[int(ascents[i][j])]
+                    self.tblAscents.setItem(i-1,j, QtWidgets.QTableWidgetItem(grade))    
+                elif j == 2:#convert stars for display
+                    star = const.STARS[int(ascents[i][j])]
+                    self.tblAscents.setItem(i-1,j, QtWidgets.QTableWidgetItem(star))                    
+                else:
+                    self.tblAscents.setItem(i-1,j, QtWidgets.QTableWidgetItem(ascents[i][j]))                
         #set headers and column widths
         header = self.tblAscents.horizontalHeader()       
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)

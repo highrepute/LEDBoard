@@ -132,8 +132,8 @@ class problemClass:#funcs that access information in the problem file
     def getGradeFilteredProblems(start, end):
         problems = problemClass.readProblemFile()
         matches = []
-        for grade in const.GRADES[start:end+1]:
-            matches += (problemClass.find(grade,problems))
+        for grade in range(start,end+1):
+            matches += problemClass.find(str(grade),problemClass.column(problems,1))
         matches = problemClass.column(matches,0)
         #matches.sort()
         fitleredProblems = []
@@ -146,7 +146,7 @@ class problemClass:#funcs that access information in the problem file
         header = problems[0]
         del problems[0]
         matches = []
-        matches += (problemClass.find(user,problems))
+        matches += (problemClass.find(user,problemClass.column(problems,4)))
         matches = problemClass.column(matches,0)
         matches.sort()
         fitleredProblems = [header]
@@ -155,10 +155,11 @@ class problemClass:#funcs that access information in the problem file
         return fitleredProblems 
 
     def getStarFilteredProblems(problems,stars):
+        stars = problemClass.find(stars,const.STARS)[0][0]#return index of first match
         header = problems[0]
         del problems[0]
         matches = []
-        matches += (problemClass.find(stars,problems))
+        matches += problemClass.find(str(stars),problemClass.column(problems,2))
         matches = problemClass.column(matches,0)
         matches.sort()
         fitleredProblems = [header]
@@ -168,9 +169,9 @@ class problemClass:#funcs that access information in the problem file
 
 #example of the functions in the FileIO class in use
 #print(problemClass.getGradeFilteredProblems(4,4))
-#problems = problemClass.getGradeFilteredProblems(4,4)
+#problems = problemClass.getGradeFilteredProblems(0,6)
 #print(problems)
-#problems = problemClass.getStarFilteredProblems(problems, '***')
+#problems = problemClass.getStarFilteredProblems(problems, '*')
 #problems = problemClass.getUserFilteredProblems(problems,"Robyn")
 #print(problems)
 

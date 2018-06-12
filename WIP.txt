@@ -3,14 +3,7 @@ Priority 1
 Picture of board in background
 Executable
 	- make run on startup - google
-Filter problems
-	- inlcude/exclude my ascents
-	- just show my logged ascents
-	- grade (mirror slider in filter tab?) - Maybe?
-Users
-	- new user - email and real name fields
 Problem information
-	- Tidy how problem info is displayed - seperate into labels so can change bold etc
 	- Number of repeats - display in table to allow sorting by
 Remote desktop
 Appearance
