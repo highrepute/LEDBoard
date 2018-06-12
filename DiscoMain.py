@@ -110,6 +110,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #make them transparent???
             label.setStyleSheet("background-color: rgba(240, 240, 240, 10%)")
             
+        QDialog.setStyleSheet("background-color: rgba(0, 0, 0, 100%)")
+            
         #init new problem globals
         newProbCounter = 0
         newStartHolds = []

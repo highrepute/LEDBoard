@@ -33,7 +33,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -1104,9 +1104,9 @@
     <widget class="QPushButton" name="pbTestLEDs">
      <property name="geometry">
       <rect>
-       <x>1000</x>
+       <x>990</x>
        <y>490</y>
-       <width>121</width>
+       <width>131</width>
        <height>31</height>
       </rect>
      </property>
@@ -1122,9 +1122,9 @@
     <widget class="QPushButton" name="pbSequence">
      <property name="geometry">
       <rect>
-       <x>860</x>
+       <x>850</x>
        <y>490</y>
-       <width>121</width>
+       <width>131</width>
        <height>31</height>
       </rect>
      </property>
@@ -1140,9 +1140,9 @@
     <widget class="QPushButton" name="pbShowTwoProbs">
      <property name="geometry">
       <rect>
-       <x>1000</x>
+       <x>990</x>
        <y>440</y>
-       <width>121</width>
+       <width>131</width>
        <height>31</height>
       </rect>
      </property>
@@ -1158,9 +1158,9 @@
     <widget class="QPushButton" name="pbMirror">
      <property name="geometry">
       <rect>
-       <x>860</x>
+       <x>850</x>
        <y>440</y>
-       <width>121</width>
+       <width>131</width>
        <height>31</height>
       </rect>
      </property>
