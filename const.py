@@ -1,6 +1,6 @@
 
 class const:
-    LINUX = 0
+    LINUX = 1
     TOTAL_LED_COUNT = 126
     LED_VALUE = 50
     DEFAULTMSG = "Welcome to the Board of High Repute"
