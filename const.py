@@ -6,5 +6,3 @@ class const:
     DEFAULTMSG = "Welcome to the Board of High Repute"
     GRADES = ['6a', '6a+', '6b', '6b+', '6c', '6c+', '7a']
     STARS = ['-', '*', '**', '***']
-    
-#print(const.GRADES[0:3+1])

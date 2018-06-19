@@ -54,13 +54,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global adminFlag
         global userFilter
         
-        #global prevPb
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
-        #LED Board widgets
         self.setupUi(self)
         
-        #init slider
         self.slider = QRangeSlider(self)
         self.slider.setMax(8)
         self.slider.setMin(0)
@@ -70,8 +67,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.slider.startValueChanged.connect(self.sliderChange)    
         
         #Connect buttons to functions
-        self.pbTestLEDs.clicked.connect(self.testLEDs)        
-        #self.tblProblems.clicked.connect(self.lightProblem)
+        self.pbTestLEDs.clicked.connect(self.testLEDs)       
         self.tblProblems.selectionModel().selectionChanged.connect(self.lightProblem)
         self.pbMirror.clicked.connect(self.mirrorProb)
         self.pbLogin.clicked.connect(self.login)
@@ -99,7 +95,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbDeleteRow.clicked.connect(self.deleteRow)
         
         #filter tab
-        #self.tabWidget.currentChanged.connect(self.populateFilterTab)
         self.pbFilterByUser.clicked.connect(self.filterByUser)
         self.lbUserFilter.selectionModel().selectionChanged.connect(self.filterUserChange)
         
@@ -109,8 +104,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             label.clicked.connect(self.addHoldtoProb)
             #make them transparent???
             label.setStyleSheet("background-color: rgba(240, 240, 240, 10%)")
-            
-        QDialog.setStyleSheet("background-color: rgba(0, 0, 0, 100%)")
             
         #init new problem globals
         newProbCounter = 0
@@ -140,14 +133,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         userFilter = ""            
                 
         self.populateProblemTable()
-        self.tabWidget.setCurrentIndex(0)
-        
+        self.tabWidget.setCurrentIndex(0)#set startup tab      
         self.populateFilterTab()
         
-        #start timer that logs out inactive users
         self.start_timer()
         
-        #self.showFullScreen()
+        self.showFullScreen()
         #self.LEDBoard.setStyleSheet("background-color: rgba(255, 0, 0, 0%)")
         
         #default message
@@ -221,7 +212,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if adminFlag > 1:
             model = self.tblEdit.model()
             
-            #data=[]
             #need to add headers to the data - get from original data
             if adminFlag == 2:
                 data = [userClass.readUsersFile()[0]]
@@ -283,13 +273,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.tblEdit.setItem(i-1,j, item)
                 except:
                     self.tblEdit.setItem(i-1,j, QtWidgets.QTableWidgetItem(''))
-                    
-        #set column widths - difficult to do well here but doesn't matter so much
-        #header = self.tblEdit.horizontalHeader()                     
-        #if maxCols > 0:
-        #    header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
-        #if maxCols > 4:
-        #    header.setSectionResizeMode(5, QtWidgets.QHeaderView.Stretch)
     
     def adminLogout(self):
         global adminFlag
@@ -304,7 +287,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if self.leAdminPassword.text() == "admin":#CHANGE THIS!!!
                 adminFlag = 1
                 self.leAdminPassword.clear()
-                #self.lblInfo.setText("Logged In!\nLogged In. You may now edit the databassed. Be careful!")
                 self.lblAdminState.setText("Logged In")
             else:
                 self.lblInfo.setText("Oh no!\nI'm sorry your password is incorrect")
@@ -450,11 +432,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.populateFilterTab()
               
     def start_timer(self):
-        #timer with 1 minute timeout
+        #timer with 1 minute timeout - auto logout
         self.timer = QTimer()
         self.timer.timeout.connect(lambda: self.autoLogout())
         self.timer.start(60000)#change to 1 minute = 60000
-        #timer with 250ms timeout
+        #timer with 250ms timeout - blinking LEDs in show2problem mode and showSequence
         self.timerQuick = QTimer()
         self.timerQuick.timeout.connect(lambda: self.timerQuickISR())
         self.timerQuick.start(400)     
@@ -485,7 +467,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global S2PProbMatches
         global S2PFinMatches 
         global sliderFlag
-        #print("quick timer", showSequenceFlag, showSequenceCounter, shownSequenceCount)
+        
         if (showSequenceFlag == 1):
             #get index of selected problem in table
             items = self.tblProblems.selectedIndexes()[0]
@@ -496,21 +478,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if (shownSequenceCount < 10):
                 showSequenceCounter = showSequenceCounter + 1
                 if const.LINUX == 1:
-                    for i in range(0,const.TOTAL_LED_COUNT,1):
+                    for i in range(0,const.TOTAL_LED_COUNT,1):#turn all LED off
                         strip.setPixelColorRGB(i, 0, 0, 0)
-                    for i in range(0,showSequenceCounter,1):
-                        #print("i",i)
+                    for i in range(0,showSequenceCounter,1):#figure out where in sequence we are and light next LED
                         if (i < len(startHolds)):
                             hold = startHolds[i]
-                            #print(hold)
                             strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)
                         elif (i < (len(startHolds)+len(probHolds))):
                             hold = probHolds[i-len(startHolds)]
-                            #print(hold)
                             strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)
                         elif (i < (len(startHolds)+len(probHolds)+len(finHolds))):
                             hold = finHolds[i-len(startHolds)-len(probHolds)]
-                            #print(hold)
                             strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)                       
                     strip.show()
                     if (i == (len(startHolds)+len(probHolds)+len(finHolds))):
@@ -532,6 +510,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             text = "Showing problems between grades - " + const.GRADES[start] + " and " + const.GRADES[end]
             self.lblInfo.setText(text)
                     
+    #called when user does something - to stop auto logout
     def resetUserTimeIn(self,user):
         global usersLoggedIn
         index = MyApp.find(usersLoggedIn,user)[0]
@@ -565,10 +544,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         usersDB = userClass.readUsersFile()
         login = userClass.checkPassword(usersDB, self.leUsername.text(), self.lePassword.text())
         if (login == -2):
-            #QtWidgets.QMessageBox.warning(self, "Oh no!", "I'm sorry this Username is unknown!")
             self.lblInfo.setText("Oh no!\nI'm sorry username not recognised")
         elif (login == -1):
-            #QtWidgets.QMessageBox.warning(self, "Oh no!", "I'm sorry your password is incorrect!")
             self.lblInfo.setText("Oh no!\nI'm sorry your password is incorrect")
         elif (login == 0):
             username = [self.leUsername.text()]
@@ -583,7 +560,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.leUsername.clear()
                 self.lePassword.clear()
             else:
-                #QtWidgets.QMessageBox.warning(self, "Oh no!", "You're already logged in!!")
                 self.lblInfo.setText("Oh no!\nYou're already logged in!!")
                 
     def populateLogbook(self):
@@ -601,7 +577,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.tblLogbook.setHorizontalHeaderLabels(logbook[0])
                     for i in range(1,len(logbook),1):
                         for j in range(0,6,1):
-                            #self.tblLogbook.setItem(i-1,j, QtWidgets.QTableWidgetItem(logbook[i][j]))
                             if j == 1:#convert grade for display
                                 grade = const.GRADES[int(logbook[i][j])]
                                 self.tblLogbook.setItem(i-1,j, QtWidgets.QTableWidgetItem(grade))    
@@ -653,11 +628,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
-        #text = "Showing problems between grades - " + const.GRADES[start] + " and " + const.GRADES[end]
-        #self.lblInfo.setText(text)
         
     def resetAddProblemTab(self):
-        #print("reset")
         global newProbCounter
         global newStartHolds
         global newProbHolds
@@ -716,7 +688,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #finalise last hold in newProbHolds
             holdString = str(prevPb.objectName())
             newProbHolds.append(int(re.search(r'\d+', holdString).group()))
-            #print('probHolds', newProbHolds)            
             #append name, grade, stars & date
             probName = self.leProblemName.text()
             newProblem.append(probName)
@@ -724,9 +695,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             newProblem.append(MyApp.find(const.STARS,self.cbStars_2.currentText()))
             now = datetime.datetime.now()
             newProblem.append(now.strftime("%Y-%m-%d"))        
-            #append user
-            newProblem.append(user)            
-            #append comments
+            #append user & comment
+            newProblem.append(user)   
             comments = self.tbComments.toPlainText().replace('\n', ' ')
             comments = comments.replace(',', '-')
             newProblem.append(comments)
@@ -734,10 +704,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             newProblem.append(str(newStartHolds[0]))
             if (len(newStartHolds) == 2):
                 newProblem.append(str(newStartHolds[1]))
-                #print("N start holds", 2)
             else:
                 newProblem.append('')
-                #print("N start holds", 1)
             #append finish holds
             choice = QtWidgets.QMessageBox.question(self, 'Finish Holds',
                                                 "Two Finish holds?",
@@ -755,7 +723,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             newProblem.append(str(len(newProbHolds)))
             for hold in newProbHolds:
                 newProblem.append(str(hold))
-            #print(newProblem)
             #save to file
             problemClass.addNewProb(newProblem)
             self.resetAddProblemTab()
@@ -788,6 +755,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 prevPb = getattr(self, 'pb{}'.format(newStartHolds[-1]))
                 del(newStartHolds[-1])
         
+    #extracts the number from the button pressed and uses it to light the correct LED
     def setLEDbyButton(self,button,colour):
         holdNumber = self.getHoldNumberFromButton(button)
         print("hold Number -", holdNumber, "colour -", colour)
@@ -819,9 +787,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #first check if button already clicked by loading colour
         colour = self.sender().palette().button().color().name()
         if (colour != '#f0f0f0'): #is it NOT the default colour? #efebe7
-            QtWidgets.QMessageBox.warning(self, "Hold Added", "To remove ho use the Undo button")      
+            QtWidgets.QMessageBox.warning(self, "Hold Added", "To remove hold use the Undo button")      
         else:
-            #print("new count", newProbCounter)
             if (newProbCounter == 0):
                 self.offLEDs()
                 self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
@@ -829,8 +796,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             elif (newProbCounter == 1):
                 self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
                 self.setLEDbyButton(self.sender(),"red")
+                #when a button is pressed we save the previous button to the new problem and change colour of previous button
                 newStartHolds.append(self.getHoldNumberFromButton(prevPb))
-                #print("start", newStartHolds)
                 prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 50%)")#green
                 self.setLEDbyButton(prevPb,"green")
             elif (newProbCounter == 2):
@@ -857,12 +824,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
                 self.setLEDbyButton(self.sender(),"red")
                 newProbHolds.append(self.getHoldNumberFromButton(prevPb))
-                #print('newProbHolds', newProbHolds)
                 prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 25%)")#blue
                 self.setLEDbyButton(prevPb,"blue")
             newProbCounter += 1
             prevPb = self.sender()
-        
+    
+    #this is for the rainbow effect for testLEDs    
     def wheel(pos):
         """Generate rainbow colors across 0-255 positions."""
         if pos < 85:
@@ -881,12 +848,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         text = "Test LEDs button pressed\nAll LEDs lit"
         self.lblInfo.setText(text)
-
         showSequenceFlag = 0     
-        
         if showTwoProbsFlag == 1:
-            self.showTwoProbs()
-        
+            self.showTwoProbs()     
         if (LEDState == 0):
             LEDState = 1
             if const.LINUX == 1:
@@ -899,7 +863,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             LEDState = 0
             self.offLEDs()
-            
+    
+    #turn all LEDs off        
     def offLEDs(self):
         if const.LINUX == 1:
             for i in range(0,const.TOTAL_LED_COUNT,1):
@@ -938,7 +903,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             for hold in finHolds2:
                 strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0,const.LED_VALUE )#pink
             strip.show()
-            
+    
+    #used in show two prob mode to toggle colour of an LED that is on both problems
     def toggleLEDs(startHolds, probHolds, finHolds):
         global toggleLEDFlag
         
@@ -962,7 +928,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 for hold in finHolds:
                     strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0,const.LED_VALUE )#pink
             strip.show()
-        
+    
+    #fine item elem in list l    
     def find(l, elem):
         for row, i in enumerate(l):
             try:
@@ -973,20 +940,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             return row, column
         return [-1,-1]
     
+    #checks the grade and stars of the selected problem and updates the log problem dropdowns
     def updateLogProblemDropdowns(self,rowProb):
         problemsDB = problemClass.readProblemFile()
-        
         grade = int(problemsDB[rowProb][1])
         stars = int(problemsDB[rowProb][2])
-        
-        #index = self.cbStars.findText(stars, QtCore.Qt.MatchFixedString)
         if stars >= 0:
             self.cbStars.setCurrentIndex(stars)
-                    
-        #index = self.cbGrade.findText(grade, QtCore.Qt.MatchFixedString)
         if grade >= 0:
             self.cbGrade.setCurrentIndex(grade)   
-
     
     def updateProbInfo(self,rowProb):
         problemsDB = problemClass.readProblemFile()
@@ -1045,16 +1007,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 label.setText(const.GRADES[int(grade)])
                 bar.setValue(count)
                 
-        #get problem ascents
+        #get problem ascents & display
         ascents = logClass.getProblemAscents(probName)
-        #display in a table
         self.populateAscents(ascents)
         
-        #display info
+        #display problem info
         self.tbProblemInfo.setText(infoText)
-        
-    def populateAscents(self, ascents):
-        
+ 
+    #populate table of ascents       
+    def populateAscents(self, ascents):       
         self.tblAscents.setRowCount(len(ascents)-1)
         self.tblAscents.setColumnCount(6)
         self.tblAscents.horizontalHeader().setVisible(True)

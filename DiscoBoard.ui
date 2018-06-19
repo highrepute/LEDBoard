@@ -18,6 +18,9 @@
   <property name="windowTitle">
    <string>LED Board</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
