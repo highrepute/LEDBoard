@@ -105,6 +105,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #make them transparent???
             label.setStyleSheet("background-color: rgba(240, 240, 240, 10%)")
             
+            
+        #QDialog.setStyleSheet("background-color: rgba(0, 0, 0, 100%)")
+            
         #init new problem globals
         newProbCounter = 0
         newStartHolds = []
@@ -140,6 +143,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         self.showFullScreen()
         #self.LEDBoard.setStyleSheet("background-color: rgba(255, 0, 0, 0%)")
+        self.frame_6.setStyleSheet('background-image: url("20180411_210921.jpg")')
         
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
