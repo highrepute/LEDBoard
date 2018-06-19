@@ -103,7 +103,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             label = getattr(self, 'pb{}'.format(num))
             label.clicked.connect(self.addHoldtoProb)
             #make them transparent???
-            label.setStyleSheet("background-color: rgba(240, 240, 240, 10%)")
+            label.setStyleSheet("background-color: rgba(240, 240, 240, 25%)")
             
             
         #QDialog.setStyleSheet("background-color: rgba(0, 0, 0, 100%)")
@@ -141,9 +141,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         self.start_timer()
         
-        self.showFullScreen()
-        #self.LEDBoard.setStyleSheet("background-color: rgba(255, 0, 0, 0%)")
-        self.frame_6.setStyleSheet('background-image: url("20180411_210921.jpg")')
+        #dispaly full screen and set background colour (behind tabs)
+        #self.showFullScreen()
+        #self.LEDBoard.setStyleSheet("background-color: rgba(255, 0, 0, 0%)")#todo - doesn't work!
+        
+        #set background image of add problems frame
+        self.frame_6.setObjectName("Frame_6");
+        self.frame_6.setStyleSheet('QWidget#Frame_6 { background-image: url("20180411_210921_2.jpg")}')
         
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
@@ -641,7 +645,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #reset button colours            
         for num in range (1,const.TOTAL_LED_COUNT+1):
             label = getattr(self, 'pb{}'.format(num))
-            label.setStyleSheet("background-color: rgba(240, 240, 240, 10%)")#f0f0f0(240,240,240) #efebe7(239,235,231)
+            label.setStyleSheet("background-color: rgba(240, 240, 240, 25%)")#f0f0f0(240,240,240) #efebe7(239,235,231)
             font = label.font();
             font.setPointSize(12);
             label.setFont(font);
@@ -746,7 +750,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if (newProbCounter != 0):
              #QtWidgets.QMessageBox.warning(self, "Nothing to Undo", "There are no holds to Undo!")          
         #else:#hold to undo
-            prevPb.setStyleSheet("background-color: rgba(240, 240, 240, 10%)")
+            prevPb.setStyleSheet("background-color: rgba(240, 240, 240, 25%)")
             self.setLEDbyButton(prevPb,"off")
             newProbCounter -= 1
             undoCounter = 1
