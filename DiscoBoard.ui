@@ -2969,6 +2969,9 @@
       <property name="text">
        <string>120</string>
       </property>
+      <property name="autoDefault">
+       <bool>true</bool>
+      </property>
      </widget>
      <widget class="QPushButton" name="pb32">
       <property name="geometry">
@@ -3128,154 +3131,11 @@
        <string>61</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_18">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>781</width>
-        <height>761</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="pixmap">
-       <pixmap>20180411_210921_2.jpg</pixmap>
-      </property>
-     </widget>
-     <zorder>label_18</zorder>
-     <zorder>pb98</zorder>
-     <zorder>pb31</zorder>
-     <zorder>pb34</zorder>
-     <zorder>pb78</zorder>
-     <zorder>pb109</zorder>
-     <zorder>pb77</zorder>
-     <zorder>pb19</zorder>
-     <zorder>pb55</zorder>
-     <zorder>pb118</zorder>
-     <zorder>pb24</zorder>
-     <zorder>pb106</zorder>
-     <zorder>pb121</zorder>
-     <zorder>pb126</zorder>
-     <zorder>pb113</zorder>
-     <zorder>pb29</zorder>
-     <zorder>pb51</zorder>
-     <zorder>pb9</zorder>
-     <zorder>pb84</zorder>
-     <zorder>pb124</zorder>
-     <zorder>pb87</zorder>
-     <zorder>pb110</zorder>
-     <zorder>pb108</zorder>
-     <zorder>pb22</zorder>
-     <zorder>pb88</zorder>
-     <zorder>pb4</zorder>
-     <zorder>pb13</zorder>
-     <zorder>pb125</zorder>
-     <zorder>pb85</zorder>
-     <zorder>pb35</zorder>
-     <zorder>pb21</zorder>
-     <zorder>pb63</zorder>
-     <zorder>pb74</zorder>
-     <zorder>pb122</zorder>
-     <zorder>pb58</zorder>
-     <zorder>pb14</zorder>
-     <zorder>pb16</zorder>
-     <zorder>pb100</zorder>
-     <zorder>pb23</zorder>
-     <zorder>pb52</zorder>
-     <zorder>pb44</zorder>
-     <zorder>pb5</zorder>
-     <zorder>pb76</zorder>
-     <zorder>pb95</zorder>
-     <zorder>pb15</zorder>
-     <zorder>pb75</zorder>
-     <zorder>pb119</zorder>
-     <zorder>pb43</zorder>
-     <zorder>pb25</zorder>
-     <zorder>pb48</zorder>
-     <zorder>pb54</zorder>
-     <zorder>pb69</zorder>
-     <zorder>pb117</zorder>
-     <zorder>pb20</zorder>
-     <zorder>pb97</zorder>
-     <zorder>pb68</zorder>
-     <zorder>pb46</zorder>
-     <zorder>pb56</zorder>
-     <zorder>pb79</zorder>
-     <zorder>pb26</zorder>
-     <zorder>pb60</zorder>
-     <zorder>pb11</zorder>
-     <zorder>pb42</zorder>
-     <zorder>pb92</zorder>
-     <zorder>pb114</zorder>
-     <zorder>pb71</zorder>
-     <zorder>pb65</zorder>
-     <zorder>pb30</zorder>
-     <zorder>pb37</zorder>
-     <zorder>pb38</zorder>
-     <zorder>pb116</zorder>
-     <zorder>pb59</zorder>
-     <zorder>pb81</zorder>
-     <zorder>pb66</zorder>
-     <zorder>pb67</zorder>
-     <zorder>pb33</zorder>
-     <zorder>pb1</zorder>
-     <zorder>pb2</zorder>
-     <zorder>pb27</zorder>
-     <zorder>pb104</zorder>
-     <zorder>pb103</zorder>
-     <zorder>pb8</zorder>
-     <zorder>pb105</zorder>
-     <zorder>pb96</zorder>
-     <zorder>pb17</zorder>
-     <zorder>pb47</zorder>
-     <zorder>pb102</zorder>
-     <zorder>pb123</zorder>
-     <zorder>pb6</zorder>
-     <zorder>pb91</zorder>
-     <zorder>pb93</zorder>
-     <zorder>pb39</zorder>
-     <zorder>pb80</zorder>
-     <zorder>pb94</zorder>
-     <zorder>pb3</zorder>
-     <zorder>pb112</zorder>
-     <zorder>pb49</zorder>
-     <zorder>pb115</zorder>
-     <zorder>pb7</zorder>
-     <zorder>pb83</zorder>
-     <zorder>pb45</zorder>
-     <zorder>pb28</zorder>
-     <zorder>pb90</zorder>
-     <zorder>pb82</zorder>
-     <zorder>pb64</zorder>
-     <zorder>pb12</zorder>
-     <zorder>pb73</zorder>
-     <zorder>pb107</zorder>
-     <zorder>pb53</zorder>
-     <zorder>pb72</zorder>
-     <zorder>pb50</zorder>
-     <zorder>pb111</zorder>
-     <zorder>pb18</zorder>
-     <zorder>pb101</zorder>
-     <zorder>pb62</zorder>
-     <zorder>pb120</zorder>
-     <zorder>pb32</zorder>
-     <zorder>pb99</zorder>
-     <zorder>pb89</zorder>
-     <zorder>pb41</zorder>
-     <zorder>pb86</zorder>
-     <zorder>pb40</zorder>
-     <zorder>pb70</zorder>
-     <zorder>pb36</zorder>
-     <zorder>pb10</zorder>
-     <zorder>pb57</zorder>
-     <zorder>pb61</zorder>
     </widget>
+    <zorder>frame_6</zorder>
     <zorder>layoutWidget</zorder>
     <zorder>pbUndo</zorder>
     <zorder>pbDiscard</zorder>
-    <zorder>frame_6</zorder>
    </widget>
    <widget class="QWidget" name="tab_3">
     <attribute name="title">
@@ -3481,7 +3341,7 @@
       <bool>false</bool>
      </property>
      <property name="sortingEnabled">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="rowCount">
       <number>10</number>

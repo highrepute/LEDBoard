@@ -114,7 +114,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             label.clicked.connect(self.addHoldtoProb)
             #make them transparent???
             label.setStyleSheet("background-color: rgba(240, 240, 240, 25%)")
-            
+        self.pbMirror.setStyleSheet("background-color: rgba(240, 240, 240, 25%)")    
             
         #QDialog.setStyleSheet("background-color: rgba(0, 0, 0, 100%)")
             
@@ -244,18 +244,24 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             elif adminFlag == 4:
                 data = [problemClass.readProblemFile()[0]]
             #get the data from the table
-            for row in range(model.rowCount()-1):
+            for row in range(model.rowCount()):
               data.append([])
               for column in range(model.columnCount()):
-                index = model.index(row+1, column)
-                data[row+1].append(str(model.data(index)))  
+                index = model.index(row, column)
+                data[row+1].append(str(model.data(index)))
             #save the data to the correct file
             if adminFlag == 2:
                 userClass.saveUsersFile(data)
+                self.lblAdminState.setText("Saved users database")
             elif adminFlag == 3:
                 logClass.saveLogFile(data)
+                self.lblAdminState.setText("Saved logbook database")
             elif adminFlag == 4:
                 problemClass.saveProblemFile(data)
+                self.lblAdminState.setText("Saved problems database")
+            #set to logged in but no database loaded
+            adminFlag = 1
+            self.tblEdit.clear()
                 
     def editProblems(self):
         global adminFlag
@@ -816,8 +822,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global newProbHolds
         global newStartHolds
         global undoCounter
+        global mirrorFlag
+        global showTwoProbsFlag
         
         undoCounter = 0
+        self.stopShowSequence()              
+        mirrorFlag = 0
+        if showTwoProbsFlag == 1:
+            self.showTwoProbs()
         
         #first check if button already clicked by loading colour
         colour = self.sender().palette().button().color().name()
@@ -903,7 +915,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if const.LINUX == 1:
             for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
-                strip.show()
+            strip.show()
             
     def lightLEDs(startHolds, probHolds, finHolds):
         if const.LINUX == 1:
@@ -945,33 +957,33 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if toggleLEDFlag == 0:
                 toggleLEDFlag = 1
                 #print("toggle 0")
+                for hold in startHolds2:
+                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
+                for hold in probHolds2:
+                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
+                for hold in finHolds2:
+                    strip.setPixelColorRGB(hold-1, 0, 0, 0)                
                 for hold in startHolds:
                     strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)#blue
                 for hold in probHolds:
                     strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#green
                 for hold in finHolds:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)#red
-                for hold in startHolds2:
-                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
-                for hold in probHolds2:
-                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
-                for hold in finHolds2:
-                    strip.setPixelColorRGB(hold-1, 0, 0, 0)               
+                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)#red                              
             elif toggleLEDFlag == 1:
                 toggleLEDFlag = 0
                 #print("toggle 1")
-                for hold in startHolds2:
-                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, const.LED_VALUE)#yellow
-                for hold in probHolds2:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE,0)#teal
-                for hold in finHolds2:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0,const.LED_VALUE )#pink
                 for hold in startHolds:
                     strip.setPixelColorRGB(hold-1, 0, 0, 0)
                 for hold in probHolds:
                     strip.setPixelColorRGB(hold-1, 0, 0, 0)
                 for hold in finHolds:
-                    strip.setPixelColorRGB(hold-1, 0, 0, 0)                     
+                    strip.setPixelColorRGB(hold-1, 0, 0, 0)                
+                for hold in startHolds2:
+                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, const.LED_VALUE)#yellow
+                for hold in probHolds2:
+                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE,0)#teal
+                for hold in finHolds2:
+                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0,const.LED_VALUE )#pink                     
             strip.show()
     
     #find item elem in list l    
