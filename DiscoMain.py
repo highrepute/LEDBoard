@@ -44,6 +44,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global S2PStartMatches        
         global S2PProbMatches
         global S2PFinMatches
+        global S2P2StartMatches        
+        global S2P2ProbMatches
+        global S2P2FinMatches        
         global toggleLEDFlag
         global startHolds
         global probHolds
@@ -77,11 +80,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbSequence.clicked.connect(self.showSequence)
         self.pbShowTwoProbs.clicked.connect(self.showTwoProbs)
         
-        #new problem widgiets
-        self.pbDiscard.clicked.connect(self.resetAddProblemTab)
-        self.pbSave.clicked.connect(self.saveNewProb)
-        self.pbUndo.clicked.connect(self.undo)
-        
         #Add user tab
         self.pbAddNewUsers.clicked.connect(self.addNewUser)
         
@@ -91,12 +89,24 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbEditLogs.clicked.connect(self.editLogs)
         self.pbEditProblems.clicked.connect(self.editProblems)
         self.pbEditSave.clicked.connect(self.editSave)
-        self.tabWidget.currentChanged.connect(self.adminLogout)
         self.pbDeleteRow.clicked.connect(self.deleteRow)
         
         #filter tab
         self.pbFilterByUser.clicked.connect(self.filterByUser)
         self.lbUserFilter.selectionModel().selectionChanged.connect(self.filterUserChange)
+        
+        #changing tabs
+        self.tabWidget.currentChanged.connect(self.stopShowSequence)
+        self.tabWidget.currentChanged.connect(self.adminLogout)
+        
+        #Add problem tab
+        self.pbDiscard.clicked.connect(self.resetAddProblemTab)
+        self.pbSave.clicked.connect(self.saveNewProb)
+        self.pbUndo.clicked.connect(self.undo)
+        
+        #set background image of add problems frame
+        self.frame_6.setObjectName("Frame_6");
+        self.frame_6.setStyleSheet('QWidget#Frame_6 { background-image: url("20180411_210921_2.jpg")}')
         
         #link hold buttons to the changeButtonColour function
         for num in range (1,const.TOTAL_LED_COUNT+1):
@@ -129,6 +139,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         S2PStartMatches = []    
         S2PProbMatches = []
         S2PFinMatches = []
+        S2P2StartMatches = []      
+        S2P2ProbMatches = [] 
+        S2P2FinMatches = []       
         S2PProbName = ""
         probName = ""
         sliderFlag = 0
@@ -145,10 +158,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #self.showFullScreen()
         #self.LEDBoard.setStyleSheet("background-color: rgba(255, 0, 0, 0%)")#todo - doesn't work!
         
-        #set background image of add problems frame
-        self.frame_6.setObjectName("Frame_6");
-        self.frame_6.setStyleSheet('QWidget#Frame_6 { background-image: url("20180411_210921_2.jpg")}')
-        
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
         
@@ -156,6 +165,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        
+    def stopShowSequence(self):
+        global showSequenceFlag
+        if showSequenceFlag == 1:
+            showSequenceFlag = 0
+            text = "Show sequence stopped"
+            self.lblInfo.setText(text)
         
     def filterUserChange(self):
         global userFilter 
@@ -323,6 +339,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global S2PStartMatches        
         global S2PProbMatches
         global S2PFinMatches
+        global S2P2StartMatches        
+        global S2P2ProbMatches
+        global S2P2FinMatches        
         print("show two probs")
         
         if showTwoProbsFlag == 0:
@@ -332,11 +351,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #change button colour to show "two prob" mode is active
             self.pbShowTwoProbs.setStyleSheet("background-color: rgba(0, 128, 0 100%)")#green
             #get holds for both problems
-            MyApp.lightTwoLEDs(startHolds, probHolds, finHolds, startHoldsS2P, probHoldsS2P, finHoldsS2P)
+            self.lightTwoLEDs(startHolds, probHolds, finHolds, startHoldsS2P, probHoldsS2P, finHoldsS2P)
+            print("start ",startHolds, startHoldsS2P, "prob ",probHoldsS2P, probHolds, "fin ",finHoldsS2P, finHolds)
             #figure out any holds that are on both problems
-            S2PStartMatches = list(set(startHolds) & set(startHoldsS2P))     
-            S2PProbMatches = list(set(probHolds) & set(probHoldsS2P))  
-            S2PFinMatches = list(set(finHolds) & set(finHoldsS2P))  
+            S2PStartMatches = list(set(startHolds) & set(startHoldsS2P+probHoldsS2P+finHoldsS2P))     
+            S2PProbMatches = list(set(probHolds) & set(startHoldsS2P+probHoldsS2P+finHoldsS2P))  
+            S2PFinMatches = list(set(finHolds) & set(startHoldsS2P+probHoldsS2P+finHoldsS2P)) 
+            S2P2StartMatches = list(set(startHoldsS2P) & set(startHolds+probHolds+finHolds))     
+            S2P2ProbMatches = list(set(probHoldsS2P) & set(startHolds+probHolds+finHolds))  
+            S2P2FinMatches = list(set(finHoldsS2P) & set(startHolds+probHolds+finHolds))            
+            print("matches ", S2PStartMatches, S2PProbMatches, S2PFinMatches, S2P2StartMatches, S2P2ProbMatches, S2P2FinMatches)
         else:
             #turn off show two problem mode
             showTwoProbsFlag = 0
@@ -474,6 +498,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global S2PStartMatches        
         global S2PProbMatches
         global S2PFinMatches 
+        global S2PStartMatches        
+        global S2PProbMatches
+        global S2PFinMatches        
         global sliderFlag
         
         if (showSequenceFlag == 1):
@@ -509,7 +536,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 showSequenceCounter = 0
                 self.lblInfo.setText(const.DEFAULTMSG)
         if (showTwoProbsFlag == 1):
-            MyApp.toggleLEDs(S2PStartMatches, S2PProbMatches, S2PFinMatches)
+            MyApp.toggleLEDs(S2PStartMatches, S2PProbMatches, S2PFinMatches, S2P2StartMatches, S2P2ProbMatches, S2P2FinMatches)
         if (sliderFlag == 1):
             sliderFlag = 0
             self.populateProblemTable()
@@ -850,13 +877,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             return Color(0, pos * 3, 255 - pos * 3)
     
     def testLEDs(self):
-        global showSequenceFlag
         global LEDState
         global showTwoProbsFlag
         
         text = "Test LEDs button pressed\nAll LEDs lit"
         self.lblInfo.setText(text)
-        showSequenceFlag = 0     
+        self.stopShowSequence()
         if showTwoProbsFlag == 1:
             self.showTwoProbs()     
         if (LEDState == 0):
@@ -891,10 +917,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)
             strip.show()
         
-    def lightTwoLEDs(startHolds, probHolds, finHolds, startHolds2, probHolds2, finHolds2):
-        global showSequenceFlag
-        showSequenceFlag = 0
+    def lightTwoLEDs(self, startHolds, probHolds, finHolds, startHolds2, probHolds2, finHolds2):
         
+        self.stopShowSequence()        
         if const.LINUX == 1:
             for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
@@ -913,7 +938,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             strip.show()
     
     #used in show two prob mode to toggle colour of an LED that is on both problems
-    def toggleLEDs(startHolds, probHolds, finHolds):
+    def toggleLEDs(startHolds, probHolds, finHolds, startHolds2, probHolds2, finHolds2):
         global toggleLEDFlag
         
         if const.LINUX == 1:
@@ -926,18 +951,30 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#green
                 for hold in finHolds:
                     strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)#red
+                for hold in startHolds2:
+                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
+                for hold in probHolds2:
+                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
+                for hold in finHolds2:
+                    strip.setPixelColorRGB(hold-1, 0, 0, 0)               
             elif toggleLEDFlag == 1:
                 toggleLEDFlag = 0
                 #print("toggle 1")
-                for hold in startHolds:
+                for hold in startHolds2:
                     strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, const.LED_VALUE)#yellow
-                for hold in probHolds:
+                for hold in probHolds2:
                     strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE,0)#teal
-                for hold in finHolds:
+                for hold in finHolds2:
                     strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0,const.LED_VALUE )#pink
+                for hold in startHolds:
+                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
+                for hold in probHolds:
+                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
+                for hold in finHolds:
+                    strip.setPixelColorRGB(hold-1, 0, 0, 0)                     
             strip.show()
     
-    #fine item elem in list l    
+    #find item elem in list l    
     def find(l, elem):
         for row, i in enumerate(l):
             try:
@@ -1069,7 +1106,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             
     def lightProblem(self):
         global mirrorFlag
-        global showSequenceFlag
         global startHoldsS2P
         global probHoldsS2P
         global finHoldsS2P
@@ -1079,7 +1115,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global showTwoProbsFlag
         global probName
         
-        showSequenceFlag = 0                
+        self.stopShowSequence()              
         mirrorFlag = 0
         
         #store the previous problem before loading the next
