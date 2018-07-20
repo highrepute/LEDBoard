@@ -14,6 +14,7 @@ User create board
 		- user clicks on mirror of that hold
 		- undo
 		- make a db that user can edit
+	- way of saving previous layout/mirror etc
 Executable
 	- make run on startup - google
 Problem information
