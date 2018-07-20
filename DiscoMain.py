@@ -104,9 +104,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbSave.clicked.connect(self.saveNewProb)
         self.pbUndo.clicked.connect(self.undo)
         
+        #Test tab
+        self.pbLoadImage.clicked.connect(self.loadFile)
+        
         #set background image of add problems frame
         self.frame_6.setObjectName("Frame_6");
-        self.frame_6.setStyleSheet('QWidget#Frame_6 { background-image: url("20180411_210921_2.jpg")}')
+        self.frame_6.setStyleSheet('QWidget#Frame_6 { border-image: url("20180411_210921_2.jpg")}')
         
         #link hold buttons to the changeButtonColour function
         for num in range (1,const.TOTAL_LED_COUNT+1):
@@ -114,7 +117,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             label.clicked.connect(self.addHoldtoProb)
             #make them transparent???
             label.setStyleSheet("background: rgba(240, 240, 240, 25%); border: none;")
-        self.pbMirror.setStyleSheet("background-color: rgba(240, 240, 240, 25%)")    
             
         #QDialog.setStyleSheet("background-color: rgba(0, 0, 0, 100%)")
             
@@ -154,9 +156,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         self.start_timer()
         
-        #dispaly full screen and set background colour (behind tabs)
+        #dispaly full screen
         #self.showFullScreen()
-        #self.LEDBoard.setStyleSheet("background-color: rgba(255, 0, 0, 0%)")#todo - doesn't work!
         
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
@@ -165,6 +166,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        
+    def loadFile(self):#set the loaded image file as background for frame
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"Image files (*.jpg *.png *.gif)")
+        self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("' + fname[0] + '")}')
         
     def stopShowSequence(self):
         global showSequenceFlag
@@ -646,9 +651,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         start = self.slider.getRange()[0]
         end = self.slider.getRange()[1] - 1
         problemList = problemClass.getGradeFilteredProblems(start, end)
-        print("FILTER1", problemList)
+        #print("FILTER1", problemList)
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
-        print("FILTER2", problemList)
+        #print("FILTER2", problemList)
         self.tblProblems.setRowCount(len(problemList)-1)
         self.tblProblems.setColumnCount(5)
         self.tblProblems.horizontalHeader().setVisible(True)
@@ -1193,6 +1198,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = MyApp()
+    #set the background colour of the main window
+    p = window.palette()
+    p.setColor(window.backgroundRole(), QtCore.Qt.black)
+    window.setPalette(p)
+    
     window.show()
     LEDState = 0
     if const.LINUX == 1:

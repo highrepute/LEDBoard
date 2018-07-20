@@ -19,7 +19,7 @@
    <string>LED Board</string>
   </property>
   <property name="autoFillBackground">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
@@ -36,7 +36,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>5</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -3470,6 +3470,43 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_7">
+    <attribute name="title">
+     <string>Test</string>
+    </attribute>
+    <widget class="QFrame" name="frmBoard">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>40</y>
+       <width>781</width>
+       <height>761</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pbLoadImage">
+     <property name="geometry">
+      <rect>
+       <x>930</x>
+       <y>320</y>
+       <width>131</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Load Image</string>
+     </property>
     </widget>
    </widget>
   </widget>

@@ -1,6 +1,19 @@
 Work In Progress...
 Priority 1
-Picture of board in background
+Figure out why buttons aren't transparent on RasPi
+User create board
+	- ++import image
+	- add buttons
+		- light LED N
+		- user clicks hold N on board
+		- button is automatically placed
+		-- loop for all LEDs
+		- undo, skip LED, 
+	- mirror
+		- highlight a hold/button
+		- user clicks on mirror of that hold
+		- undo
+		- make a db that user can edit
 Executable
 	- make run on startup - google
 Problem information
@@ -8,11 +21,10 @@ Problem information
 Remote desktop
 Appearance
 	- make look good!
-	- coloured/image background
 	- logo and name
 	- space for wall logo
 	- space for board name
-Priority 2
+Priority 3
 Mobile App
 Button/LDRs on holds
 Auto-increment problem function.
