@@ -1,6 +1,7 @@
 import sys
 from PyQt5 import QtWidgets, uic, QtCore#, QtGui
 from PyQt5.QtCore import QTimer
+from PyQt5.QtWidgets import QSizePolicy
 #import time
 import re
 import datetime
@@ -13,6 +14,7 @@ from mirror import mirror
 from usersFuncs import userClass
 from logFuncs import logClass
 from const import const
+from dragButton import DragButton
 
 from qrangeslider import QRangeSlider
 
@@ -56,6 +58,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global sliderFlag
         global adminFlag
         global userFilter
+        global addButtonCount
         
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
@@ -106,6 +109,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         #Test tab
         self.pbLoadImage.clicked.connect(self.loadFile)
+        self.pbBuildBoard.clicked.connect(self.addButton)
         
         #set background image of add problems frame
         self.frame_6.setObjectName("Frame_6");
@@ -117,8 +121,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             label.clicked.connect(self.addHoldtoProb)
             #make them transparent???
             label.setStyleSheet("background: rgba(240, 240, 240, 25%); border: none;")
-            
-        #QDialog.setStyleSheet("background-color: rgba(0, 0, 0, 100%)")
             
         #init new problem globals
         newProbCounter = 0
@@ -148,7 +150,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         probName = ""
         sliderFlag = 0
         adminFlag = 0#0-logged out, 1-logged in, 2-editUsers, 3-editlogs, 4-editproblems
-        userFilter = ""            
+        userFilter = ""  
+        addButtonCount = 1          
                 
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)#set startup tab      
@@ -167,9 +170,24 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         
+    def addButton(self):
+        global addButtonCount
+        
+        w = QtWidgets.QWidget()
+        button = DragButton(str(addButtonCount), w)
+        button.resize(31,31)
+        button.setParent(self.frmBoard)
+        button.move(addButtonCount,addButtonCount)
+        button.show()
+        addButtonCount += 1
+        button.clicked.connect(self.clickedd)
+        
     def loadFile(self):#set the loaded image file as background for frame
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"Image files (*.jpg *.png *.gif)")
         self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("' + fname[0] + '")}')
+        
+    def clickedd(self):
+        print("click as normal! - ", self.sender().objectName())
         
     def stopShowSequence(self):
         global showSequenceFlag
