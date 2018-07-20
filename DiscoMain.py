@@ -113,7 +113,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             label = getattr(self, 'pb{}'.format(num))
             label.clicked.connect(self.addHoldtoProb)
             #make them transparent???
-            label.setStyleSheet("background-color: rgba(240, 240, 240, 25%)")
+            label.setStyleSheet("background: rgba(240, 240, 240, 25%); border: none;")
         self.pbMirror.setStyleSheet("background-color: rgba(240, 240, 240, 25%)")    
             
         #QDialog.setStyleSheet("background-color: rgba(0, 0, 0, 100%)")
@@ -186,7 +186,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def filterByUser(self):
         global userFilter
-        print("fitlerbyuser")
+        
         if userFilter == "":
             try:
                 rowN = self.lbUserFilter.selectedIndexes()[0].row()
@@ -207,7 +207,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lblInfo.setText("Not filtering by user")
             userFilter = ""
         self.populateProblemTable()
-        print(userFilter)
         
     def populateFilterTab(self):
         try:
@@ -647,7 +646,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         start = self.slider.getRange()[0]
         end = self.slider.getRange()[1] - 1
         problemList = problemClass.getGradeFilteredProblems(start, end)
+        print("FILTER1", problemList)
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
+        print("FILTER2", problemList)
         self.tblProblems.setRowCount(len(problemList)-1)
         self.tblProblems.setColumnCount(5)
         self.tblProblems.horizontalHeader().setVisible(True)
