@@ -36,7 +36,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>6</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -343,6 +343,13 @@
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="0">
           <layout class="QGridLayout" name="gridLayout">
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Password</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label">
              <property name="text">
@@ -350,20 +357,17 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="leUsername"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Password</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
+           <item row="2" column="1">
             <widget class="QLineEdit" name="lePassword">
              <property name="echoMode">
               <enum>QLineEdit::Password</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="leUsername">
+             <property name="echoMode">
+              <enum>QLineEdit::Normal</enum>
              </property>
             </widget>
            </item>
@@ -3507,6 +3511,181 @@
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>tbLogComments</tabstop>
+  <tabstop>cbStars</tabstop>
+  <tabstop>cbStyle</tabstop>
+  <tabstop>cbGrade</tabstop>
+  <tabstop>pbLogProblem</tabstop>
+  <tabstop>tblProblems</tabstop>
+  <tabstop>lbUsers</tabstop>
+  <tabstop>pbLogout</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>leUsername</tabstop>
+  <tabstop>lePassword</tabstop>
+  <tabstop>pbLogin</tabstop>
+  <tabstop>tbProblemInfo</tabstop>
+  <tabstop>tblAscents</tabstop>
+  <tabstop>pbTestLEDs</tabstop>
+  <tabstop>pbSequence</tabstop>
+  <tabstop>pbShowTwoProbs</tabstop>
+  <tabstop>pbMirror</tabstop>
+  <tabstop>pbFilterByUser</tabstop>
+  <tabstop>lbUserFilter</tabstop>
+  <tabstop>pbUndo</tabstop>
+  <tabstop>pbDiscard</tabstop>
+  <tabstop>cbStars_2</tabstop>
+  <tabstop>pbSave</tabstop>
+  <tabstop>leProblemName</tabstop>
+  <tabstop>cbGrade_2</tabstop>
+  <tabstop>tbComments</tabstop>
+  <tabstop>pb98</tabstop>
+  <tabstop>pb31</tabstop>
+  <tabstop>pb34</tabstop>
+  <tabstop>pb78</tabstop>
+  <tabstop>pb109</tabstop>
+  <tabstop>pb77</tabstop>
+  <tabstop>pb19</tabstop>
+  <tabstop>pb55</tabstop>
+  <tabstop>pb118</tabstop>
+  <tabstop>pb24</tabstop>
+  <tabstop>pb106</tabstop>
+  <tabstop>pb121</tabstop>
+  <tabstop>pb126</tabstop>
+  <tabstop>pb113</tabstop>
+  <tabstop>pb29</tabstop>
+  <tabstop>pb51</tabstop>
+  <tabstop>pb9</tabstop>
+  <tabstop>pb84</tabstop>
+  <tabstop>pb124</tabstop>
+  <tabstop>pb87</tabstop>
+  <tabstop>pb110</tabstop>
+  <tabstop>pb108</tabstop>
+  <tabstop>pb22</tabstop>
+  <tabstop>pb88</tabstop>
+  <tabstop>pb4</tabstop>
+  <tabstop>pb13</tabstop>
+  <tabstop>pb125</tabstop>
+  <tabstop>pb85</tabstop>
+  <tabstop>pb35</tabstop>
+  <tabstop>pb21</tabstop>
+  <tabstop>pb63</tabstop>
+  <tabstop>pb74</tabstop>
+  <tabstop>pb122</tabstop>
+  <tabstop>pb58</tabstop>
+  <tabstop>pb14</tabstop>
+  <tabstop>pb16</tabstop>
+  <tabstop>pb100</tabstop>
+  <tabstop>pb23</tabstop>
+  <tabstop>pb52</tabstop>
+  <tabstop>pb44</tabstop>
+  <tabstop>pb5</tabstop>
+  <tabstop>pb76</tabstop>
+  <tabstop>pb95</tabstop>
+  <tabstop>pb15</tabstop>
+  <tabstop>pb75</tabstop>
+  <tabstop>pb119</tabstop>
+  <tabstop>pb43</tabstop>
+  <tabstop>pb25</tabstop>
+  <tabstop>pb48</tabstop>
+  <tabstop>pb54</tabstop>
+  <tabstop>pb69</tabstop>
+  <tabstop>pb117</tabstop>
+  <tabstop>pb20</tabstop>
+  <tabstop>pb97</tabstop>
+  <tabstop>pb68</tabstop>
+  <tabstop>pb46</tabstop>
+  <tabstop>pb56</tabstop>
+  <tabstop>pb79</tabstop>
+  <tabstop>pb26</tabstop>
+  <tabstop>pb60</tabstop>
+  <tabstop>pb11</tabstop>
+  <tabstop>pb42</tabstop>
+  <tabstop>pb92</tabstop>
+  <tabstop>pb114</tabstop>
+  <tabstop>pb71</tabstop>
+  <tabstop>pb65</tabstop>
+  <tabstop>pb30</tabstop>
+  <tabstop>pb37</tabstop>
+  <tabstop>pb38</tabstop>
+  <tabstop>pb116</tabstop>
+  <tabstop>pb59</tabstop>
+  <tabstop>pb81</tabstop>
+  <tabstop>pb66</tabstop>
+  <tabstop>pb67</tabstop>
+  <tabstop>pb33</tabstop>
+  <tabstop>pb1</tabstop>
+  <tabstop>pb2</tabstop>
+  <tabstop>pb27</tabstop>
+  <tabstop>pb104</tabstop>
+  <tabstop>pb103</tabstop>
+  <tabstop>pb8</tabstop>
+  <tabstop>pb105</tabstop>
+  <tabstop>pb96</tabstop>
+  <tabstop>pb17</tabstop>
+  <tabstop>pb47</tabstop>
+  <tabstop>pb102</tabstop>
+  <tabstop>pb123</tabstop>
+  <tabstop>pb6</tabstop>
+  <tabstop>pb91</tabstop>
+  <tabstop>pb93</tabstop>
+  <tabstop>pb39</tabstop>
+  <tabstop>pb80</tabstop>
+  <tabstop>pb94</tabstop>
+  <tabstop>pb3</tabstop>
+  <tabstop>pb112</tabstop>
+  <tabstop>pb49</tabstop>
+  <tabstop>pb115</tabstop>
+  <tabstop>pb7</tabstop>
+  <tabstop>pb83</tabstop>
+  <tabstop>pb45</tabstop>
+  <tabstop>pb28</tabstop>
+  <tabstop>pb90</tabstop>
+  <tabstop>pb82</tabstop>
+  <tabstop>pb64</tabstop>
+  <tabstop>pb12</tabstop>
+  <tabstop>pb73</tabstop>
+  <tabstop>pb107</tabstop>
+  <tabstop>pb53</tabstop>
+  <tabstop>pb72</tabstop>
+  <tabstop>pb50</tabstop>
+  <tabstop>pb111</tabstop>
+  <tabstop>pb18</tabstop>
+  <tabstop>pb101</tabstop>
+  <tabstop>pb62</tabstop>
+  <tabstop>pb120</tabstop>
+  <tabstop>pb32</tabstop>
+  <tabstop>pb99</tabstop>
+  <tabstop>pb89</tabstop>
+  <tabstop>pb41</tabstop>
+  <tabstop>pb86</tabstop>
+  <tabstop>pb40</tabstop>
+  <tabstop>pb70</tabstop>
+  <tabstop>pb36</tabstop>
+  <tabstop>pb10</tabstop>
+  <tabstop>pb57</tabstop>
+  <tabstop>pb61</tabstop>
+  <tabstop>leAddRealName</tabstop>
+  <tabstop>leAddPassword</tabstop>
+  <tabstop>pbAddNewUsers</tabstop>
+  <tabstop>leAddUsername</tabstop>
+  <tabstop>leAddEmail</tabstop>
+  <tabstop>tblLogbook</tabstop>
+  <tabstop>tblEdit</tabstop>
+  <tabstop>pbEditUsers</tabstop>
+  <tabstop>pbEditLogs</tabstop>
+  <tabstop>pbEditProblems</tabstop>
+  <tabstop>pbEditSave</tabstop>
+  <tabstop>pbDeleteRow</tabstop>
+  <tabstop>leAdminPassword</tabstop>
+  <tabstop>pbAdminLogin</tabstop>
+  <tabstop>pbLoadImage</tabstop>
+  <tabstop>pbBuildBoard</tabstop>
+  <tabstop>pbFinalise</tabstop>
+  <tabstop>leBoardName</tabstop>
+  <tabstop>pbUndoAddHold</tabstop>
+  <tabstop>pbSkipHold</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

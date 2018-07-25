@@ -73,10 +73,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.slider.startValueChanged.connect(self.sliderChange)    
         
         #Connect buttons to functions
+        #ELD Board tab
         self.pbTestLEDs.clicked.connect(self.testLEDs)       
         self.tblProblems.selectionModel().selectionChanged.connect(self.lightProblem)
         self.pbMirror.clicked.connect(self.mirrorProb)
         self.pbLogin.clicked.connect(self.login)
+        self.lePassword.returnPressed.connect(self.login)
         self.pbLogout.clicked.connect(self.logout)
         self.lbUsers.clicked.connect(self.updateLogLabel)
         self.pbLogProblem.clicked.connect(self.logProblem)
@@ -88,6 +90,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         #admin tab
         self.pbAdminLogin.clicked.connect(self.adminLogin)
+        self.leAdminPassword.returnPressed.connect(self.adminLogin)
         self.pbEditUsers.clicked.connect(self.editUsers)
         self.pbEditLogs.clicked.connect(self.editLogs)
         self.pbEditProblems.clicked.connect(self.editProblems)
@@ -161,6 +164,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.populateFilterTab()
         self.populateComboBoxes()
         self.resetBoardMaker()
+        self.setAdminTab(False)
         
         self.start_timer()
         
@@ -408,6 +412,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         adminFlag = 0
         self.lblAdminState.setText("Logged Out")
         self.tblEdit.clear()
+        self.setAdminTab(False)
     
     def adminLogin(self):
         global adminFlag
@@ -417,8 +422,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 adminFlag = 1
                 self.leAdminPassword.clear()
                 self.lblAdminState.setText("Logged In")
+                self.setAdminTab(True)
             else:
                 self.lblInfo.setText("Oh no!\nI'm sorry your password is incorrect")
+                
+    def setAdminTab(self, loggedIn):
+        self.tblEdit.setEnabled(loggedIn)
+        self.pbEditUsers.setEnabled(loggedIn)
+        self.pbEditLogs.setEnabled(loggedIn)
+        self.pbEditProblems.setEnabled(loggedIn)
+        self.pbDeleteRow.setEnabled(loggedIn)
+        self.pbEditSave.setEnabled(loggedIn)
     
     def sliderChange(self):
         global sliderFlag
@@ -523,7 +537,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def updateLogLabel(self):        
         rowN = self.tblProblems.selectedIndexes()
-        print(rowN)
+        #print(rowN)
         if (rowN != []):#if a problem selected
             rowN = rowN[0].row()
             problem = self.tblProblems.item(rowN,0).text()
@@ -660,19 +674,24 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     #logout user selected in lbUsers listbox
     def logout(self):
         global usersLoggedIn
-        
-        rowN = self.lbUsers.selectedIndexes()[0].row()
-        user = self.lbUsers.item(rowN).text()
-        index = MyApp.find(usersLoggedIn,user)[0]
-        del usersLoggedIn[index]
-        self.lbUsers.clear()
-        if (len(usersLoggedIn) > 0):
-            self.lbUsers.addItems(MyApp.column(usersLoggedIn,0))
-        self.updateLogLabel()
-        text = user + " logged out"
-        self.lblInfo.setText(text)
-        rowN = self.lbUsers.selectedIndexes()[0].row()
-        self.lblLogbook.setText("Login and select a user to view logbook")
+        if self.lbUsers.count() > 0:
+            try:
+                rowN = self.lbUsers.selectedIndexes()[0].row()
+                user = self.lbUsers.item(rowN).text()
+                index = MyApp.find(usersLoggedIn,user)[0]
+                del usersLoggedIn[index]
+                self.lbUsers.clear()
+                if (len(usersLoggedIn) > 0):
+                    self.lbUsers.addItems(MyApp.column(usersLoggedIn,0))
+                self.updateLogLabel()
+                text = user + " logged out"
+                self.lblInfo.setText(text)
+                #rowN = self.lbUsers.selectedIndexes()[0].row()
+                self.lblLogbook.setText("Login and select a user to view logbook")
+            except:
+                self.lblInfo.setText("Select a user to logout")
+        else:
+            self.lblInfo.setText("No users to logout")    
     
     #returns a column from a list - list must be a matrix in dimensions
     def column(matrix, i):

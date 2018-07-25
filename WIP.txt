@@ -26,6 +26,8 @@ Grades
 							- populate drop downs with grade table from file
 							- change the grades constant to a file
 							- config file which also includes other constants
+Admin
+	- grey out buttons when logged out
 Executable
 	- make run on startup - google
 Problem information
