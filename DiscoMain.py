@@ -18,6 +18,9 @@ from boardMaker import boardMaker
 
 from qrangeslider import QRangeSlider
 
+#load that configuration variables from config.ini
+const.initConfigVariables()
+
 if const.LINUX == 1:
     from neopixel import *
 
@@ -154,9 +157,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         adminFlag = 0#0-logged out, 1-logged in, 2-editUsers, 3-editlogs, 4-editproblems
         userFilter = ""  
         addButtonCount = 1          
-                
-        #load that configuration variables from config.ini
-        const.initConfigVariables()
         
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)#set startup tab      
@@ -182,7 +182,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def initialiseAddProblemTab(self):
         #set background image of add problems frame
         self.frame_6.setObjectName("Frame_6");
-        #self.frame_6.setStyleSheet('QWidget#Frame_6 { border-image: url("' + const.IMAGEPATH + '")}')
+        self.frame_6.setStyleSheet('QWidget#Frame_6 { border-image: url("' + const.IMAGEPATH + '")}')
         #todo - load the buttons
         boardHolds = boardMaker.loadBoard()
         print(boardHolds)
