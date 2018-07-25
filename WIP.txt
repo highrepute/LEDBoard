@@ -1,12 +1,11 @@
 Work In Progress...
 Priority 1
-Figure out why buttons aren't transparent on RasPi
 User create board
 	- ++import image
-		- save the path to this image in a configuration file
+							- save the path to this image in a configuration file
 							- boardname is user entered name for the board
 	- add buttons
-		- light LED N
+							- light LED N
 							- user clicks hold N on board
 							- button is automatically placed
 								-use movable button that can be adjusted

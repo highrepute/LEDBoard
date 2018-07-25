@@ -3487,7 +3487,7 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="lblSelectedImage">
+    <widget class="QLabel" name="lblImagePath">
      <property name="geometry">
       <rect>
        <x>880</x>

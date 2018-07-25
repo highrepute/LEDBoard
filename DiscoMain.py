@@ -117,10 +117,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbUndoAddHold.clicked.connect(self.undoAddHold)    
         self.pbSkipHold.clicked.connect(self.skipHold)
         
-        #set background image of add problems frame
-        self.frame_6.setObjectName("Frame_6");
-        self.frame_6.setStyleSheet('QWidget#Frame_6 { border-image: url("20180411_210921_2.jpg")}')
-        
         #link hold buttons to the changeButtonColour function
         for num in range (1,const.TOTAL_LED_COUNT+1):
             label = getattr(self, 'pb{}'.format(num))
@@ -168,6 +164,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.populateComboBoxes()
         self.resetBoardMaker()
         self.setAdminTab(False)
+        self.initialiseAddProblemTab()
         
         self.start_timer()
         
@@ -182,14 +179,24 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         
+    def initialiseAddProblemTab(self):
+        #set background image of add problems frame
+        self.frame_6.setObjectName("Frame_6");
+        imagePath = const.IMAGEPATH
+        print(imagePath)
+        self.frame_6.setStyleSheet('QWidget#Frame_6 { border-image: url("' + imagePath + '")}')
+        
     def resetBoardMaker(self):
         self.pbUndoAddHold.setEnabled(False)
         self.pbBuildBoard.setEnabled(False)
         self.pbFinalise.setEnabled(False)
         self.pbSkipHold.setEnabled(False)
-        self.lblSelectedImage.setText("Selected image")
-        self.lblSelectedImage.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        self.lblImagePath.setText("Selected image")
+        self.lblImagePath.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.lblBoardMakerInfo.setText("Load an image of the board to begin")
+        #todo - clear image
+        #todo - clear filename
+        #todo - clear all buttons!
         
     def skipHold(self):#skip a button for when LED is unused
         global addButtonCount
@@ -219,8 +226,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         filename = self.leBoardName.text()
         if (filename != ""):
-            newBoard = []
+            #save the image path to config
+            const.setIMAGEPATH(self.lblImagePath.text())
             
+            newBoard = []            
             #find every hold button and append their position to a list (newBoard)
             for num in range (1,addButtonCount):
                 widget_name = self.findChild(DragButton, "pbx{}".format(num))
@@ -261,9 +270,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def loadFile(self):#set the loaded image file as background for frame
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"Image files (*.jpg *.png *.gif)")
-        self.lblSelectedImage.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.lblImagePath.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         #display the file path of the image selected - actually done this to use when saving the board (dodgy!)
-        self.lblSelectedImage.setText(fname[0])
+        self.lblImagePath.setText(fname[0])
         #set image as background
         self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("' + fname[0] + '")}')
         #enable the next buttons
@@ -1044,7 +1053,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 strip.setPixelColorRGB(i, 0, 0, 0)
             strip.show()
             
-    def lightSingleLED(hold):
+    def lightSingleLED(self, hold):
          if const.LINUX == 1:
             for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
