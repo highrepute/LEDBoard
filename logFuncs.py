@@ -23,7 +23,7 @@ class logClass:
             writer = csv.writer(f, dialect='excel')
             for row in log:
                 writer.writerow(row)
-                if const.LINUX() == 0:
+                if const.LINUX == 0:
                     #delete line seems to be required in windows but not in linux!
                     logClass.deleteLastLine()
     
@@ -49,7 +49,7 @@ class logClass:
             writer = csv.writer(f, dialect='excel')
             writer.writerow(newLogProb)
         f.close()
-        if const.LINUX() == 0:
+        if const.LINUX == 0:
             #delete line seems to be required in windows but not in linux!
             logClass.deleteLastLine()
        

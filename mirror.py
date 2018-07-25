@@ -7,7 +7,7 @@ class mirror:
     def getMirror(holdArr):
         mirrorHolds = []
         for item in holdArr:
-            for holds in const.MIRRORTABLE():
+            for holds in const.MIRRORTABLE:
                 if holds[0] == item:
                     mirrorHolds.append(holds[1])
         return mirrorHolds

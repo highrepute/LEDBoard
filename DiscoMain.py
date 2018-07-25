@@ -18,7 +18,7 @@ from boardMaker import boardMaker
 
 from qrangeslider import QRangeSlider
 
-if const.LINUX() == 1:
+if const.LINUX == 1:
     from neopixel import *
 
 qtCreatorFile = "DiscoBoard.ui" # Enter file here.
@@ -122,7 +122,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.frame_6.setStyleSheet('QWidget#Frame_6 { border-image: url("20180411_210921_2.jpg")}')
         
         #link hold buttons to the changeButtonColour function
-        for num in range (1,const.TOTAL_LED_COUNT()+1):
+        for num in range (1,const.TOTAL_LED_COUNT+1):
             label = getattr(self, 'pb{}'.format(num))
             label.clicked.connect(self.addHoldtoProb)
             #make them transparent???
@@ -159,6 +159,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         userFilter = ""  
         addButtonCount = 1          
                 
+        #load that configuration variables from config.ini
+        const.setConfigVariables()
+        
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)#set startup tab      
         self.populateFilterTab()
@@ -172,7 +175,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #self.showFullScreen()
         
         #default message
-        self.lblInfo.setText(const.DEFAULTMSG())
+        self.lblInfo.setText(const.DEFAULTMSG)
         
         #make tables read only
         self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
@@ -312,10 +315,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.populateProblemTable()
     
     def populateComboBoxes(self):
-        self.cbGrade.addItems(const.GRADES())
-        self.cbGrade_2.addItems(const.GRADES())
-        self.cbStars.addItems(const.STARS())
-        self.cbStars_2.addItems(const.STARS())
+        self.cbGrade.addItems(const.GRADES)
+        self.cbGrade_2.addItems(const.GRADES)
+        self.cbStars.addItems(const.STARS)
+        self.cbStars_2.addItems(const.STARS)
         
     def populateFilterTab(self):
         try:
@@ -443,8 +446,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global sliderFlag
         sliderFlag = 1
         
-        start = const.GRADES()[self.slider.getRange()[0]]
-        end = const.GRADES()[self.slider.getRange()[1]-1]
+        start = const.GRADES[self.slider.getRange()[0]]
+        end = const.GRADES[self.slider.getRange()[1]-1]
         self.lblMax.setText(str(end))
         self.lblMin.setText(str(start))
 
@@ -521,8 +524,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             comments = self.tbLogComments.toPlainText().replace('\n', ' ')
             comments = comments.replace(',', '-')
             #get grade and stars - index of lookup table is value
-            grade = MyApp.find(const.GRADES(),self.cbGrade.currentText())[0]
-            stars = MyApp.find(const.STARS(),self.cbStars.currentText())[0]
+            grade = MyApp.find(const.GRADES,self.cbGrade.currentText())[0]
+            stars = MyApp.find(const.STARS,self.cbStars.currentText())[0]
             style = self.cbStyle.currentText()
             #create new log entry
             logProblem = [user,problem,grade,stars,date,comments,style]
@@ -636,19 +639,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lblInfo.setText(text)
             if (shownSequenceCount < 10):
                 showSequenceCounter = showSequenceCounter + 1
-                if const.LINUX() == 1:
-                    for i in range(0,const.TOTAL_LED_COUNT(),1):#turn all LED off
+                if const.LINUX == 1:
+                    for i in range(0,const.TOTAL_LED_COUNT,1):#turn all LED off
                         strip.setPixelColorRGB(i, 0, 0, 0)
                     for i in range(0,showSequenceCounter,1):#figure out where in sequence we are and light next LED
                         if (i < len(startHolds)):
                             hold = startHolds[i]
-                            strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE(), 0)
+                            strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)
                         elif (i < (len(startHolds)+len(probHolds))):
                             hold = probHolds[i-len(startHolds)]
-                            strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE())
+                            strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)
                         elif (i < (len(startHolds)+len(probHolds)+len(finHolds))):
                             hold = finHolds[i-len(startHolds)-len(probHolds)]
-                            strip.setPixelColorRGB(hold-1, const.LED_VALUE(), 0, 0)                       
+                            strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)                       
                     strip.show()
                     if (i == (len(startHolds)+len(probHolds)+len(finHolds))):
                         #print("reset")
@@ -658,7 +661,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 shownSequenceCount = 0
                 showSequenceFlag = 0
                 showSequenceCounter = 0
-                self.lblInfo.setText(const.DEFAULTMSG())
+                self.lblInfo.setText(const.DEFAULTMSG)
         if (showTwoProbsFlag == 1):
             MyApp.toggleLEDs(S2PStartMatches, S2PProbMatches, S2PFinMatches, S2P2StartMatches, S2P2ProbMatches, S2P2FinMatches)
         if (sliderFlag == 1):
@@ -666,7 +669,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.populateProblemTable()
             start = self.slider.getRange()[0]
             end = self.slider.getRange()[1] - 1
-            text = "Showing problems between grades - " + const.GRADES()[start] + " and " + const.GRADES()[end]
+            text = "Showing problems between grades - " + const.GRADES[start] + " and " + const.GRADES[end]
             self.lblInfo.setText(text)
                     
     #called when user does something - to stop auto logout
@@ -742,10 +745,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     for i in range(1,len(logbook),1):
                         for j in range(0,6,1):
                             if j == 1:#convert grade for display
-                                grade = const.GRADES()[int(logbook[i][j])]
+                                grade = const.GRADES[int(logbook[i][j])]
                                 self.tblLogbook.setItem(i-1,j, QtWidgets.QTableWidgetItem(grade))    
                             elif j == 2:#convert stars for display
-                                star = const.STARS()[int(logbook[i][j])]
+                                star = const.STARS[int(logbook[i][j])]
                                 self.tblLogbook.setItem(i-1,j, QtWidgets.QTableWidgetItem(star))                    
                             else:
                                 self.tblLogbook.setItem(i-1,j, QtWidgets.QTableWidgetItem(logbook[i][j]))                           
@@ -780,10 +783,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         for i in range(1,len(problemList),1):
             for j in range(0,5,1):
                 if j == 1:#convert grade for display
-                    grade = const.GRADES()[int(problemList[i][j])]
+                    grade = const.GRADES[int(problemList[i][j])]
                     self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(grade))    
                 elif j == 2:#convert stars for display
-                    star = const.STARS()[int(problemList[i][j])]
+                    star = const.STARS[int(problemList[i][j])]
                     self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(star))                    
                 else:
                     self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(problemList[i][j]))
@@ -801,7 +804,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global newProbHolds
         global undoCounter
         #reset button colours            
-        for num in range (1,const.TOTAL_LED_COUNT()+1):
+        for num in range (1,const.TOTAL_LED_COUNT+1):
             label = getattr(self, 'pb{}'.format(num))
             label.setStyleSheet("background-color: rgba(240, 240, 240, 25%); border: none;")#f0f0f0(240,240,240) #efebe7(239,235,231)
             
@@ -854,8 +857,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #append name, grade, stars & date
             probName = self.leProblemName.text()
             newProblem.append(probName)
-            grade = MyApp.find(const.GRADES(),self.cbGrade_2.currentText())[0]
-            stars = MyApp.find(const.STARS(),self.cbStars_2.currentText())[0]
+            grade = MyApp.find(const.GRADES,self.cbGrade_2.currentText())[0]
+            stars = MyApp.find(const.STARS,self.cbStars_2.currentText())[0]
             newProblem.append(grade)
             newProblem.append(stars)
             now = datetime.datetime.now()
@@ -924,13 +927,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def setLEDbyButton(self,button,colour):
         holdNumber = self.getHoldNumberFromButton(button)
         print("hold Number -", holdNumber, "colour -", colour)
-        if (const.LINUX() == 1):
+        if (const.LINUX == 1):
             if (colour == "red"):
-                strip.setPixelColorRGB(holdNumber-1, const.LED_VALUE(), 0, 0)#red
+                strip.setPixelColorRGB(holdNumber-1, const.LED_VALUE, 0, 0)#red
             elif (colour == "green"):
-                strip.setPixelColorRGB(holdNumber-1, 0, const.LED_VALUE(), 0)#green
+                strip.setPixelColorRGB(holdNumber-1, 0, const.LED_VALUE, 0)#green
             elif (colour == "blue"):
-                strip.setPixelColorRGB(holdNumber-1, 0, 0, const.LED_VALUE())#blue
+                strip.setPixelColorRGB(holdNumber-1, 0, 0, const.LED_VALUE)#blue
             elif (colour == "off"):
                 strip.setPixelColorRGB(holdNumber-1, 0, 0, 0)#off
             strip.show()
@@ -1023,9 +1026,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.showTwoProbs()     
         if (LEDState == 0):
             LEDState = 1
-            if const.LINUX() == 1:
-                for i in range(0,const.TOTAL_LED_COUNT(),1):
-                    strip.setPixelColorRGB(i,int((255/const.TOTAL_LED_COUNT())*i), 0, 0)
+            if const.LINUX == 1:
+                for i in range(0,const.TOTAL_LED_COUNT,1):
+                    strip.setPixelColorRGB(i,int((255/const.TOTAL_LED_COUNT)*i), 0, 0)
                 for j in range(256*1):
                     for i in range(strip.numPixels()):
                         strip.setPixelColor(i, MyApp.wheel((i+j) & 255))
@@ -1036,55 +1039,55 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     
     #turn all LEDs off        
     def offLEDs(self):
-        if const.LINUX() == 1:
-            for i in range(0,const.TOTAL_LED_COUNT(),1):
+        if const.LINUX == 1:
+            for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
             strip.show()
             
     def lightSingleLED(hold):
-         if const.LINUX() == 1:
-            for i in range(0,const.TOTAL_LED_COUNT(),1):
+         if const.LINUX == 1:
+            for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
-            strip.setPixelColorRGB(hold-1, const.LED_VALUE(), 0, const.LED_VALUE())
+            strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, const.LED_VALUE)
             strip.show()       
             
     def lightLEDs(startHolds, probHolds, finHolds):
-        if const.LINUX() == 1:
-            for i in range(0,const.TOTAL_LED_COUNT(),1):
+        if const.LINUX == 1:
+            for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
             for hold in startHolds:
-                strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE(), 0)
+                strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)
             for hold in probHolds:
-                strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE())
+                strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)
             for hold in finHolds:
-                strip.setPixelColorRGB(hold-1, const.LED_VALUE(), 0, 0)
+                strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)
             strip.show()
         
     def lightTwoLEDs(self, startHolds, probHolds, finHolds, startHolds2, probHolds2, finHolds2):
         
         self.stopShowSequence()        
-        if const.LINUX() == 1:
-            for i in range(0,const.TOTAL_LED_COUNT(),1):
+        if const.LINUX == 1:
+            for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
             for hold in startHolds:
-                strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE(), 0)#green
+                strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)#green
             for hold in probHolds:
-                strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE())#blue
+                strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#blue
             for hold in finHolds:
-                strip.setPixelColorRGB(hold-1, const.LED_VALUE(), 0, 0)#red
+                strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)#red
             for hold in startHolds2:
-                strip.setPixelColorRGB(hold-1, 0,const.LED_VALUE(), const.LED_VALUE())#teal
+                strip.setPixelColorRGB(hold-1, 0,const.LED_VALUE, const.LED_VALUE)#teal
             for hold in probHolds2:
-                strip.setPixelColorRGB(hold-1, const.LED_VALUE(), const.LED_VALUE(),0)#teal
+                strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE,0)#teal
             for hold in finHolds2:
-                strip.setPixelColorRGB(hold-1, const.LED_VALUE(), 0,const.LED_VALUE() )#pink
+                strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0,const.LED_VALUE )#pink
             strip.show()
     
     #used in show two prob mode to toggle colour of an LED that is on both problems
     def toggleLEDs(startHolds, probHolds, finHolds, startHolds2, probHolds2, finHolds2):
         global toggleLEDFlag
         
-        if const.LINUX() == 1:
+        if const.LINUX == 1:
             if toggleLEDFlag == 0:
                 toggleLEDFlag = 1
                 #print("toggle 0")
@@ -1095,11 +1098,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 for hold in finHolds2:
                     strip.setPixelColorRGB(hold-1, 0, 0, 0)                
                 for hold in startHolds:
-                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE(), 0)#blue
+                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)#blue
                 for hold in probHolds:
-                    strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE())#green
+                    strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#green
                 for hold in finHolds:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE(), 0, 0)#red                              
+                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)#red                              
             elif toggleLEDFlag == 1:
                 toggleLEDFlag = 0
                 #print("toggle 1")
@@ -1110,11 +1113,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 for hold in finHolds:
                     strip.setPixelColorRGB(hold-1, 0, 0, 0)                
                 for hold in startHolds2:
-                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE(), const.LED_VALUE())#yellow
+                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, const.LED_VALUE)#yellow
                 for hold in probHolds2:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE(), const.LED_VALUE(),0)#teal
+                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE,0)#teal
                 for hold in finHolds2:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE(), 0,const.LED_VALUE() )#pink                     
+                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0,const.LED_VALUE )#pink                     
             strip.show()
     
     #find item elem in list l    
@@ -1142,8 +1145,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         problemsDB = problemClass.readProblemFile()
         
         probName = problemsDB[rowProb][0]
-        grade = const.GRADES()[int(problemsDB[rowProb][1])]
-        stars = const.STARS()[int(problemsDB[rowProb][2])]
+        grade = const.GRADES[int(problemsDB[rowProb][1])]
+        stars = const.STARS[int(problemsDB[rowProb][2])]
         date = problemsDB[rowProb][3]
         setter = problemClass.getUser(rowProb)
         notes = problemClass.getNotes(rowProb)
@@ -1192,7 +1195,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 label = getattr(self, 'lblBarGrade{}'.format(num))
                 bar = getattr(self, 'barGrade{}'.format(num))
                 num += 1
-                label.setText(const.GRADES()[int(grade)])
+                label.setText(const.GRADES[int(grade)])
                 bar.setValue(count)
                 
         #get problem ascents & display
@@ -1212,10 +1215,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             for j in range(0,6,1):
                     #self.tblAscents.setItem(i-1,j, QtWidgets.QTableWidgetItem(ascents[i][j]))
                 if j == 1:#convert grade for display
-                    grade = const.GRADES()[int(ascents[i][j])]
+                    grade = const.GRADES[int(ascents[i][j])]
                     self.tblAscents.setItem(i-1,j, QtWidgets.QTableWidgetItem(grade))    
                 elif j == 2:#convert stars for display
-                    star = const.STARS()[int(ascents[i][j])]
+                    star = const.STARS[int(ascents[i][j])]
                     self.tblAscents.setItem(i-1,j, QtWidgets.QTableWidgetItem(star))                    
                 else:
                     self.tblAscents.setItem(i-1,j, QtWidgets.QTableWidgetItem(ascents[i][j]))                
@@ -1330,11 +1333,11 @@ if __name__ == "__main__":
     
     window.show()
     LEDState = 0
-    if const.LINUX() == 1:
-        strip = Adafruit_NeoPixel(const.TOTAL_LED_COUNT(), 18, 800000, 5, False, 255)
+    if const.LINUX == 1:
+        strip = Adafruit_NeoPixel(const.TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
         strip.begin()   #only call this once - each call creates new memory instance which
                         #eventually will crash program
-        strip.setPixelColorRGB(const.TOTAL_LED_COUNT(), 0, 0, 0)
+        strip.setPixelColorRGB(const.TOTAL_LED_COUNT, 0, 0, 0)
         strip.show()
         
     sys.exit(app.exec_())
