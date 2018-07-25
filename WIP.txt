@@ -3,18 +3,29 @@ Priority 1
 Figure out why buttons aren't transparent on RasPi
 User create board
 	- ++import image
+		- save the path to this image in a configuration file
+							- boardname is user entered name for the board
 	- add buttons
 		- light LED N
-		- user clicks hold N on board
-		- button is automatically placed
-		-- loop for all LEDs
-		- undo, skip LED, 
+							- user clicks hold N on board
+							- button is automatically placed
+								-use movable button that can be adjusted
+							-- loop for all LEDs
+							- undo, skip LED, clear all
+							- when done the user clicks a complete board button
+							- the positions of every hold & number are stored in a boardname.txt file
+		- this file is loaded every time the program runs - configuration file
+		- the user can load this in the "admin" tab to edit hold positions/hold numbers
+		- can save multiple "boards" and choose which one is loaded by default
 	- mirror
 		- highlight a hold/button
 		- user clicks on mirror of that hold
 		- undo
 		- make a db that user can edit
-	- way of saving previous layout/mirror etc
+Grades
+							- populate drop downs with grade table from file
+							- change the grades constant to a file
+							- config file which also includes other constants
 Executable
 	- make run on startup - google
 Problem information

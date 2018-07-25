@@ -6,7 +6,6 @@ Created on Wed Feb 14 12:05:16 2018
 """
 import csv
 from const import const
-#from operator import itemgetter
 
 class userClass:#funcs that access information in the users file 
     
