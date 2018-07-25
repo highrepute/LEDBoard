@@ -645,9 +645,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         start = self.slider.getRange()[0]
         end = self.slider.getRange()[1] - 1
         problemList = problemClass.getGradeFilteredProblems(start, end)
-        print("FILTER1", problemList)
+        #print("FILTER1", problemList)
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
-        print("FILTER2", problemList)
+        #print("FILTER2", problemList)
         self.tblProblems.setRowCount(len(problemList)-1)
         self.tblProblems.setColumnCount(5)
         self.tblProblems.horizontalHeader().setVisible(True)
