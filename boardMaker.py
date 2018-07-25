@@ -18,6 +18,13 @@ class boardMaker:
                 if const.LINUX == 0:
                     #delete line seems to be required in windows but not in linux!
                     boardMaker.deleteLastLine()  
+                
+    def loadBoard():
+        #this gets the contents of the csv file into a list
+        with open(const.BOARDNAME, newline='') as csvfile:
+            filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
+            board = list(filereader)
+        return board
                     
     def deleteLastLine():
         #bodge to delete extra <CR> that appears when a problem is added
@@ -27,3 +34,4 @@ class boardMaker:
         w = open("users.csv",'w')
         w.writelines([item for item in lines[:-1]])
         w.close()                    
+        

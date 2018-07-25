@@ -30,6 +30,7 @@ class userClass:#funcs that access information in the users file
         #extracts just the name
         users = userClass.readUsersFile()
         userList = [i[0] for i in users]
+        #todo handle empty users file
         del userList[0]
         return userList
     

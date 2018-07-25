@@ -12,8 +12,9 @@ class const:
     MIRRORTABLE = []
     TOTAL_LED_COUNT = 126
     IMAGEPATH = None
+    BOARDNAME = None
     
-    def setConfigVariables():
+    def initConfigVariables():
         const.LINUX = int(const.getLINUX())
         const.LED_VALUE = int(const.getLED_VALUE())
         const.DEFAULTMSG = str(const.getDEFAULTMSG())
@@ -22,6 +23,7 @@ class const:
         const.MIRRORTABLE = const.getMIRRORTABLE()
         const.TOTAL_LED_COUNT = int(const.getTOTAL_LED_COUNT())
         const.IMAGEPATH = str(const.getIMAGEPATH())
+        const.BOARDNAME = str(const.getBOARDNAME())
     
     def loadConfig():
         config = configparser.ConfigParser()
@@ -42,6 +44,16 @@ class const:
         config.set('DEFAULT', 'LINUX', str(value))
         const.writeConfig(config)
         const.LINUX = value
+        
+    def getBOARDNAME():
+        config = const.loadConfig()
+        return str(config.get('BOARD', 'BOARDNAME'))
+    
+    def setBOARDNAME(value):
+        config = const.loadConfig()
+        config.set('DEFAULT', 'BOARDNAME', str(value))
+        const.writeConfig(config)
+        const.LINUX = value        
 
     def getTOTAL_LED_COUNT():
         config = const.loadConfig()
@@ -115,7 +127,7 @@ class const:
     
 #print(const.LINUX)
 #const.setConfigVariables()
-#print(const.GRADES[0])
+#print(const.BOARDNAME)
 #grades = ['6a', '6a+', '6b', '6b+', '6c', '6c+', '7a']
 #print(str(grades))
 #print(const.IMAGEPATH)

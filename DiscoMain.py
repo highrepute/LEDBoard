@@ -156,7 +156,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         addButtonCount = 1          
                 
         #load that configuration variables from config.ini
-        const.setConfigVariables()
+        const.initConfigVariables()
         
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)#set startup tab      
@@ -177,14 +177,29 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #make tables read only
         self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)    
         
     def initialiseAddProblemTab(self):
         #set background image of add problems frame
         self.frame_6.setObjectName("Frame_6");
-        imagePath = const.IMAGEPATH
-        print(imagePath)
-        self.frame_6.setStyleSheet('QWidget#Frame_6 { border-image: url("' + imagePath + '")}')
+        #self.frame_6.setStyleSheet('QWidget#Frame_6 { border-image: url("' + const.IMAGEPATH + '")}')
+        #todo - load the buttons
+        boardHolds = boardMaker.loadBoard()
+        print(boardHolds)
+        for hold in boardHolds:
+            print(hold)
+            button = QtWidgets.QPushButton(hold[0],self)
+            button.resize(31,31)
+            button.setParent(self.frame_6)
+            button.move(int(hold[1]),int(hold[2]))
+            button.setObjectName("pbx{}".format(hold[0]))
+            button.setStyleSheet("background: rgba(240, 240, 240, 25%); border: none;")
+            button.clicked.connect(self.buttonPress)
+            button.show()
+            button = None
+            
+    def buttonPress(self):
+        print("pressed")
         
     def resetBoardMaker(self):
         self.pbUndoAddHold.setEnabled(False)
