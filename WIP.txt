@@ -17,6 +17,9 @@ User create board
 		- this file is loaded every time the program runs - configuration file
 		- the user can load this in the "admin" tab to edit hold positions/hold numbers
 		- can save multiple "boards" and choose which one is loaded by default
+	- ability to edit existing board
+		- load current layout
+		- save edited layout (overwrite or new file?)
 	- mirror
 		- highlight a hold/button
 		- user clicks on mirror of that hold
@@ -26,8 +29,6 @@ Grades
 							- populate drop downs with grade table from file
 							- change the grades constant to a file
 							- config file which also includes other constants
-Admin
-	- grey out buttons when logged out
 Executable
 	- make run on startup - google
 Problem information

@@ -188,13 +188,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lblSelectedImage.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.lblBoardMakerInfo.setText("Load an image of the board to begin")
         
-    def skipHold(self):
+    def skipHold(self):#skip a button for when LED is unused
         global addButtonCount
         addButtonCount += 1
         text = "LED - " + str(addButtonCount-1)
         self.lblBoardMakerInfo.setText(text)
         
-    def undoAddHold(self):
+    def undoAddHold(self):#undo last hold added or skipped
         global addButtonCount
         addButtonCount -= 1
         widget_name = self.findChild(DragButton, "pbx{}".format(addButtonCount))
@@ -209,20 +209,21 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #self.pbBuildBoard.setEnabled(False)
             self.pbFinalise.setEnabled(False)
             text = "Click Add Hold to begin"
-            self.lblBoardMakerInfo.setText(text)
+            self.lblBoardMakerInfo.setText(text)     
         
-        
-    def finalise(self):
+    def finalise(self):#save the new board layout
         global addButtonCount
         
         filename = self.leBoardName.text()
         if (filename != ""):
             newBoard = []
-             #link hold buttons to the changeButtonColour function
+            
+            #find every hold button and append their position to a list (newBoard)
             for num in range (1,addButtonCount):
                 widget_name = self.findChild(DragButton, "pbx{}".format(num))
                 newHold = [str(num), str(widget_name.pos().x()), str(widget_name.pos().y())]
                 newBoard.append(newHold)
+            #save hold button locations list
             boardMaker.saveBoard(newBoard, filename) 
             self.resetBoardMaker()
             text = "Saved as - " + filename
@@ -234,13 +235,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def addButton(self):
         global addButtonCount
         
+        #light the LED that corrisponds to the button being added
+        self.lightSingleLED(addButtonCount)
+        #create a drag-able button - user places button over correct hold on image
+        #correct hold is indicated by LED on board
         w = QtWidgets.QWidget()
         button = DragButton(str(addButtonCount), w)
         button.resize(31,31)
         button.setParent(self.frmBoard)
         button.move(addButtonCount,addButtonCount)
         button.text = str(addButtonCount)
-        #button.setObjectName('pbx%d' % addButtonCount)
         button.setObjectName("pbx{}".format(addButtonCount))
         button.show()
         addButtonCount += 1
@@ -249,16 +253,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.pbBuildBoard.setEnabled(True)
             self.pbFinalise.setEnabled(True)
             self.pbSkipHold.setEnabled(True)
-        #button.clicked.connect(self.clickedd)
         text = "LED - " + str(addButtonCount-1)
         self.lblBoardMakerInfo.setText(text)
         
     def loadFile(self):#set the loaded image file as background for frame
-        #todo uncomment once ready to go
         fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"Image files (*.jpg *.png *.gif)")
         self.lblSelectedImage.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        #display the file path of the image selected - actually done this to use when saving the board (dodgy!)
         self.lblSelectedImage.setText(fname[0])
+        #set image as background
         self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("' + fname[0] + '")}')
+        #enable the next buttons
         self.pbBuildBoard.setEnabled(True)     
         self.pbSkipHold.setEnabled(True)                               
         text = "Image loaded\nAdd Hold to begin"
@@ -1035,6 +1040,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             for i in range(0,const.TOTAL_LED_COUNT(),1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
             strip.show()
+            
+    def lightSingleLED(hold):
+         if const.LINUX() == 1:
+            for i in range(0,const.TOTAL_LED_COUNT(),1):
+                strip.setPixelColorRGB(i, 0, 0, 0)
+            strip.setPixelColorRGB(hold-1, const.LED_VALUE(), 0, const.LED_VALUE())
+            strip.show()       
             
     def lightLEDs(startHolds, probHolds, finHolds):
         if const.LINUX() == 1:

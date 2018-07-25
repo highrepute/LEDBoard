@@ -36,7 +36,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>6</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -3366,13 +3366,13 @@
    </widget>
    <widget class="QWidget" name="tab_7">
     <attribute name="title">
-     <string>Test</string>
+     <string>Board Maker</string>
     </attribute>
     <widget class="QPushButton" name="pbLoadImage">
      <property name="geometry">
       <rect>
        <x>920</x>
-       <y>250</y>
+       <y>230</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -3491,7 +3491,7 @@
      <property name="geometry">
       <rect>
        <x>880</x>
-       <y>290</y>
+       <y>280</y>
        <width>211</width>
        <height>21</height>
       </rect>
@@ -3505,7 +3505,7 @@
       <string>Selected image</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </widget>
