@@ -36,7 +36,7 @@ class problemClass:#funcs that access information in the problem file
             writer = csv.writer(f, dialect='excel')
             for row in problems:
                 writer.writerow(row)
-                if const.LINUX == 0:
+                if const.LINUX() == 0:
                     #delete line seems to be required in windows but not in linux!
                     problemClass.deleteLastLine()    
         
@@ -109,7 +109,7 @@ class problemClass:#funcs that access information in the problem file
             writer = csv.writer(f, dialect='excel')
             writer.writerow(newProblem)
         f.close()
-        if (const.LINUX == 0):
+        if (const.LINUX() == 0):
             problemClass.deleteLastLine()
             
     def sortProblems(sortBy):
@@ -155,7 +155,7 @@ class problemClass:#funcs that access information in the problem file
         return fitleredProblems 
 
     def getStarFilteredProblems(problems,stars):
-        stars = problemClass.find(stars,const.STARS)[0][0]#return index of first match
+        stars = problemClass.find(stars,const.STARS())[0][0]#return index of first match
         header = problems[0]
         del problems[0]
         matches = []

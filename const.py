@@ -5,6 +5,7 @@ import ast
 class const:   
     def loadConfig():
         config = configparser.ConfigParser()
+        config.optionxform = str
         config.read('config.ini')
         return config
     
@@ -54,4 +55,4 @@ class const:
         config.set('BOARD', 'BOARDIMAGEPATH', path)
     
 #print(const.TOTAL_LED_COUNT())
-const.setLINUX("1")
+#const.setLINUX("0")

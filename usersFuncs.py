@@ -22,7 +22,7 @@ class userClass:#funcs that access information in the users file
             writer = csv.writer(f, dialect='excel')
             for row in users:
                 writer.writerow(row)
-                if const.LINUX == 0:
+                if const.LINUX() == 0:
                     #delete line seems to be required in windows but not in linux!
                     userClass.deleteLastLine()
         
@@ -73,7 +73,7 @@ class userClass:#funcs that access information in the users file
             writer = csv.writer(f, dialect='excel')
             writer.writerow(newUser)
         f.close()
-        if const.LINUX == 0:
+        if const.LINUX() == 0:
             #delete line seems to be required in windows but not in linux!
             userClass.deleteLastLine()
             

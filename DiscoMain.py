@@ -779,10 +779,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #reset button colours            
         for num in range (1,const.TOTAL_LED_COUNT()+1):
             label = getattr(self, 'pb{}'.format(num))
-            label.setStyleSheet("background-color: rgba(240, 240, 240, 25%)")#f0f0f0(240,240,240) #efebe7(239,235,231)
-            font = label.font();
-            font.setPointSize(12);
-            label.setFont(font);
+            label.setStyleSheet("background-color: rgba(240, 240, 240, 25%); border: none;")#f0f0f0(240,240,240) #efebe7(239,235,231)
             
         #reset inputs
         self.leProblemName.clear()
@@ -886,7 +883,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if (newProbCounter != 0):
              #QtWidgets.QMessageBox.warning(self, "Nothing to Undo", "There are no holds to Undo!")          
         #else:#hold to undo
-            prevPb.setStyleSheet("background-color: rgba(240, 240, 240, 25%)")
+            prevPb.setStyleSheet("background-color: rgba(240, 240, 240, 25%); border: none;")
             self.setLEDbyButton(prevPb,"off")
             newProbCounter -= 1
             undoCounter = 1
@@ -941,14 +938,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             if (newProbCounter == 0):
                 self.offLEDs()
-                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
+                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%); border: none;")#red
                 self.setLEDbyButton(self.sender(),"red")
             elif (newProbCounter == 1):
-                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
+                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%); border: none;")#red
                 self.setLEDbyButton(self.sender(),"red")
                 #when a button is pressed we save the previous button to the new problem and change colour of previous button
                 newStartHolds.append(self.getHoldNumberFromButton(prevPb))
-                prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 50%)")#green
+                prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 50%); border: none;")#green
                 self.setLEDbyButton(prevPb,"green")
             elif (newProbCounter == 2):
                 choice = QtWidgets.QMessageBox.question(self, 'Start Holds',
@@ -956,25 +953,25 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                                                     QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                 if (choice == QtWidgets.QMessageBox.Yes):
                     #two start holds
-                    self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
+                    self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%); border: none;")#red
                     self.setLEDbyButton(self.sender(),"red")
                     newStartHolds.append(self.getHoldNumberFromButton(prevPb))
                     #print("start", newStartHolds)
-                    prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 50%)")#green
+                    prevPb.setStyleSheet("background-color: rgba(0, 128, 0, 50%); border: none;")#green
                     self.setLEDbyButton(prevPb,"green")
                 else:
                     #only one start hold
-                    self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
+                    self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%); border: none;")#red
                     self.setLEDbyButton(self.sender(),"red")
                     newProbHolds.append(self.getHoldNumberFromButton(prevPb))
-                    prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 25%)")#blue
+                    prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 25%); border: none;")#blue
                     self.setLEDbyButton(prevPb,"blue")
             elif (newProbCounter >= 3):
                 #append hold to newProbHold array and change button and LED colours
-                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%)")#red
+                self.sender().setStyleSheet("background-color: rgba(255, 0, 0, 50%); border: none;")#red
                 self.setLEDbyButton(self.sender(),"red")
                 newProbHolds.append(self.getHoldNumberFromButton(prevPb))
-                prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 25%)")#blue
+                prevPb.setStyleSheet("background-color: rgba(0, 0, 255, 25%); border: none;")#blue
                 self.setLEDbyButton(prevPb,"blue")
             newProbCounter += 1
             prevPb = self.sender()
