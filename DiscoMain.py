@@ -207,9 +207,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 widget_name.setParent(None)
         #load the individual buttons
         boardHolds = boardMaker.loadBoard()
-        print(boardHolds)
+        #print(boardHolds)
         for hold in boardHolds:
-            print(hold)
+            #print(hold)
             button = QtWidgets.QPushButton(hold[0],self)
             button.resize(31,31)
             button.setParent(self.frame_6)
@@ -282,7 +282,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     newHold = [str(num), str(widget_name.pos().x()), str(widget_name.pos().y())]
                     newBoard.append(newHold)
             #save hold button locations list
-            boardMaker.saveBoard(newBoard, filename) 
+            boardMaker.saveBoard(newBoard, const.IMAGEPATH) 
             self.resetBoardMaker()
             self.pbReset.setEnabled(True)
             text = "Saved as - " + filename +"\nClick RESET to active new board"
@@ -398,11 +398,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lblAdminState.setText("New Default Board set - click RESET to load")   
         board = boardMaker.loadBoard()
         const.setTOTAL_LED_COUNT(len(board))
+        const.setIMAGEPATH(boardMaker.getBoardImagePath())
         
     def deleteRow(self):
         model = self.tblEdit.model()
         indices = [self.tblEdit.selectedIndexes()[0]]
-        print("delete", indices)
+        #print("delete", indices)
         for index in sorted(indices):
             model.removeRow(index.row())
         
@@ -538,7 +539,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global S2P2StartMatches        
         global S2P2ProbMatches
         global S2P2FinMatches        
-        print("show two probs")
+        #print("show two probs")
         
         if showTwoProbsFlag == 0:
             showTwoProbsFlag = 1
@@ -548,7 +549,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.pbShowTwoProbs.setStyleSheet("background-color: rgba(0, 128, 0 100%)")#green
             #get holds for both problems
             self.lightTwoLEDs(startHolds, probHolds, finHolds, startHoldsS2P, probHoldsS2P, finHoldsS2P)
-            print("start ",startHolds, startHoldsS2P, "prob ",probHoldsS2P, probHolds, "fin ",finHoldsS2P, finHolds)
+            #print("start ",startHolds, startHoldsS2P, "prob ",probHoldsS2P, probHolds, "fin ",finHoldsS2P, finHolds)
             #figure out any holds that are on both problems
             S2PStartMatches = list(set(startHolds) & set(startHoldsS2P+probHoldsS2P+finHoldsS2P))     
             S2PProbMatches = list(set(probHolds) & set(startHoldsS2P+probHoldsS2P+finHoldsS2P))  
@@ -556,7 +557,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             S2P2StartMatches = list(set(startHoldsS2P) & set(startHolds+probHolds+finHolds))     
             S2P2ProbMatches = list(set(probHoldsS2P) & set(startHolds+probHolds+finHolds))  
             S2P2FinMatches = list(set(finHoldsS2P) & set(startHolds+probHolds+finHolds))            
-            print("matches ", S2PStartMatches, S2PProbMatches, S2PFinMatches, S2P2StartMatches, S2P2ProbMatches, S2P2FinMatches)
+            #print("matches ", S2PStartMatches, S2PProbMatches, S2PFinMatches, S2P2StartMatches, S2P2ProbMatches, S2P2FinMatches)
         else:
             #turn off show two problem mode
             showTwoProbsFlag = 0
@@ -598,7 +599,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             style = self.cbStyle.currentText()
             #create new log entry
             logProblem = [user,problem,grade,stars,date,comments,style]
-            print(logProblem)
+            #print(logProblem)
             logClass.logProblem(logProblem)
             #clear text
             self.tbLogComments.clear()
@@ -672,10 +673,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     #log a user out
     def autoLogout(self):
         global usersLoggedIn
-        print("auto logout")
+        #print("auto logout")
         for user,timeIn in usersLoggedIn:
             #if time since logged-in is 30mins (1800sec)
-            print(time.time() - timeIn)
+            #print(time.time() - timeIn)
             if ((time.time() - timeIn) > 1800):
                 #log out that user
                 index = MyApp.find(usersLoggedIn,user)[0]
@@ -746,7 +747,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global usersLoggedIn
         index = MyApp.find(usersLoggedIn,user)[0]
         usersLoggedIn[index][1] = time.time()
-        print("time in",usersLoggedIn)
+        #print("time in",usersLoggedIn)
         
     #logout user selected in lbUsers listbox
     def logout(self):
@@ -1007,7 +1008,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     #extracts the number from the button pressed and uses it to light the correct LED
     def setLEDbyButton(self,button,colour):
         holdNumber = self.getHoldNumberFromButton(button)
-        print("hold Number -", holdNumber, "colour -", colour)
+        #print("hold Number -", holdNumber, "colour -", colour)
         if (const.LINUX == 1):
             if (colour == "red"):
                 strip.setPixelColorRGB(holdNumber-1, const.LED_VALUE, 0, 0)#red
