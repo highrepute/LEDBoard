@@ -13,6 +13,7 @@ class const:
     TOTAL_LED_COUNT = 126
     IMAGEPATH = None
     BOARDNAME = None
+    PROB_TBL_COL = 5
     
     def initConfigVariables():
         const.LINUX = int(const.getLINUX())

@@ -158,6 +158,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         userFilter = ""  
         addButtonCount = 1          
         
+        self.initProblemTable()
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)#set startup tab      
         self.populateFilterTab()
@@ -242,6 +243,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         filename = self.leBoardName.text()
         if (filename != ""):
             #save the image path to config
+            #todo - strip out filename? so not reliant on fixed path
             const.setIMAGEPATH(self.lblImagePath.text())
             
             newBoard = []            
@@ -273,6 +275,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         button.move(addButtonCount,addButtonCount)
         button.text = str(addButtonCount)
         button.setObjectName("pbx{}".format(addButtonCount))
+        button.setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")
         button.show()
         addButtonCount += 1
         if addButtonCount > 1:
@@ -791,6 +794,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             except:
                 self.lblInfo.setText("Oh no!\nPlease select a user, you may need to login")
         
+    def initProblemTable(self):
+        problemList = problemClass.getGradeFilteredProblems(0, 0)
+        self.tblProblems.setColumnCount(const.PROB_TBL_COL)
+        self.tblProblems.horizontalHeader().setVisible(True)
+        self.tblProblems.setHorizontalHeaderLabels(problemList[0])
+        #set headers and column widths
+        header = self.tblProblems.horizontalHeader()       
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+    
     def populateProblemTable(self):
         global userFilter
         #populate problem list
@@ -799,28 +815,24 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         problemList = problemClass.getGradeFilteredProblems(start, end)
         #print("FILTER1", problemList)
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
-        #print("FILTER2", problemList)
+        print("FILTER2", problemList)
+        self.tblProblems.setSortingEnabled(False)
         self.tblProblems.setRowCount(len(problemList)-1)
-        self.tblProblems.setColumnCount(5)
-        self.tblProblems.horizontalHeader().setVisible(True)
-        self.tblProblems.setHorizontalHeaderLabels(problemList[0])
         for i in range(1,len(problemList),1):
-            for j in range(0,5,1):
+            for j in range(0,const.PROB_TBL_COL,1):
                 if j == 1:#convert grade for display
                     grade = const.GRADES[int(problemList[i][j])]
+                    print(grade)
                     self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(grade))    
                 elif j == 2:#convert stars for display
                     star = const.STARS[int(problemList[i][j])]
+                    print(star)
                     self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(star))                    
                 else:
-                    self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(problemList[i][j]))
-        #set headers and column widths
-        header = self.tblProblems.horizontalHeader()       
-        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+                    item = problemList[i][j]
+                    print(item)
+                    self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(item))   
+        self.tblProblems.setSortingEnabled(True)
         
     def resetAddProblemTab(self):
         global newProbCounter
