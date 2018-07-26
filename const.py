@@ -52,9 +52,9 @@ class const:
     
     def setBOARDNAME(value):
         config = const.loadConfig()
-        config.set('DEFAULT', 'BOARDNAME', str(value))
+        config.set('BOARD', 'BOARDNAME', str(value))
         const.writeConfig(config)
-        const.LINUX = value        
+        const.BOARDNAME = value   
 
     def getTOTAL_LED_COUNT():
         config = const.loadConfig()

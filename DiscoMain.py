@@ -5,6 +5,7 @@ from PyQt5.QtCore import QTimer
 import re
 import datetime
 import time
+import os
 
 from collections import Counter
 
@@ -99,6 +100,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbEditProblems.clicked.connect(self.editProblems)
         self.pbEditSave.clicked.connect(self.editSave)
         self.pbDeleteRow.clicked.connect(self.deleteRow)
+        self.pbDefaultBoard.clicked.connect(self.setDefaultBoard)
+        self.pbReset_2.clicked.connect(self.resetSoftware)
         
         #filter tab
         self.pbFilterByUser.clicked.connect(self.filterByUser)
@@ -113,21 +116,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbSave.clicked.connect(self.saveNewProb)
         self.pbUndo.clicked.connect(self.undo)
         
-        #Test tab
+        #Board Maker tab
         self.pbLoadImage.clicked.connect(self.loadFile)
         self.pbBuildBoard.clicked.connect(self.addButton)
         self.pbFinalise.clicked.connect(self.finalise)
         self.pbUndoAddHold.clicked.connect(self.undoAddHold)    
         self.pbSkipHold.clicked.connect(self.skipHold)
-        
-        #link hold buttons to the changeButtonColour function
-        for num in range (1,const.TOTAL_LED_COUNT+1):
-            label = getattr(self, 'pb{}'.format(num))
-            label.clicked.connect(self.addHoldtoProb)
-            #make them transparent???
-            label.setStyleSheet("background: rgba(240, 240, 240, 25%); border: none;")
+        self.pbReset.clicked.connect(self.resetSoftware)
             
-        #init new problem globals
+        #init globals
         newProbCounter = 0
         newStartHolds = []
         newProbHolds = []
@@ -158,15 +155,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         userFilter = ""  
         addButtonCount = 1          
         
+        #initialise variout bits
         self.initProblemTable()
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)#set startup tab      
         self.populateFilterTab()
         self.populateComboBoxes()
         self.resetBoardMaker()
-        self.setAdminTab(False)
+        self.initAdminTab(False)
         self.initialiseAddProblemTab()
-        
         self.start_timer()
         
         #dispaly full screen
@@ -178,13 +175,37 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #make tables read only
         self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)    
+        self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers) 
+        
+    def resetSoftware(self):
+        #load that configuration variables from config.ini
+        const.initConfigVariables()
+        #initialise variout bits
+        self.initProblemTable()
+        self.populateProblemTable()
+        self.tabWidget.setCurrentIndex(0)#set startup tab      
+        self.populateFilterTab()
+        self.populateComboBoxes()
+        self.resetBoardMaker()
+        self.initAdminTab(False)
+        self.initialiseAddProblemTab()
+        self.start_timer()
+        #default message
+        self.lblInfo.setText(const.DEFAULTMSG)
+        self.pbUndoAddHold.setEnabled(False)
+        
         
     def initialiseAddProblemTab(self):
         #set background image of add problems frame
         self.frame_6.setObjectName("Frame_6");
         self.frame_6.setStyleSheet('QWidget#Frame_6 { border-image: url("' + const.IMAGEPATH + '")}')
-        #todo - load the buttons
+        #clear any existing buttons
+        for num in range (1,1000):#attempt to clear all holds
+            widget_name = self.findChild(QtWidgets.QPushButton, "pb{}".format(num))
+            if widget_name != None:
+                widget_name.hide()
+                widget_name.setParent(None)
+        #load the individual buttons
         boardHolds = boardMaker.loadBoard()
         print(boardHolds)
         for hold in boardHolds:
@@ -193,26 +214,33 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             button.resize(31,31)
             button.setParent(self.frame_6)
             button.move(int(hold[1]),int(hold[2]))
-            button.setObjectName("pbx{}".format(hold[0]))
+            button.setObjectName("pb{}".format(hold[0]))
             button.setStyleSheet("background: rgba(240, 240, 240, 25%); border: none;")
-            button.clicked.connect(self.buttonPress)
+            button.clicked.connect(self.addHoldtoProb)
             button.show()
             button = None
-            
-    def buttonPress(self):
-        print("pressed")
         
     def resetBoardMaker(self):
+        global addButtonCount
+        
         self.pbUndoAddHold.setEnabled(False)
         self.pbBuildBoard.setEnabled(False)
         self.pbFinalise.setEnabled(False)
         self.pbSkipHold.setEnabled(False)
+        self.pbReset.setEnabled(False)
         self.lblImagePath.setText("Selected image")
         self.lblImagePath.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.lblBoardMakerInfo.setText("Load an image of the board to begin")
-        #todo - clear image
-        #todo - clear filename
-        #todo - clear all buttons!
+        self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("")}')
+        self.lblImagePath.setText("Select an image")
+        self.lblImagePath.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        #todo - clear all buttons
+        for num in range (1,addButtonCount):
+            widget_name = self.findChild(DragButton, "pbx{}".format(num))
+            if widget_name != None:
+                widget_name.hide()
+                widget_name.setParent(None)
+        addButtonCount = 1
         
     def skipHold(self):#skip a button for when LED is unused
         global addButtonCount
@@ -226,7 +254,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         widget_name = self.findChild(DragButton, "pbx{}".format(addButtonCount))
         if widget_name != None:
             widget_name.hide()
-            #widget_name.setObjectName("pbx{}".format(-1))
             widget_name.setParent(None)
         text = "LED - " + str(addButtonCount-1)
         self.lblBoardMakerInfo.setText(text)
@@ -242,20 +269,23 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         filename = self.leBoardName.text()
         if (filename != ""):
-            #save the image path to config
-            #todo - strip out filename? so not reliant on fixed path
+            filename += ".brd"
             const.setIMAGEPATH(self.lblImagePath.text())
+            const.setTOTAL_LED_COUNT(addButtonCount-1)
+            const.setBOARDNAME(filename)
             
-            newBoard = []            
             #find every hold button and append their position to a list (newBoard)
+            newBoard = []
             for num in range (1,addButtonCount):
                 widget_name = self.findChild(DragButton, "pbx{}".format(num))
-                newHold = [str(num), str(widget_name.pos().x()), str(widget_name.pos().y())]
-                newBoard.append(newHold)
+                if widget_name != None:
+                    newHold = [str(num), str(widget_name.pos().x()), str(widget_name.pos().y())]
+                    newBoard.append(newHold)
             #save hold button locations list
             boardMaker.saveBoard(newBoard, filename) 
             self.resetBoardMaker()
-            text = "Saved as - " + filename
+            self.pbReset.setEnabled(True)
+            text = "Saved as - " + filename +"\nClick RESET to active new board"
             self.lblBoardMakerInfo.setText(text)
         else:
             text = "Enter a name to save"
@@ -287,7 +317,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lblBoardMakerInfo.setText(text)
         
     def loadFile(self):#set the loaded image file as background for frame
-        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', 'c:\\',"Image files (*.jpg *.png *.gif)")
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg *.png *.gif)")
         self.lblImagePath.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         #display the file path of the image selected - actually done this to use when saving the board (dodgy!)
         self.lblImagePath.setText(fname[0])
@@ -359,7 +389,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             users = userClass.getUserNames()
             self.lbUserFilter.clear()
             if (len(users) > 0):
-                self.lbUserFilter.addItems(users)            
+                self.lbUserFilter.addItems(users)    
+                
+    def setDefaultBoard(self):
+        boardPath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Board files (*.brd)")
+        const.setBOARDNAME(os.path.basename(boardPath[0]))
+        self.lblDefaultBoard.setText(const.BOARDNAME)  
+        self.lblAdminState.setText("New Default Board set - click RESET to load")   
+        board = boardMaker.loadBoard()
+        const.setTOTAL_LED_COUNT(len(board))
         
     def deleteRow(self):
         model = self.tblEdit.model()
@@ -447,7 +485,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         adminFlag = 0
         self.lblAdminState.setText("Logged Out")
         self.tblEdit.clear()
-        self.setAdminTab(False)
+        self.initAdminTab(False)
     
     def adminLogin(self):
         global adminFlag
@@ -457,17 +495,21 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 adminFlag = 1
                 self.leAdminPassword.clear()
                 self.lblAdminState.setText("Logged In")
-                self.setAdminTab(True)
+                self.initAdminTab(True)
             else:
                 self.lblInfo.setText("Oh no!\nI'm sorry your password is incorrect")
                 
-    def setAdminTab(self, loggedIn):
+    def initAdminTab(self, loggedIn):
         self.tblEdit.setEnabled(loggedIn)
         self.pbEditUsers.setEnabled(loggedIn)
         self.pbEditLogs.setEnabled(loggedIn)
         self.pbEditProblems.setEnabled(loggedIn)
         self.pbDeleteRow.setEnabled(loggedIn)
         self.pbEditSave.setEnabled(loggedIn)
+        self.lblDefaultBoard.setEnabled(loggedIn)
+        self.lblDefaultBoard.setText(const.BOARDNAME)
+        self.pbDefaultBoard.setEnabled(loggedIn)
+        self.pbReset_2.setEnabled(loggedIn)
     
     def sliderChange(self):
         global sliderFlag
@@ -815,22 +857,22 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         problemList = problemClass.getGradeFilteredProblems(start, end)
         #print("FILTER1", problemList)
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
-        print("FILTER2", problemList)
+        #print("FILTER2", problemList)
         self.tblProblems.setSortingEnabled(False)
         self.tblProblems.setRowCount(len(problemList)-1)
         for i in range(1,len(problemList),1):
             for j in range(0,const.PROB_TBL_COL,1):
                 if j == 1:#convert grade for display
                     grade = const.GRADES[int(problemList[i][j])]
-                    print(grade)
+                    #print(grade)
                     self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(grade))    
                 elif j == 2:#convert stars for display
                     star = const.STARS[int(problemList[i][j])]
-                    print(star)
+                    #print(star)
                     self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(star))                    
                 else:
                     item = problemList[i][j]
-                    print(item)
+                    #print(item)
                     self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(item))   
         self.tblProblems.setSortingEnabled(True)
         
@@ -841,8 +883,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global undoCounter
         #reset button colours            
         for num in range (1,const.TOTAL_LED_COUNT+1):
-            label = getattr(self, 'pb{}'.format(num))
-            label.setStyleSheet("background-color: rgba(240, 240, 240, 25%); border: none;")#f0f0f0(240,240,240) #efebe7(239,235,231)
+            label = self.findChild(QtWidgets.QPushButton, "pb{}".format(num))
+            if label != None:
+                label.setStyleSheet("background-color: rgba(240, 240, 240, 25%); border: none;")#f0f0f0(240,240,240) #efebe7(239,235,231)
             
         #reset inputs
         self.leProblemName.clear()
@@ -953,10 +996,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #set prevPb (previously pushed button) back one
             #and delete last entry to new problem array (start or problem holds)
             if (len(newProbHolds) != 0):
-                prevPb = getattr(self, 'pb{}'.format(newProbHolds[-1]))
+                #prevPb = getattr(self, 'pb{}'.format(newProbHolds[-1]))
+                prevPb = self.findChild(QtWidgets.QPushButton, "pb{}".format(newProbHolds[-1]))
                 del(newProbHolds[-1])
             elif (len(newStartHolds) != 0):
-                prevPb = getattr(self, 'pb{}'.format(newStartHolds[-1]))
+                #prevPb = getattr(self, 'pb{}'.format(newStartHolds[-1]))
+                prevPb = self.findChild(QtWidgets.QPushButton, "pb{}".format(newStartHolds[-1]))
                 del(newStartHolds[-1])
         
     #extracts the number from the button pressed and uses it to light the correct LED
@@ -1363,9 +1408,10 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = MyApp()
     #set the background colour of the main window
-    p = window.palette()
-    p.setColor(window.backgroundRole(), QtCore.Qt.black)
-    window.setPalette(p)
+    #todo - this sets all the backgrounds black - possibly not a bad thing
+    #p = window.palette()
+    #p.setColor(window.backgroundRole(), QtCore.Qt.black)
+    #window.setPalette(p)
     
     window.show()
     LEDState = 0

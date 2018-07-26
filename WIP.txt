@@ -1,5 +1,7 @@
 Work In Progress...
 Priority 1
+Bugs
+	- users file sometimes ends up empty!
 User create board
 	- ++import image
 							- save the path to this image in a configuration file
@@ -13,9 +15,9 @@ User create board
 							- undo, skip LED, clear all
 							- when done the user clicks a complete board button
 							- the positions of every hold & number are stored in a boardname.txt file
-		- this file is loaded every time the program runs - configuration file
-		- the user can load this in the "admin" tab to edit hold positions/hold numbers
-		- can save multiple "boards" and choose which one is loaded by default
+							- reset button - to load new layout
+							- this file is loaded every time the program runs - configuration file
+							- can save multiple "boards" and choose which one is loaded by default
 	- ability to edit existing board
 		- load current layout
 		- save edited layout (overwrite or new file?)
