@@ -22,11 +22,14 @@ class boardMaker:
                     
     def loadBoard():
         #this gets the contents of the csv file into a list
-        with open(const.BOARDNAME, newline='') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
-            board = list(filereader)
-        del board[0]
-        return board
+        try:
+            with open(const.BOARDNAME, newline='') as csvfile:
+                filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
+                board = list(filereader)
+            del board[0]
+            return board
+        except:
+            return None
     
     def getBoardImagePath():
         #this gets the contents of the csv file into a list
@@ -50,3 +53,4 @@ class boardMaker:
 #imagepath = "image.jpg"
 #boardMaker.saveBoard(board, imagepath)
 #print(boardMaker.getBoardImagePath())
+#print(boardMaker.loadBoard())

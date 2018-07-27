@@ -156,6 +156,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         addButtonCount = 1          
         
         #initialise variout bits
+        print("init")
         self.initProblemTable()
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)#set startup tab      
@@ -165,6 +166,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.initAdminTab(False)
         self.initialiseAddProblemTab()
         self.start_timer()
+        print("init-ed")
         
         #dispaly full screen
         #self.showFullScreen()
@@ -196,9 +198,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         
     def initialiseAddProblemTab(self):
-        #set background image of add problems frame
-        self.frame_6.setObjectName("Frame_6");
-        self.frame_6.setStyleSheet('QWidget#Frame_6 { border-image: url("' + const.IMAGEPATH + '")}')
         #clear any existing buttons
         for num in range (1,1000):#attempt to clear all holds
             widget_name = self.findChild(QtWidgets.QPushButton, "pb{}".format(num))
@@ -207,18 +206,24 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 widget_name.setParent(None)
         #load the individual buttons
         boardHolds = boardMaker.loadBoard()
-        #print(boardHolds)
-        for hold in boardHolds:
-            #print(hold)
-            button = QtWidgets.QPushButton(hold[0],self)
-            button.resize(31,31)
-            button.setParent(self.frame_6)
-            button.move(int(hold[1]),int(hold[2]))
-            button.setObjectName("pb{}".format(hold[0]))
-            button.setStyleSheet("background: rgba(240, 240, 240, 25%); border: none;")
-            button.clicked.connect(self.addHoldtoProb)
-            button.show()
-            button = None
+        if boardHolds != None:
+            #set background image of add problems frame
+            self.frame_6.setObjectName("Frame_6");
+            self.frame_6.setStyleSheet('QWidget#Frame_6 { border-image: url("' + const.IMAGEPATH + '")}')
+        
+            for hold in boardHolds:
+                #print(hold)
+                button = QtWidgets.QPushButton(hold[0],self)
+                button.resize(31,31)
+                button.setParent(self.frame_6)
+                button.move(int(hold[1]),int(hold[2]))
+                button.setObjectName("pb{}".format(hold[0]))
+                button.setStyleSheet("background: rgba(240, 240, 240, 25%); border: none;")
+                button.clicked.connect(self.addHoldtoProb)
+                button.show()
+                button = None
+        else:
+            QtWidgets.QMessageBox.warning(self, "Easy now!", "Unable to load a board. Head over The Board Maker to create one")
         
     def resetBoardMaker(self):
         global addButtonCount
@@ -1109,11 +1114,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if (LEDState == 0):
             LEDState = 1
             if const.LINUX == 1:
-                for i in range(0,const.TOTAL_LED_COUNT,1):
-                    strip.setPixelColorRGB(i,int((255/const.TOTAL_LED_COUNT)*i), 0, 0)
-                for j in range(256*1):
-                    for i in range(strip.numPixels()):
-                        strip.setPixelColor(i, MyApp.wheel((i+j) & 255))
+#                for i in range(0,500,1):
+#                    strip.setPixelColorRGB(i,int((255/100)*i), 0, 0)
+#                for j in range(256*1):
+                #500 is a guess at the max number of LEDs any system might have
+                for i in range(500):
+                    strip.setPixelColor(i, MyApp.wheel((i) & 255))
                 strip.show()
         else:
             LEDState = 0
