@@ -36,7 +36,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>5</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -1287,10 +1287,36 @@
       <enum>QFrame::Raised</enum>
      </property>
     </widget>
+    <widget class="QLabel" name="lblInfoAddProb">
+     <property name="geometry">
+      <rect>
+       <x>850</x>
+       <y>50</y>
+       <width>251</width>
+       <height>111</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Welcome to the Board of High Repute</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
     <zorder>frame_6</zorder>
     <zorder>layoutWidget</zorder>
     <zorder>pbUndo</zorder>
     <zorder>pbDiscard</zorder>
+    <zorder>lblInfoAddProb</zorder>
    </widget>
    <widget class="QWidget" name="tab_3">
     <attribute name="title">
@@ -1626,7 +1652,7 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>310</x>

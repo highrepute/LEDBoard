@@ -69,9 +69,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         
         self.slider = QRangeSlider(self)
-        self.slider.setMax(8)
+        self.slider.setMax(len(const.GRADES)+1)
         self.slider.setMin(0)
-        self.slider.setRange(0,7)
+        self.slider.setRange(0,len(const.GRADES))
         self.QVBLayoutSlider.addWidget(self.slider)
         self.slider.endValueChanged.connect(self.sliderChange)
         self.slider.startValueChanged.connect(self.sliderChange)    
@@ -155,8 +155,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         userFilter = ""  
         addButtonCount = 1          
         
+        #default message
+        self.lblInfo.setText(const.DEFAULTMSG)
+        self.lblInfoAddProb.setText("Create new problems here - click a hold to begin")
+        
         #initialise variout bits
-        print("init")
         self.initProblemTable()
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)#set startup tab      
@@ -165,37 +168,37 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.resetBoardMaker()
         self.initAdminTab(False)
         self.initialiseAddProblemTab()
+        self.initSlider()
         self.start_timer()
-        print("init-ed")
         
         #dispaly full screen
         #self.showFullScreen()
-        
-        #default message
-        self.lblInfo.setText(const.DEFAULTMSG)
         
         #make tables read only
         self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers) 
         
+    def initSlider(self):
+        self.lblMin.setText(str(const.GRADES[0]))
+        self.lblMax.setText(str(const.GRADES[-1]))
+        
     def resetSoftware(self):
         #load that configuration variables from config.ini
         const.initConfigVariables()
+        #default message
+        self.lblInfo.setText(const.DEFAULTMSG)
+        self.lblInfoAddProb.setText("Create new problems here - click a hold to begin")
         #initialise variout bits
         self.initProblemTable()
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)#set startup tab      
         self.populateFilterTab()
-        self.populateComboBoxes()
+        #self.populateComboBoxes()
         self.resetBoardMaker()
         self.initAdminTab(False)
         self.initialiseAddProblemTab()
         self.start_timer()
-        #default message
-        self.lblInfo.setText(const.DEFAULTMSG)
-        self.pbUndoAddHold.setEnabled(False)
-        
         
     def initialiseAddProblemTab(self):
         #clear any existing buttons
@@ -223,7 +226,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 button.show()
                 button = None
         else:
-            QtWidgets.QMessageBox.warning(self, "Easy now!", "Unable to load a board. Head over The Board Maker to create one")
+            #can't load a board - assume first use
+            const.setTOTAL_LED_COUNT(1000)#this allows test LED button to work on a new system - for max 1000 LEDs
+            self.lblInfoAddProb.setText("Unable to load a board. Head over to The Board Maker to create one")
+            self.lblInfo.setText("Unable to load a board. Head over to The Board Maker to create one")
         
     def resetBoardMaker(self):
         global addButtonCount
@@ -522,7 +528,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         sliderFlag = 1
         
         start = const.GRADES[self.slider.getRange()[0]]
-        end = const.GRADES[self.slider.getRange()[1]-1]
+        end = const.GRADES[self.slider.getRange()[1] - 1]
         self.lblMax.setText(str(end))
         self.lblMin.setText(str(start))
 
@@ -860,6 +866,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #populate problem list
         start = self.slider.getRange()[0]
         end = self.slider.getRange()[1] - 1
+        print(start, ",", end)
         problemList = problemClass.getGradeFilteredProblems(start, end)
         #print("FILTER1", problemList)
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
@@ -1118,7 +1125,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 #                    strip.setPixelColorRGB(i,int((255/100)*i), 0, 0)
 #                for j in range(256*1):
                 #500 is a guess at the max number of LEDs any system might have
-                for i in range(500):
+                for i in range(const.TOTAL_LED_COUNT):
                     strip.setPixelColor(i, MyApp.wheel((i) & 255))
                 strip.show()
         else:
