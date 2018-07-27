@@ -20,10 +20,10 @@ class boardMaker:
                     #delete line seems to be required in windows but not in linux!
                     boardMaker.deleteLastLine()  
                     
-    def loadBoard():
+    def loadBoard(boardPath):
         #this gets the contents of the csv file into a list
         try:
-            with open(const.BOARDNAME, newline='') as csvfile:
+            with open(boardPath, newline='') as csvfile:
                 filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
                 board = list(filereader)
             del board[0]
@@ -31,9 +31,9 @@ class boardMaker:
         except:
             return None
     
-    def getBoardImagePath():
-        #this gets the contents of the csv file into a list
-        with open(const.BOARDNAME, newline='') as csvfile:
+    def getBoardImagePath(boardPath):
+        #this gets board image path from the first line of the brd file
+        with open(boardPath, newline='') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
             board = list(filereader)
         return board[0][0]        

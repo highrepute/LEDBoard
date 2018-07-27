@@ -1,11 +1,8 @@
 Work In Progress...
 Priority 1
 Bugs
-	- ?
+
 User create board
-	- ability to edit existing board
-		- load current layout
-		- save edited layout (overwrite or new file?)
 	- mirror
 		- option to create once board is finalised - or loaded
 		- highlight a hold/button

@@ -123,6 +123,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbUndoAddHold.clicked.connect(self.undoAddHold)    
         self.pbSkipHold.clicked.connect(self.skipHold)
         self.pbReset.clicked.connect(self.resetSoftware)
+        self.pbOpenExisting.clicked.connect(self.openExistingBoard)
             
         #init globals
         newProbCounter = 0
@@ -208,7 +209,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 widget_name.hide()
                 widget_name.setParent(None)
         #load the individual buttons
-        boardHolds = boardMaker.loadBoard()
+        boardHolds = boardMaker.loadBoard(const.BOARDNAME)
         if boardHolds != None:
             #set background image of add problems frame
             self.frame_6.setObjectName("Frame_6");
@@ -231,6 +232,43 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lblInfoAddProb.setText("Unable to load a board. Head over to The Board Maker to create one")
             self.lblInfo.setText("Unable to load a board. Head over to The Board Maker to create one")
         
+    def openExistingBoard(self):
+        global addButtonCount
+        
+        self.resetBoardMaker()
+        boardPath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Board files (*.brd)")[0]
+        imagePath = str(boardMaker.getBoardImagePath(boardPath))
+        print(boardPath, ",", imagePath)
+        boardHolds = boardMaker.loadBoard(boardPath)
+        if boardHolds != None:
+            #set background image of add problems frame
+            self.frmBoard.setObjectName("frmBoard");
+            self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("' + imagePath + '")}')
+        
+            for hold in boardHolds:                
+                w = QtWidgets.QWidget()
+                button = DragButton(str(hold[0]), w)
+                button.resize(31,31)
+                button.setParent(self.frmBoard)
+                button.move(int(hold[1]),int(hold[2]))
+                button.text = str(hold[0])
+                button.setObjectName("pbx{}".format(str(hold[0])))
+                button.setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")
+                button.show()
+                addButtonCount += 1
+            
+            self.lblImagePath.setText(imagePath)
+            boardName = os.path.splitext(os.path.basename(boardPath))[0]
+            print(boardName)
+            self.leBoardName.setText(boardName)
+            self.lblBoardMakerInfo.setText("Board loaded")
+            self.pbFinalise.setEnabled(True)
+            self.pbSkipHold.setEnabled(True)
+            self.pbUndoAddHold.setEnabled(True)
+            self.pbBuildBoard.setEnabled(True)
+        else:
+            self.lblBoardMakerInfo.setText("Unable to load a board!")
+    
     def resetBoardMaker(self):
         global addButtonCount
         
@@ -314,7 +352,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         button.resize(31,31)
         button.setParent(self.frmBoard)
         button.move(addButtonCount,addButtonCount)
-        button.text = str(addButtonCount)
         button.setObjectName("pbx{}".format(addButtonCount))
         button.setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")
         button.show()
@@ -328,12 +365,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lblBoardMakerInfo.setText(text)
         
     def loadFile(self):#set the loaded image file as background for frame
-        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg *.png *.gif)")
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg *.png *.gif)")[0]
         self.lblImagePath.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         #display the file path of the image selected - actually done this to use when saving the board (dodgy!)
-        self.lblImagePath.setText(fname[0])
+        self.lblImagePath.setText(fname)
         #set image as background
-        self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("' + fname[0] + '")}')
+        self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("' + fname + '")}')
         #enable the next buttons
         self.pbBuildBoard.setEnabled(True)     
         self.pbSkipHold.setEnabled(True)                               
@@ -403,13 +440,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.lbUserFilter.addItems(users)    
                 
     def setDefaultBoard(self):
-        boardPath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Board files (*.brd)")
-        const.setBOARDNAME(os.path.basename(boardPath[0]))
+        boardPath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Board files (*.brd)")[0]
+        const.setBOARDNAME(os.path.basename(boardPath))
         self.lblDefaultBoard.setText(const.BOARDNAME)  
         self.lblAdminState.setText("New Default Board set - click RESET to load")   
-        board = boardMaker.loadBoard()
+        board = boardMaker.loadBoard(boardPath)
         const.setTOTAL_LED_COUNT(len(board))
-        const.setIMAGEPATH(boardMaker.getBoardImagePath())
+        const.setIMAGEPATH(boardMaker.getBoardImagePath(boardPath))
         
     def deleteRow(self):
         model = self.tblEdit.model()

@@ -36,7 +36,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>6</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -1863,6 +1863,19 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pbOpenExisting">
+     <property name="geometry">
+      <rect>
+       <x>900</x>
+       <y>40</y>
+       <width>171</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Open existing board</string>
      </property>
     </widget>
    </widget>
