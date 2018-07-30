@@ -5,10 +5,11 @@ Bugs
 User create board
 	- mirror
 		- option to create once board is finalised - or loaded
-		- highlight a hold/button
-		- user clicks on mirror of that hold
-		- undo
-		- make a db that user can edit
+		- user clicks on a hold and is then asked click on the mirror
+		- user clicks on mirror of that hold - both holds lit the same colour (use a few different colours)
+		- when all LEDs are coloured then mirror is complete
+		- undo (just click on the button again)
+		- can edit my loading the mirror .brd file
 Executable
 	- make run on startup - google
 Problem information

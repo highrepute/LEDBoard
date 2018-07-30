@@ -63,6 +63,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global adminFlag
         global userFilter
         global addButtonCount
+        global firstMirrorHold
         
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
@@ -124,6 +125,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbSkipHold.clicked.connect(self.skipHold)
         self.pbReset.clicked.connect(self.resetSoftware)
         self.pbOpenExisting.clicked.connect(self.openExistingBoard)
+        self.leHoldText.returnPressed.connect(self.changeHoldText)
+        self.pbSetText.clicked.connect(self.changeHoldText)
             
         #init globals
         newProbCounter = 0
@@ -154,7 +157,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         sliderFlag = 0
         adminFlag = 0#0-logged out, 1-logged in, 2-editUsers, 3-editlogs, 4-editproblems
         userFilter = ""  
-        addButtonCount = 1          
+        addButtonCount = 1     
+        firstMirrorHold = 0
         
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
@@ -218,6 +222,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 widget_name.setParent(None)
         #load the individual buttons
         boardHolds = boardMaker.loadBoard(const.BOARDNAME)
+        print(boardHolds)
         if boardHolds != None:
             #set background image of add problems frame
             self.frame_6.setObjectName("Frame_6");
@@ -225,7 +230,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
             for hold in boardHolds:
                 #print(hold)
-                button = QtWidgets.QPushButton(hold[0],self)
+                button = QtWidgets.QPushButton(hold[3],self)
                 button.resize(31,31)
                 button.setParent(self.frame_6)
                 button.move(int(hold[1]),int(hold[2]))
@@ -249,19 +254,27 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         print(boardPath, ",", imagePath)
         boardHolds = boardMaker.loadBoard(boardPath)
         if boardHolds != None:
-            #set background image of add problems frame
+            #set background image of frame
             self.frmBoard.setObjectName("frmBoard");
             self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("' + imagePath + '")}')
+                                        
+            #get the mirror table
+            mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
         
+            #create the holds from the file
             for hold in boardHolds:                
                 w = QtWidgets.QWidget()
                 button = DragButton(str(hold[0]), w)
                 button.resize(31,31)
                 button.setParent(self.frmBoard)
                 button.move(int(hold[1]),int(hold[2]))
-                button.text = str(hold[0])
                 button.setObjectName("pbx{}".format(str(hold[0])))
-                button.setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")
+                button.setText(str(hold[3]))
+                if int(hold[0]) in (MyApp.column(mirrorTable,0)):
+                    button.setStyleSheet("background: rgba(240, 240, 0, 50%); border: none;")
+                else:
+                    button.setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")
+                button.clicked.connect(self.makeMirrorTable)
                 button.show()
                 addButtonCount += 1
             
@@ -298,6 +311,70 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 widget_name.hide()
                 widget_name.setParent(None)
         addButtonCount = 1
+        
+    def makeMirrorTable(self):
+        global firstMirrorHold
+        print("mirror")
+        boardPath = self.leBoardName.text() + ".brd"
+        print(boardPath)
+        #get mirror table
+        try:
+            mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
+        except:
+            mirrorTable = []
+        print(mirrorTable)
+        if firstMirrorHold == 0:
+            #get number of hold
+            holdNumber = self.getHoldNumberFromButton(self.sender())
+            print(holdNumber)
+            #if the mirror hold already exists then we are going to remove it
+            if holdNumber in (MyApp.column(mirrorTable,0)):
+                #find the matching hold in mirror table and set that hold to grey
+                matchingIndex = (MyApp.column(mirrorTable,0)).index(holdNumber)
+                self.sender().setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")#grey
+                mirrorToDel = mirrorTable[matchingIndex][1]#the mirrored hold - delete later
+                del mirrorTable[matchingIndex]#delete the entry to mirror table
+                #find the mirrored hold button, set grey and delete the entry to mirror table
+                widget_name = self.frmBoard.findChild(DragButton, "pbx{}".format(mirrorToDel))
+                if widget_name != None:
+                    widget_name.setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")#grey
+                if mirrorToDel in (MyApp.column(mirrorTable,0)):
+                    matchingIndex = (MyApp.column(mirrorTable,0)).index(mirrorToDel)
+                    del mirrorTable[matchingIndex]
+            else:#not already in mirror table - a new entry
+                #change hold to a colour - purple
+                self.sender().setStyleSheet("background: rgba(240, 0, 240, 50%); border: none;")
+                firstMirrorHold = self.getHoldNumberFromButton(self.sender())#save hold for when user clicks second hold
+                text = "Click the Mirror hold to create pair"
+                self.lblBoardMakerInfo.setText(text)
+        else:#firstMirrorHold > 1 - we are waiting for user to click second hold
+            #change both holds to a new colour - yellow
+            self.sender().setStyleSheet("background: rgba(240, 240, 0, 50%); border: none;")
+            widget_name = self.frmBoard.findChild(DragButton, "pbx{}".format(firstMirrorHold))
+            if widget_name != None:
+                widget_name.setStyleSheet("background: rgba(240, 240, 0, 50%); border: none;")        
+            #create the new entry/ies to the mirror table
+            secondMirrorHold = self.getHoldNumberFromButton(self.sender())
+            if firstMirrorHold == secondMirrorHold:
+                newEntry = [firstMirrorHold, secondMirrorHold]
+                mirrorTable.append(newEntry)
+            else:
+                newEntry = [firstMirrorHold, secondMirrorHold]
+                mirrorTable.append(newEntry)
+                newEntry = [secondMirrorHold, firstMirrorHold]
+                mirrorTable.append(newEntry)
+            text = str(firstMirrorHold) + " - paired with - " + str(secondMirrorHold)
+            self.lblBoardMakerInfo.setText(text)    
+            #reset
+            firstMirrorHold = 0
+            
+        boardMaker.setBoardMirrorTable(boardPath, mirrorTable)
+        
+    def changeHoldText(self):
+        global addButtonCount
+        widget_name = self.frmBoard.findChild(DragButton, "pbx{}".format(addButtonCount-1))
+        if widget_name != None:
+            widget_name.setText(self.leHoldText.text())
         
     def skipHold(self):#skip a button for when LED is unused
         global addButtonCount
@@ -336,10 +413,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             for num in range (1,addButtonCount):
                 widget_name = self.frmBoard.findChild(DragButton, "pbx{}".format(num))
                 if widget_name != None:
-                    newHold = [str(num), str(widget_name.pos().x()), str(widget_name.pos().y())]
+                    newHold = [str(num), str(widget_name.pos().x()), str(widget_name.pos().y()), str(widget_name.text())]
                     newBoard.append(newHold)
             #save hold button locations list
-            boardMaker.saveBoard(newBoard, const.IMAGEPATH) 
+            boardMaker.saveBoard(filename, newBoard, const.IMAGEPATH) 
             self.resetBoardMaker()
             self.pbReset.setEnabled(True)
             text = "Saved as - " + filename +"\nClick RESET to active new board"
@@ -362,6 +439,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         button.move(addButtonCount,addButtonCount)
         button.setObjectName("pbx{}".format(addButtonCount))
         button.setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")
+        button.clicked.connect(self.makeMirrorTable)
         button.show()
         addButtonCount += 1
         if addButtonCount > 1:
@@ -370,6 +448,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.pbFinalise.setEnabled(True)
             self.pbSkipHold.setEnabled(True)
         text = "LED - " + str(addButtonCount-1)
+        self.leHoldText.setText(str(addButtonCount-1))
         self.lblBoardMakerInfo.setText(text)
         
     def loadFile(self):#set the loaded image file as background for frame
@@ -925,7 +1004,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #populate problem list
         start = self.slider.getRange()[0]
         end = self.slider.getRange()[1] - 1
-        print(start, ",", end)
+        #print(start, ",", end)
         problemList = problemClass.getGradeFilteredProblems(start, end)
         #print("FILTER1", problemList)
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)

@@ -1745,7 +1745,7 @@
      <property name="geometry">
       <rect>
        <x>920</x>
-       <y>480</y>
+       <y>560</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -1758,7 +1758,7 @@
      <property name="geometry">
       <rect>
        <x>860</x>
-       <y>430</y>
+       <y>510</y>
        <width>251</width>
        <height>25</height>
       </rect>
@@ -1768,7 +1768,7 @@
      <property name="geometry">
       <rect>
        <x>920</x>
-       <y>350</y>
+       <y>430</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -1781,7 +1781,7 @@
      <property name="geometry">
       <rect>
        <x>920</x>
-       <y>300</y>
+       <y>380</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -1794,7 +1794,7 @@
      <property name="geometry">
       <rect>
        <x>870</x>
-       <y>520</y>
+       <y>600</y>
        <width>241</width>
        <height>111</height>
       </rect>
@@ -1843,7 +1843,7 @@
      <property name="geometry">
       <rect>
        <x>920</x>
-       <y>640</y>
+       <y>720</y>
        <width>131</width>
        <height>31</height>
       </rect>
@@ -1856,7 +1856,7 @@
      <property name="geometry">
       <rect>
        <x>870</x>
-       <y>400</y>
+       <y>480</y>
        <width>231</width>
        <height>21</height>
       </rect>
@@ -1881,57 +1881,102 @@
       <string>Open existing board</string>
      </property>
     </widget>
+    <widget class="QLineEdit" name="leHoldText">
+     <property name="geometry">
+      <rect>
+       <x>920</x>
+       <y>330</y>
+       <width>61</width>
+       <height>25</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_24">
+     <property name="geometry">
+      <rect>
+       <x>870</x>
+       <y>300</y>
+       <width>231</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Custom hold text</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pbSetText">
+     <property name="geometry">
+      <rect>
+       <x>990</x>
+       <y>330</y>
+       <width>61</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Set</string>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>
  <tabstops>
   <tabstop>tbLogComments</tabstop>
-  <tabstop>cbStars</tabstop>
-  <tabstop>cbStyle</tabstop>
-  <tabstop>cbGrade</tabstop>
-  <tabstop>pbLogProblem</tabstop>
+  <tabstop>pbTestLEDs</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>pbShowTwoProbs</tabstop>
   <tabstop>tblProblems</tabstop>
   <tabstop>lbUsers</tabstop>
   <tabstop>pbLogout</tabstop>
-  <tabstop>tabWidget</tabstop>
+  <tabstop>pbSequence</tabstop>
+  <tabstop>pbMirror</tabstop>
+  <tabstop>tbProblemInfo</tabstop>
+  <tabstop>leAddUsername</tabstop>
+  <tabstop>leAddPassword</tabstop>
+  <tabstop>leAddRealName</tabstop>
+  <tabstop>leAddEmail</tabstop>
+  <tabstop>pbAddNewUsers</tabstop>
+  <tabstop>pbUndo</tabstop>
+  <tabstop>pbDiscard</tabstop>
+  <tabstop>leProblemName</tabstop>
+  <tabstop>cbGrade_2</tabstop>
+  <tabstop>cbStars_2</tabstop>
+  <tabstop>tbComments</tabstop>
+  <tabstop>pbSave</tabstop>
+  <tabstop>lbUserFilter</tabstop>
+  <tabstop>pbFilterByUser</tabstop>
   <tabstop>leUsername</tabstop>
   <tabstop>lePassword</tabstop>
   <tabstop>pbLogin</tabstop>
-  <tabstop>tbProblemInfo</tabstop>
-  <tabstop>tblAscents</tabstop>
-  <tabstop>pbTestLEDs</tabstop>
-  <tabstop>pbSequence</tabstop>
-  <tabstop>pbShowTwoProbs</tabstop>
-  <tabstop>pbMirror</tabstop>
-  <tabstop>pbFilterByUser</tabstop>
-  <tabstop>lbUserFilter</tabstop>
-  <tabstop>pbUndo</tabstop>
-  <tabstop>pbDiscard</tabstop>
-  <tabstop>cbStars_2</tabstop>
-  <tabstop>pbSave</tabstop>
-  <tabstop>leProblemName</tabstop>
-  <tabstop>cbGrade_2</tabstop>
-  <tabstop>tbComments</tabstop>
-  <tabstop>leAddRealName</tabstop>
-  <tabstop>leAddPassword</tabstop>
-  <tabstop>pbAddNewUsers</tabstop>
-  <tabstop>leAddUsername</tabstop>
-  <tabstop>leAddEmail</tabstop>
-  <tabstop>tblLogbook</tabstop>
-  <tabstop>tblEdit</tabstop>
-  <tabstop>pbEditUsers</tabstop>
-  <tabstop>pbEditLogs</tabstop>
-  <tabstop>pbEditProblems</tabstop>
-  <tabstop>pbEditSave</tabstop>
-  <tabstop>pbDeleteRow</tabstop>
-  <tabstop>leAdminPassword</tabstop>
-  <tabstop>pbAdminLogin</tabstop>
+  <tabstop>cbGrade</tabstop>
+  <tabstop>cbStars</tabstop>
+  <tabstop>cbStyle</tabstop>
+  <tabstop>pbLogProblem</tabstop>
+  <tabstop>pbOpenExisting</tabstop>
   <tabstop>pbLoadImage</tabstop>
   <tabstop>pbBuildBoard</tabstop>
-  <tabstop>pbFinalise</tabstop>
-  <tabstop>leBoardName</tabstop>
-  <tabstop>pbUndoAddHold</tabstop>
+  <tabstop>leHoldText</tabstop>
+  <tabstop>pbSetText</tabstop>
   <tabstop>pbSkipHold</tabstop>
+  <tabstop>pbUndoAddHold</tabstop>
+  <tabstop>leBoardName</tabstop>
+  <tabstop>pbFinalise</tabstop>
+  <tabstop>pbReset</tabstop>
+  <tabstop>tblLogbook</tabstop>
+  <tabstop>tblEdit</tabstop>
+  <tabstop>leAdminPassword</tabstop>
+  <tabstop>pbDeleteRow</tabstop>
+  <tabstop>pbEditSave</tabstop>
+  <tabstop>pbEditProblems</tabstop>
+  <tabstop>pbDefaultBoard</tabstop>
+  <tabstop>pbReset_2</tabstop>
+  <tabstop>pbAdminLogin</tabstop>
+  <tabstop>tblAscents</tabstop>
+  <tabstop>pbEditUsers</tabstop>
+  <tabstop>pbEditLogs</tabstop>
  </tabstops>
  <resources/>
  <connections/>
