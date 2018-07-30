@@ -14,6 +14,7 @@ class const:
     IMAGEPATH = None
     BOARDNAME = None
     PROB_TBL_COL = 5
+    ADMIN = None
     
     def initConfigVariables():
         const.LINUX = int(const.getLINUX())
@@ -25,6 +26,7 @@ class const:
         const.TOTAL_LED_COUNT = int(const.getTOTAL_LED_COUNT())
         const.IMAGEPATH = str(const.getIMAGEPATH())
         const.BOARDNAME = str(const.getBOARDNAME())
+        const.ADMIN = str(const.getADMIN())
     
     def loadConfig():
         config = configparser.ConfigParser()
@@ -125,9 +127,20 @@ class const:
         config.set('BOARD', 'IMAGEPATH', str(value))
         const.writeConfig(config)
         const.IMAGEPATH = value
+        
+
+    def getADMIN():
+        config = const.loadConfig()
+        return str(config.get('DEFAULT', 'ADMIN'))
+    
+    def setADMIN(value):
+        config = const.loadConfig()
+        config.set('DEFAULT', 'ADMIN', str(value))
+        const.writeConfig(config)
+        const.LINUX = value        
     
 #print(const.LINUX)
-#const.setConfigVariables()
+#const.initConfigVariables()
 #print(const.BOARDNAME)
 #grades = ['6a', '6a+', '6b', '6b+', '6c', '6c+', '7a']
 #print(str(grades))
@@ -137,3 +150,4 @@ class const:
 #const.setLINUX("1")
 #print(const.MIRRORTABLE)
 #print(const.IMAGEPATH)
+#print(const.ADMIN)        

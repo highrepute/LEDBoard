@@ -171,6 +171,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.initialiseAddProblemTab()#takes ages!
         self.initSlider()
         self.start_timer()
+        self.saveAdmin = self.tabWidget.widget( 5 )
+        self.saveBoardMaker = self.tabWidget.widget( 6 )
+        self.tabWidget.removeTab( 6 )
+        self.tabWidget.removeTab( 5 )
         
         #dispaly full screen
         #self.showFullScreen()
@@ -432,13 +436,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def populateFilterTab(self):
         try:
             rowN = self.lbUserFilter.selectedIndexes()[0].row()
-            users = userClass.getUserNames()
+            users = problemClass.getAllUsers()
             self.lbUserFilter.clear()
             if (len(users) > 0):
                 self.lbUserFilter.addItems(users)
             self.lbUserFilter.setCurrentRow(rowN)
         except:
-            users = userClass.getUserNames()
+            users = problemClass.getAllUsers()
             self.lbUserFilter.clear()
             if (len(users) > 0):
                 self.lbUserFilter.addItems(users)    
@@ -448,7 +452,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         const.setBOARDNAME(os.path.basename(boardPath))
         self.lblDefaultBoard.setText(const.BOARDNAME)  
         self.lblAdminState.setText("New Default Board set - click RESET to load")   
-        board = boardMaker.loadBoard(boardPath)
+        #board = boardMaker.loadBoard(boardPath)
         #const.setTOTAL_LED_COUNT(len(board))
         const.setIMAGEPATH(boardMaker.getBoardImagePath(boardPath))
         
@@ -716,11 +720,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #timer with 1 minute timeout - auto logout
         self.timer = QTimer()
         self.timer.timeout.connect(lambda: self.autoLogout())
-        self.timer.start(60000)#change to 1 minute = 60000
+        self.timer.start(60000)# 1 minute = 60000
         #timer with 250ms timeout - blinking LEDs in show2problem mode and showSequence
         self.timerQuick = QTimer()
         self.timerQuick.timeout.connect(lambda: self.timerQuickISR())
-        self.timerQuick.start(400)     
+        self.timerQuick.start(400) # 400 ms     
         
     #log a user out
     def autoLogout(self):
@@ -739,6 +743,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.updateLogLabel()
                 text = user + " automatically logged out"
                 self.lblInfo.setText(text)
+                if user == const.ADMIN:
+                    self.saveAdmin = self.tabWidget.widget( 5 )
+                    self.saveBoardMaker = self.tabWidget.widget( 6 )
+                    self.tabWidget.removeTab( 6 )
+                    self.tabWidget.removeTab( 5 )
                     
     def timerQuickISR(self):
         global showSequenceFlag
@@ -816,7 +825,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.updateLogLabel()
                 text = user + " logged out"
                 self.lblInfo.setText(text)
-                #rowN = self.lbUsers.selectedIndexes()[0].row()
+                if user == const.ADMIN:
+                    self.saveAdmin = self.tabWidget.widget( 5 )
+                    self.saveBoardMaker = self.tabWidget.widget( 6 )
+                    self.tabWidget.removeTab( 6 )
+                    self.tabWidget.removeTab( 5 )
                 self.lblLogbook.setText("Login and select a user to view logbook")
             except:
                 self.lblInfo.setText("Select a user to logout")
@@ -838,6 +851,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lblInfo.setText("Oh no!\nI'm sorry your password is incorrect")
         elif (login == 0):
             username = [self.leUsername.text()]
+            print(username)
             #check if already logged in
             if (MyApp.find(usersLoggedIn, username[0])[0] == -1):
                 #QtWidgets.QMessageBox.warning(self, "Success!", "Well done, logged in!")
@@ -848,6 +862,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.lbUsers.addItems(MyApp.column(usersLoggedIn,0))
                 self.leUsername.clear()
                 self.lePassword.clear()
+                if username[0] == const.ADMIN:
+                    self.tabWidget.insertTab( 5, self.saveAdmin, 'Admin' ) # restore
+                    self.tabWidget.insertTab( 6, self.saveBoardMaker, 'Board Maker' ) # restore
+                    print("show tabs")
             else:
                 self.lblInfo.setText("Oh no!\nYou're already logged in!!")
                 

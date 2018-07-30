@@ -47,6 +47,14 @@ class problemClass:#funcs that access information in the problem file
         problemList = [[i[NAME],i[GRADE],i[STARS],i[DATE]] for i in problems]
         return problemList
     
+    def getAllUsers():
+        problems = problemClass.readProblemFile()
+        userList = []
+        #extracts just the name, grade & stars
+        userList = [i[USER] for i in problems]
+        del userList[0]
+        return list(set(userList))
+    
     def getUser(problemNumber):
         problems = problemClass.readProblemFile()
         user = problems[problemNumber][USER]
@@ -192,4 +200,4 @@ class problemClass:#funcs that access information in the problem file
 #newProblem = ['new',  '7a',  '3',  '11/04/2018', 'James', 'comments go here',    '1', '',   '9', '',   '3',     '1', '5', '9']
 #print(newProblem)
 #problemClass.addNewProb(newProblem)
-
+#print(problemClass.getAllUsers())
