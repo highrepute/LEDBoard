@@ -308,6 +308,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         for num in range (1,addButtonCount):
             widget_name = self.frmBoard.findChild(DragButton, "pbx{}".format(num))
             if widget_name != None:
+                widget_name.setObjectName(None) 
                 widget_name.hide()
                 widget_name.setParent(None)
         addButtonCount = 1
@@ -322,7 +323,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
         except:
             mirrorTable = []
-        print(mirrorTable)
+        #print(mirrorTable)
         if firstMirrorHold == 0:
             #get number of hold
             holdNumber = self.getHoldNumberFromButton(self.sender())

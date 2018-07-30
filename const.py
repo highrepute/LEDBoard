@@ -9,7 +9,6 @@ class const:
     DEFAULTMSG = "Welcome to the Board of High Repute"
     GRADES = ['6a', '6a+', '6b', '6b+', '6c', '6c+', '7a']
     STARS = ['-', '*', '**', '***']
-    MIRRORTABLE = []
     TOTAL_LED_COUNT = 126
     IMAGEPATH = None
     BOARDNAME = None
@@ -18,11 +17,11 @@ class const:
     
     def initConfigVariables():
         const.LINUX = int(const.getLINUX())
+        const.BOARDNAME = str(const.getBOARDNAME())
         const.LED_VALUE = int(const.getLED_VALUE())
         const.DEFAULTMSG = str(const.getDEFAULTMSG())
         const.GRADES = const.getGRADES()
         const.STARS = const.getSTARS()
-        const.MIRRORTABLE = const.getMIRRORTABLE()
         const.TOTAL_LED_COUNT = int(const.getTOTAL_LED_COUNT())
         const.IMAGEPATH = str(const.getIMAGEPATH())
         const.BOARDNAME = str(const.getBOARDNAME())
@@ -108,16 +107,6 @@ class const:
         const.writeConfig(config)    
         const.STARS = value
     
-    def getMIRRORTABLE():
-        config = const.loadConfig()
-        return ast.literal_eval(config.get('BOARD', 'MIRRORTABLE'))
-    
-    def setMIRRORTABLE(value):
-        config = const.loadConfig()
-        config.set('BOARD', 'MIRRORTABLE', str(value))
-        const.writeConfig(config)  
-        const.MIRRORTABLE = value
-    
     def getIMAGEPATH():
         config = const.loadConfig()
         return config.get('BOARD', 'IMAGEPATH')
@@ -148,6 +137,5 @@ class const:
 #print(const.LINUX)
 #const.setIMAGEPATH("C:/Users/James.Jacobs/Desktop/Temp/LED/20180411_210921_2.jpg")
 #const.setLINUX("1")
-#print(const.MIRRORTABLE)
 #print(const.IMAGEPATH)
 #print(const.ADMIN)        

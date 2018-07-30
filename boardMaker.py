@@ -15,15 +15,18 @@ class boardMaker:
         
         #we want to keep the mirror table so extract it before writing the file
         mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
+        print(mirrorTable)
+        print(mirrorTable[0])
         with open(boardPath, 'w') as f:
             writer = csv.writer(f, dialect='excel')
             writer.writerow([imagePath])
-            writer.writerow(mirrorTable)#reserve for mirror table
+            writer.writerow('')#reserve for mirror table
             for row in newBoard:
                 writer.writerow(row)
                 if const.LINUX == 0:
                     #delete line seems to be required in windows but not in linux!
-                    boardMaker.deleteLastLine(boardPath)  
+                    boardMaker.deleteLastLine(boardPath)
+        boardMaker.setBoardMirrorTable(boardPath, mirrorTable)
                     
     def loadBoard(boardPath):
         #this gets the contents of the csv file into a list
@@ -31,7 +34,7 @@ class boardMaker:
             with open(boardPath, newline='') as csvfile:
                 filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
                 board = list(filereader)
-            print(board)
+            #print(board)
             del board[1]#mirror table
             del board[0]#image path
             return board
@@ -76,15 +79,15 @@ class boardMaker:
         w.close()                    
         
 #const.initConfigVariables()
-#board = [[1,1,1,'a'],[2,2,2,'b'],[3,3,3,'c']]
-#boardPath = "testboard.brd"
-#imagepath = "image.jpg"
+board = [[1,1,1,'a'],[2,2,2,'b'],[3,3,3,'c']]
+boardPath = "test2.brd"
+imagepath = "image.jpg"
 
 #print(boardMaker.getBoardImagePath())
 #print(boardMaker.loadBoard("test2.brd"))
 #mirror = boardMaker.getBoardMirrorTable("testboard.brd")
 #mirror = [[1,11],[2,21],[6,31]]
 #print(mirror[0])
-#boardMaker.saveBoard(boardPath, board, imagepath, mirror)
+boardMaker.saveBoard(boardPath, board, imagepath)
 #boardMaker.setBoardMirrorTable("testboard.brd", mirror)
 #boardMaker.loadBoard("test1.brd")
