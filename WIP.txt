@@ -7,11 +7,8 @@ Problem information
 	- Number of repeats - display in table to allow sorting by
 Remote desktop
 Appearance
-	- make look good!
 	- logo and name
-	- space for wall logo
-	- space for board name
+					- space for wall logo
 Priority 3
 Mobile App
 Button/LDRs on holds
-Auto-increment problem function.

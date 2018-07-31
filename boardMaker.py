@@ -79,15 +79,15 @@ class boardMaker:
         w.close()                    
         
 #const.initConfigVariables()
-board = [[1,1,1,'a'],[2,2,2,'b'],[3,3,3,'c']]
-boardPath = "test2.brd"
-imagepath = "image.jpg"
+#board = [[1,1,1,'a'],[2,2,2,'b'],[3,3,3,'c']]
+#boardPath = "test2.brd"
+#imagepath = "image.jpg"
 
 #print(boardMaker.getBoardImagePath())
 #print(boardMaker.loadBoard("test2.brd"))
 #mirror = boardMaker.getBoardMirrorTable("testboard.brd")
 #mirror = [[1,11],[2,21],[6,31]]
 #print(mirror[0])
-boardMaker.saveBoard(boardPath, board, imagepath)
+#boardMaker.saveBoard(boardPath, board, imagepath)
 #boardMaker.setBoardMirrorTable("testboard.brd", mirror)
 #boardMaker.loadBoard("test1.brd")

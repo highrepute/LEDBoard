@@ -14,6 +14,8 @@ class const:
     BOARDNAME = None
     PROB_TBL_COL = 5
     ADMIN = None
+    WALLLOGOPATH = None
+    BOARDLOGOPATH = None
     
     def initConfigVariables():
         const.LINUX = int(const.getLINUX())
@@ -26,6 +28,7 @@ class const:
         const.IMAGEPATH = str(const.getIMAGEPATH())
         const.BOARDNAME = str(const.getBOARDNAME())
         const.ADMIN = str(const.getADMIN())
+        const.WALLLOGOPATH = str(const.getWALLLOGOPATH())
     
     def loadConfig():
         config = configparser.ConfigParser()
@@ -117,6 +120,15 @@ class const:
         const.writeConfig(config)
         const.IMAGEPATH = value
         
+    def getWALLLOGOPATH():
+        config = const.loadConfig()
+        return config.get('BOARD', 'WALLLOGOPATH')
+    
+    def setWALLLOGOPATH(value):
+        config = const.loadConfig()
+        config.set('BOARD', 'WALLLOGOPATH', str(value))
+        const.writeConfig(config)
+        const.WALLLOGOPATH = value        
 
     def getADMIN():
         config = const.loadConfig()

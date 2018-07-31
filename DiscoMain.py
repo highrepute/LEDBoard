@@ -103,6 +103,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbDeleteRow.clicked.connect(self.deleteRow)
         self.pbDefaultBoard.clicked.connect(self.setDefaultBoard)
         self.pbReset_2.clicked.connect(self.resetSoftware)
+        self.pbSetWallLogo.clicked.connect(self.setWallLogo)
         
         #filter tab
         self.pbFilterByUser.clicked.connect(self.filterByUser)
@@ -174,6 +175,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.initAdminTab(False)
         self.initialiseAddProblemTab()#takes ages!
         self.initSlider()
+        self.initLogos()
         self.start_timer()
         self.saveAdmin = self.tabWidget.widget( 5 )
         self.saveBoardMaker = self.tabWidget.widget( 6 )
@@ -187,6 +189,21 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers) 
+        
+    def initLogos(self):
+        if const.WALLLOGOPATH != None:
+            self.frmWallLogo.setObjectName("frmWallLogo");
+            self.frmWallLogo.setStyleSheet('QWidget#frmWallLogo { border-image: url("' + const.WALLLOGOPATH + '")}')
+        if const.BOARDLOGOPATH != None:
+            self.frmBoardLogo.setObjectName("frmBoardLogo");
+            self.frmBoardLogo.setStyleSheet('QWidget#frmBoardLogo { border-image: url("' + const.BOARDLOGOPATH + '")}')
+        
+    def setWallLogo(self):
+        imagePath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg *.png *.gif)")[0]
+        #set background image of add problems frame
+        self.frmWallLogo.setObjectName("frmWallLogo");
+        self.frmWallLogo.setStyleSheet('QWidget#frmWallLogo { border-image: url("' + imagePath + '")}')
+        const.setWALLLOGOPATH(imagePath)
         
     def initSlider(self):
         self.lblMin.setText(str(const.GRADES[0]))
@@ -222,7 +239,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 widget_name.setParent(None)
         #load the individual buttons
         boardHolds = boardMaker.loadBoard(const.BOARDNAME)
-        print(boardHolds)
+        #print(boardHolds)
         if boardHolds != None:
             #set background image of add problems frame
             self.frame_6.setObjectName("Frame_6");
@@ -251,7 +268,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.resetBoardMaker()
         boardPath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Board files (*.brd)")[0]
         imagePath = str(boardMaker.getBoardImagePath(boardPath))
-        print(boardPath, ",", imagePath)
+        #print(boardPath, ",", imagePath)
         boardHolds = boardMaker.loadBoard(boardPath)
         if boardHolds != None:
             #set background image of frame
@@ -280,24 +297,29 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             
             self.lblImagePath.setText(imagePath)
             boardName = os.path.splitext(os.path.basename(boardPath))[0]
-            print(boardName)
+            #print(boardName)
             self.leBoardName.setText(boardName)
             self.lblBoardMakerInfo.setText("Board loaded")
             self.pbFinalise.setEnabled(True)
             self.pbSkipHold.setEnabled(True)
             self.pbUndoAddHold.setEnabled(True)
             self.pbBuildBoard.setEnabled(True)
+            self.pbSetText.setEnabled(True)
         else:
             self.lblBoardMakerInfo.setText("Unable to load a board!")
     
     def resetBoardMaker(self):
         global addButtonCount
+        global firstMirrorHold
+        
+        firstMirrorHold = 0
         
         self.pbUndoAddHold.setEnabled(False)
         self.pbBuildBoard.setEnabled(False)
         self.pbFinalise.setEnabled(False)
         self.pbSkipHold.setEnabled(False)
         self.pbReset.setEnabled(False)
+        self.pbSetText.setEnabled(False)
         self.lblImagePath.setText("Selected image")
         self.lblImagePath.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.lblBoardMakerInfo.setText("Load an image of the board to begin")
@@ -315,9 +337,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def makeMirrorTable(self):
         global firstMirrorHold
-        print("mirror")
+        #print("mirror")
         boardPath = self.leBoardName.text() + ".brd"
-        print(boardPath)
+        #print(boardPath)
         #get mirror table
         try:
             mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
@@ -327,7 +349,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if firstMirrorHold == 0:
             #get number of hold
             holdNumber = self.getHoldNumberFromButton(self.sender())
-            print(holdNumber)
+            #print(holdNumber)
             #if the mirror hold already exists then we are going to remove it
             if holdNumber in (MyApp.column(mirrorTable,0)):
                 #find the matching hold in mirror table and set that hold to grey
@@ -428,7 +450,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def addButton(self):
         global addButtonCount
-        print(addButtonCount)
+        #print(addButtonCount)
         #light the LED that corrisponds to the button being added
         self.lightSingleLED(addButtonCount)
         #create a drag-able button - user places button over correct hold on image
@@ -647,6 +669,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lblDefaultBoard.setText(const.BOARDNAME)
         self.pbDefaultBoard.setEnabled(loggedIn)
         self.pbReset_2.setEnabled(loggedIn)
+        self.pbSetWallLogo.setEnabled(loggedIn)
     
     def sliderChange(self):
         global sliderFlag
@@ -931,7 +954,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lblInfo.setText("Oh no!\nI'm sorry your password is incorrect")
         elif (login == 0):
             username = [self.leUsername.text()]
-            print(username)
+            #print(username)
             #check if already logged in
             if (MyApp.find(usersLoggedIn, username[0])[0] == -1):
                 #QtWidgets.QMessageBox.warning(self, "Success!", "Well done, logged in!")
@@ -945,7 +968,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 if username[0] == const.ADMIN:
                     self.tabWidget.insertTab( 5, self.saveAdmin, 'Admin' ) # restore
                     self.tabWidget.insertTab( 6, self.saveBoardMaker, 'Board Maker' ) # restore
-                    print("show tabs")
+                    #print("show tabs")
             else:
                 self.lblInfo.setText("Oh no!\nYou're already logged in!!")
                 

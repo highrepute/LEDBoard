@@ -10,5 +10,5 @@ class mirror:
                     mirrorHolds.append(holds[1])
         return mirrorHolds
     
-const.initConfigVariables()
-print(mirror.getMirror([128,8]))
+#const.initConfigVariables()
+#print(mirror.getMirror([128,8]))
