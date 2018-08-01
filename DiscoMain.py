@@ -68,6 +68,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
+
+        moveTab = QtWidgets.QApplication.desktop().screen().rect().center() - self.rect().center()
+        moveTab += QtCore.QPoint(0, 50);
+        self.tabWidget.move(moveTab)
+        moveWallLogo = moveTab + QtCore.QPoint(800, -80);
+        self.frmWallLogo.move(moveWallLogo)
+        moveBoardLogo = moveTab + QtCore.QPoint(0, -60);
+        self.frmBoardLogo.move(moveBoardLogo)
         
         self.slider = QRangeSlider(self)
         self.slider.setMax(len(const.GRADES)+1)
@@ -183,7 +191,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tabWidget.removeTab( 5 )
         
         #dispaly full screen
-        #self.showFullScreen()
+        self.showFullScreen()
         
         #make tables read only
         self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
