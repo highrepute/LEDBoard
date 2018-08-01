@@ -33,11 +33,11 @@ class const:
     def loadConfig():
         config = configparser.ConfigParser()
         config.optionxform = str
-        config.read('config.ini')
+        config.read('/home/pi/Desktop/LEDBoard-2/config.ini')
         return config
     
     def writeConfig(config):
-        with open('config.ini', 'w') as configfile:
+        with open('/home/pi/Desktop/LEDBoard-2/config.ini', 'w') as configfile:
             config.write(configfile)
 
     def getLINUX():

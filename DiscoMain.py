@@ -25,7 +25,7 @@ const.initConfigVariables()
 if const.LINUX == 1:
     from neopixel import *
 
-qtCreatorFile = "DiscoBoard.ui" # Enter file here.
+qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
  
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
  
@@ -78,7 +78,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.slider.startValueChanged.connect(self.sliderChange)    
         
         #Connect buttons to functions
-        #ELD Board tab
+        #LED Board tab
         self.pbTestLEDs.clicked.connect(self.testLEDs)       
         self.tblProblems.selectionModel().selectionChanged.connect(self.lightProblem)
         self.pbMirror.clicked.connect(self.mirrorProb)
@@ -338,7 +338,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def makeMirrorTable(self):
         global firstMirrorHold
         #print("mirror")
-        boardPath = self.leBoardName.text() + ".brd"
+        boardPath = "/home/pi/Desktop/LEDBoard-2/" + self.leBoardName.text() + ".brd"
         #print(boardPath)
         #get mirror table
         try:
@@ -354,6 +354,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if holdNumber in (MyApp.column(mirrorTable,0)):
                 #find the matching hold in mirror table and set that hold to grey
                 matchingIndex = (MyApp.column(mirrorTable,0)).index(holdNumber)
+                #print(matchingIndex)
                 self.sender().setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")#grey
                 mirrorToDel = mirrorTable[matchingIndex][1]#the mirrored hold - delete later
                 del mirrorTable[matchingIndex]#delete the entry to mirror table
@@ -368,6 +369,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 #change hold to a colour - purple
                 self.sender().setStyleSheet("background: rgba(240, 0, 240, 50%); border: none;")
                 firstMirrorHold = self.getHoldNumberFromButton(self.sender())#save hold for when user clicks second hold
+                #print(firstMirrorHold)
                 text = "Click the Mirror hold to create pair"
                 self.lblBoardMakerInfo.setText(text)
         else:#firstMirrorHold > 1 - we are waiting for user to click second hold
@@ -378,6 +380,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 widget_name.setStyleSheet("background: rgba(240, 240, 0, 50%); border: none;")        
             #create the new entry/ies to the mirror table
             secondMirrorHold = self.getHoldNumberFromButton(self.sender())
+            #print(secondMirrorHold)
             if firstMirrorHold == secondMirrorHold:
                 newEntry = [firstMirrorHold, secondMirrorHold]
                 mirrorTable.append(newEntry)
@@ -426,7 +429,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         filename = self.leBoardName.text()
         if (filename != ""):
-            filename += ".brd"
+            filename = '/home/pi/Desktop/LEDBoard-2/' + filename + '.brd'
             const.setIMAGEPATH(self.lblImagePath.text())
             #const.setTOTAL_LED_COUNT(addButtonCount-1)
             const.setBOARDNAME(filename)

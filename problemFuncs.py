@@ -25,14 +25,14 @@ class problemClass:#funcs that access information in the problem file
     
     def readProblemFile():
         #this gets the contents of the csv file into a list
-        with open('problems.csv', newline='') as csvfile:
+        with open('/home/pi/Desktop/LEDBoard-2/problems.csv', newline='') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
             problems = list(filereader)
         return problems
     
     def saveProblemFile(problems):
         #appends a new user to the list of users
-        with open('problems.csv', 'w') as f:
+        with open('/home/pi/Desktop/LEDBoard-2/problems.csv', 'w') as f:
             writer = csv.writer(f, dialect='excel')
             for row in problems:
                 writer.writerow(row)
@@ -104,16 +104,16 @@ class problemClass:#funcs that access information in the problem file
     
     def deleteLastLine():
         #bodge to delete extra <CR> that appears when a problem is added
-        readFile = open("problems.csv")
+        readFile = open("/home/pi/Desktop/LEDBoard-2/problems.csv")
         lines = readFile.readlines()
         readFile.close()
-        w = open("problems.csv",'w')
+        w = open("/home/pi/Desktop/LEDBoard-2/problems.csv",'w')
         w.writelines([item for item in lines[:-1]])
         w.close()
     
     def addNewProb(newProblem):
         #appends a new problem to the list of problems
-        with open('problems.csv', 'a') as f:
+        with open('/home/pi/Desktop/LEDBoard-2/problems.csv', 'a') as f:
             writer = csv.writer(f, dialect='excel')
             writer.writerow(newProblem)
         f.close()

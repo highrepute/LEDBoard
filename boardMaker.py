@@ -15,8 +15,8 @@ class boardMaker:
         
         #we want to keep the mirror table so extract it before writing the file
         mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
-        print(mirrorTable)
-        print(mirrorTable[0])
+        #print(mirrorTable)
+        #print(mirrorTable[0])
         with open(boardPath, 'w') as f:
             writer = csv.writer(f, dialect='excel')
             writer.writerow([imagePath])
