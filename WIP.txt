@@ -1,14 +1,11 @@
 Work In Progress...
 Priority 1
 Bugs
-Executable
-	- make run on startup - google
 Problem information
 	- Number of repeats - display in table to allow sorting by
 Remote desktop
 Appearance
 	- logo and name
-					- space for wall logo
 Priority 3
 Mobile App
 Button/LDRs on holds

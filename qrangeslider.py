@@ -66,25 +66,25 @@ QRangeSlider * {
     padding: 0px;
 }
 QRangeSlider #Head {
-    background: #222;
+    background: #eee;
 }
 QRangeSlider #Span {
-    background: #393;
+    background: #9df;
 }
 QRangeSlider #Span:active {
-    background: #282;
+    background: #bdf;
 }
 QRangeSlider #Tail {
-    background: #222;
+    background: #eee;
 }
 QRangeSlider > QSplitter::handle {
-    background: #393;
+    background: #333;
 }
 QRangeSlider > QSplitter::handle:vertical {
-    height: 4px;
+    height: 16px;
 }
 QRangeSlider > QSplitter::handle:pressed {
-    background: #ca5;
+    background: #777;
 }
 """
 

@@ -373,12 +373,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 if mirrorToDel in (MyApp.column(mirrorTable,0)):
                     matchingIndex = (MyApp.column(mirrorTable,0)).index(mirrorToDel)
                     del mirrorTable[matchingIndex]
+                text = "Removed hold pairing -\n" + str(holdNumber) + ", " + str(mirrorToDel)
+                self.lblBoardMakerInfo.setText(text)
             else:#not already in mirror table - a new entry
                 #change hold to a colour - purple
                 self.sender().setStyleSheet("background: rgba(240, 0, 240, 50%); border: none;")
                 firstMirrorHold = self.getHoldNumberFromButton(self.sender())#save hold for when user clicks second hold
                 #print(firstMirrorHold)
-                text = "Click the Mirror hold to create pair"
+                text = "Click another hold to create pair"
                 self.lblBoardMakerInfo.setText(text)
         else:#firstMirrorHold > 1 - we are waiting for user to click second hold
             #change both holds to a new colour - yellow
@@ -397,7 +399,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 mirrorTable.append(newEntry)
                 newEntry = [secondMirrorHold, firstMirrorHold]
                 mirrorTable.append(newEntry)
-            text = str(firstMirrorHold) + " - paired with - " + str(secondMirrorHold)
+            text = "Created hold pair -\n" + str(firstMirrorHold) + ", " + str(secondMirrorHold)
             self.lblBoardMakerInfo.setText(text)    
             #reset
             firstMirrorHold = 0
@@ -838,7 +840,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #timer with 250ms timeout - blinking LEDs in show2problem mode and showSequence
         self.timerQuick = QTimer()
         self.timerQuick.timeout.connect(lambda: self.timerQuickISR())
-        self.timerQuick.start(400) # 400 ms     
+        self.timerQuick.start(300) # 400 ms     
         
     #log a user out
     def autoLogout(self):
@@ -974,6 +976,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 usersLoggedIn.append([username[0],time.time()])
                 self.lbUsers.clear()
                 self.lbUsers.addItems(MyApp.column(usersLoggedIn,0))
+                #self.lbUsers.setCurrentRow(Count(usersLoggedIn))
                 self.leUsername.clear()
                 self.lePassword.clear()
                 if username[0] == const.ADMIN:
