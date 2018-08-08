@@ -171,7 +171,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
-        self.lblInfoAddProb.setText("Create new problems here - click a hold to begin")
         
         #initialise variout bits
         self.initProblemTable()
@@ -226,7 +225,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         const.initConfigVariables()
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
-        self.lblInfoAddProb.setText("Create new problems here - click a hold to begin")
+        #self.lblInfoAddProb.setText("Create new problems here - click a hold to begin")
         #initialise variout bits
         self.initProblemTable()
         self.populateProblemTable()
@@ -264,6 +263,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 button.show()
                 button.setStyleSheet("background-color: rgba(240, 240, 240, 25%); border: none;")
                 button = None
+            self.lblInfoAddProb.setText("Create a new problem\nClick a hold to begin")
         else:
             #can't load a board - assume first use
             #const.setTOTAL_LED_COUNT(1000)#this allows test LED button to work on a new system - for max 1000 LEDs
@@ -526,17 +526,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 rowN = self.lbUserFilter.selectedIndexes()[0].row()
                 user = self.lbUserFilter.item(rowN).text()
                 userFilter = user
-                self.pbFilterByUser.setStyleSheet("background-color: rgba(0, 128, 0 100%)")#green 
+                self.pbFilterByUser.setStyleSheet("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #080, stop: 1 #fff);") 
                 text = "Filtering by user - " + user
                 self.lblUserFilter.setText(text)
                 self.lblInfo.setText(text)                 
             except:
                 userFilter = ""
-                self.pbFilterByUser.setStyleSheet("background-color: rgba(240, 240, 240 100%)")#gray
+                self.pbFilterByUser.setStyleSheet("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #cef, stop: 1 #fff);")
                 self.lblUserFilter.setText("Select a user before filtering")
                 self.lblInfo.setText("Not filtering by user")
         else:
-            self.pbFilterByUser.setStyleSheet("background-color: rgba(240, 240, 240 100%)")#gray
+            self.pbFilterByUser.setStyleSheet("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #cef, stop: 1 #fff);")
             self.lblUserFilter.setText("Not filtering by user")
             self.lblInfo.setText("Not filtering by user")
             userFilter = ""
@@ -733,7 +733,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             #turn off show two problem mode
             showTwoProbsFlag = 0
-            self.pbShowTwoProbs.setStyleSheet("background-color: rgba(240, 240, 240, 100%)")
+            self.pbShowTwoProbs.setStyleSheet("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #cef, stop: 1 #fff);")
             self.lightProblem()
         
     def showSequence(self):
@@ -1083,6 +1083,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cbStars_2.setCurrentIndex(0)
         self.tbComments.clear()
         
+        self.lblInfoAddProb.setText("Create a new problem\nClick a hold to begin")
+        
         #init new problem globals
         newProbCounter = 0
         newStartHolds = []
@@ -1193,6 +1195,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 #prevPb = getattr(self, 'pb{}'.format(newStartHolds[-1]))
                 prevPb = self.frame_6.findChild(QtWidgets.QPushButton, "pb{}".format(newStartHolds[-1]))
                 del(newStartHolds[-1])
+            if (newProbCounter > 2):    
+                self.lblInfoAddProb.setText("Removed last hold\nAdd another hold or Save problem")
+            else:
+                self.lblInfoAddProb.setText("Removed last hold\nAdd another hold")
+
         
     #extracts the number from the button pressed and uses it to light the correct LED
     def setLEDbyButton(self,button,colour):
@@ -1273,6 +1280,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.setLEDbyButton(prevPb,"blue")
             newProbCounter += 1
             prevPb = self.sender()
+        if (newProbCounter > 2):    
+            self.lblInfoAddProb.setText("Added a hold\nAdd another hold or Save problem")
+        else:
+            self.lblInfoAddProb.setText("Added a hold\nAdd another hold")
     
     #this is for the rainbow effect for testLEDs    
     def wheel(pos):
