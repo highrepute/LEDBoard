@@ -1433,8 +1433,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         date = problemsDB[rowProb][3]
         setter = problemClass.getUser(rowProb)
         notes = problemClass.getNotes(rowProb)
+        formatName = "<span style=\" font-size:14pt; font-weight:400; color:#000;\" >"
+        formatGrade = "<span style=\" font-size:14pt; font-weight:400; color:#ca3;\" >"
+        formatGray = "<span style=\" font-size:12pt; font-weight:300; color:#333;\" >"
+        formatInfo = "<span style=\" font-size:13pt; font-weight:300; color:#000;\" >"
+        closeSpan = "</span>\n"
         
-        infoText = probName + "\n   " + grade + "   " + stars + "\nDate added - " + date + "\nSet by - " + setter + "\nComments\n" + notes
+        infoText = formatName + probName + "&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatGrade + grade + "&nbsp;" + stars + closeSpan + formatGray + "<br>Date added:&nbsp;&nbsp;" + closeSpan + formatInfo + date + closeSpan + formatGray + "<br>Set by:&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + setter + closeSpan + formatGray + "<br>Comments:&nbsp;&nbsp;" + closeSpan + formatInfo + notes + closeSpan
         
         #get and present star votes
         starVotes = logClass.getStarVotes(probName)

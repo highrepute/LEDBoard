@@ -69,10 +69,10 @@ QRangeSlider #Head {
     background: #eee;
 }
 QRangeSlider #Span {
-    background: #9df;
+    background: #fd4;
 }
 QRangeSlider #Span:active {
-    background: #bdf;
+    background: #fd4;
 }
 QRangeSlider #Tail {
     background: #eee;
