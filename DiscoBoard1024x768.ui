@@ -237,7 +237,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>6</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -330,7 +330,7 @@ QComboBox QAbstractItemView {
         <x>20</x>
         <y>40</y>
         <width>421</width>
-        <height>121</height>
+        <height>130</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_8">
@@ -531,10 +531,10 @@ QComboBox QAbstractItemView {
     <widget class="QFrame" name="frame_2">
      <property name="geometry">
       <rect>
-       <x>850</x>
-       <y>540</y>
+       <x>740</x>
+       <y>480</y>
        <width>271</width>
-       <height>281</height>
+       <height>241</height>
       </rect>
      </property>
      <property name="font">
@@ -554,7 +554,7 @@ QComboBox QAbstractItemView {
         <x>10</x>
         <y>10</y>
         <width>251</width>
-        <height>260</height>
+        <height>221</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
@@ -1160,7 +1160,7 @@ QComboBox QAbstractItemView {
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>251</width>
+        <width>221</width>
         <height>111</height>
        </rect>
       </property>
@@ -1438,119 +1438,6 @@ QComboBox QAbstractItemView {
        </rect>
       </property>
       <layout class="QVBoxLayout" name="QVBLayoutSlider"/>
-     </widget>
-    </widget>
-    <widget class="QFrame" name="frame_8">
-     <property name="geometry">
-      <rect>
-       <x>740</x>
-       <y>490</y>
-       <width>271</width>
-       <height>231</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <widget class="QWidget" name="layoutWidget_2">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>251</width>
-        <height>211</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_9">
-       <item row="2" column="0">
-        <widget class="QListWidget" name="lbUsers_2">
-         <property name="toolTip">
-          <string>Select a user to log problems, add problems, etc</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QPushButton" name="pbLogout_2">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="toolTip">
-          <string>Logs out the selected user</string>
-         </property>
-         <property name="text">
-          <string>Logout</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <layout class="QGridLayout" name="gridLayout_10">
-         <item row="0" column="0">
-          <layout class="QGridLayout" name="gridLayout_11">
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_18">
-             <property name="text">
-              <string>Password</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_25">
-             <property name="text">
-              <string>Username</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLineEdit" name="lePassword_2">
-             <property name="echoMode">
-              <enum>QLineEdit::Password</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="leUsername_2">
-             <property name="echoMode">
-              <enum>QLineEdit::Normal</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="0">
-          <widget class="QPushButton" name="pbLogin_2">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="toolTip">
-            <string>Complete Username &amp; Password to Login</string>
-           </property>
-           <property name="text">
-            <string>Login</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_33">
-           <property name="text">
-            <string>Users logged in</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
      </widget>
     </widget>
    </widget>
@@ -2430,7 +2317,7 @@ QComboBox QAbstractItemView {
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>751</width>
+       <width>731</width>
        <height>711</height>
       </rect>
      </property>

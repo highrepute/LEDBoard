@@ -6,6 +6,7 @@ import re
 import datetime
 import time
 import os
+from screeninfo import get_monitors
 
 from collections import Counter
 
@@ -25,7 +26,13 @@ const.initConfigVariables()
 if const.LINUX == 1:
     from neopixel import *
 
-qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
+m = get_monitors()
+if (m[0].width == 1024) & (m[0].height == 768):
+    qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard1024x768.ui"
+else:
+    qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
+
+#qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
  
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
  
@@ -69,12 +76,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
 
-        moveTab = QtWidgets.QApplication.desktop().screen().rect().center() - self.rect().center()
-        moveTab += QtCore.QPoint(0, 50);
-        self.tabWidget.move(moveTab)
+        #moveTab = QtWidgets.QApplication.desktop().screen().rect().center() - self.rect().center()
+        if (m[0].width == 1024) & (m[0].height == 768):
+            moveTab = QtCore.QPoint(0, 0);
+        else:
+            moveTab = QtCore.QPoint((m[0].width - 1141)/2, ((m[0].height - 871)/2)+50);
+        print(moveTab)
         moveWallLogo = moveTab + QtCore.QPoint(800, -80);
-        self.frmWallLogo.move(moveWallLogo)
         moveBoardLogo = moveTab + QtCore.QPoint(0, -60);
+        self.tabWidget.move(moveTab)
+        self.frmWallLogo.move(moveWallLogo)
         self.frmBoardLogo.move(moveBoardLogo)
         
         self.slider = QRangeSlider(self)
@@ -239,7 +250,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def initialiseAddProblemTab(self):
         #clear any existing buttons
-        for num in range (1,const.TOTAL_LED_COUNT):#attempt to clear all holds
+        for num in range (1,const.TOTAL_LED_COUNT+1):#attempt to clear all holds
             widget_name = self.frame_6.findChild(QtWidgets.QPushButton, "pb{}".format(num))
             if widget_name != None:
                 widget_name.hide()
