@@ -237,7 +237,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>6</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -2274,7 +2274,7 @@ QComboBox QAbstractItemView {
      <property name="geometry">
       <rect>
        <x>920</x>
-       <y>80</y>
+       <y>120</y>
        <width>131</width>
        <height>35</height>
       </rect>
@@ -2338,7 +2338,7 @@ QComboBox QAbstractItemView {
      <property name="geometry">
       <rect>
        <x>920</x>
-       <y>520</y>
+       <y>510</y>
        <width>131</width>
        <height>35</height>
       </rect>
@@ -2352,15 +2352,15 @@ QComboBox QAbstractItemView {
       <string>Saves the board - board can be reloaded</string>
      </property>
      <property name="text">
-      <string>Finalise Board</string>
+      <string>Save Board</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="leBoardName">
      <property name="geometry">
       <rect>
-       <x>860</x>
+       <x>870</x>
        <y>470</y>
-       <width>251</width>
+       <width>231</width>
        <height>25</height>
       </rect>
      </property>
@@ -2418,8 +2418,8 @@ QComboBox QAbstractItemView {
     <widget class="QLabel" name="lblBoardMakerInfo">
      <property name="geometry">
       <rect>
-       <x>870</x>
-       <y>560</y>
+       <x>860</x>
+       <y>640</y>
        <width>241</width>
        <height>111</height>
       </rect>
@@ -2444,7 +2444,7 @@ QComboBox QAbstractItemView {
      <property name="geometry">
       <rect>
        <x>880</x>
-       <y>130</y>
+       <y>170</y>
        <width>211</width>
        <height>21</height>
       </rect>
@@ -2569,7 +2569,7 @@ QComboBox QAbstractItemView {
       <rect>
        <x>990</x>
        <y>290</y>
-       <width>84</width>
+       <width>61</width>
        <height>35</height>
       </rect>
      </property>
@@ -2583,6 +2583,72 @@ QComboBox QAbstractItemView {
      </property>
      <property name="text">
       <string>Set</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblBoardPath">
+     <property name="geometry">
+      <rect>
+       <x>880</x>
+       <y>80</y>
+       <width>211</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>The path of the loaded image</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="text">
+      <string>Open an existing board</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="leSaveAsName">
+     <property name="geometry">
+      <rect>
+       <x>870</x>
+       <y>560</y>
+       <width>231</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the name to save this board - will create a new board with this name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pbSaveAs">
+     <property name="geometry">
+      <rect>
+       <x>920</x>
+       <y>600</y>
+       <width>131</width>
+       <height>35</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save the board with a new name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>Save As</string>
      </property>
     </widget>
    </widget>

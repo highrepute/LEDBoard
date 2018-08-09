@@ -71,6 +71,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global userFilter
         global addButtonCount
         global firstMirrorHold
+        global openExistingFlag
         
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
@@ -81,7 +82,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             moveTab = QtCore.QPoint(0, 0);
         else:
             moveTab = QtCore.QPoint((m[0].width - 1141)/2, ((m[0].height - 871)/2)+50);
-        print(moveTab)
         moveWallLogo = moveTab + QtCore.QPoint(800, -80);
         moveBoardLogo = moveTab + QtCore.QPoint(0, -60);
         self.tabWidget.move(moveTab)
@@ -147,6 +147,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbOpenExisting.clicked.connect(self.openExistingBoard)
         self.leHoldText.returnPressed.connect(self.changeHoldText)
         self.pbSetText.clicked.connect(self.changeHoldText)
+        self.pbSaveAs.clicked.connect(self.saveBoardAs)
             
         #init globals
         newProbCounter = 0
@@ -179,6 +180,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         userFilter = ""  
         addButtonCount = 1     
         firstMirrorHold = 0
+        openExistingFlag = 0
         
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
@@ -281,10 +283,24 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lblInfoAddProb.setText("Unable to load a board. Head over to The Board Maker to create one")
             self.lblInfo.setText("Unable to load a board. Head over to The Board Maker to create one")
         
+    def saveBoardAs(self):
+        if self.leSaveAsName.text() != "":
+            saveAsPath = "/home/pi/Desktop/LEDBoard-2/" + self.leSaveAsName.text() + ".brd"
+            boardMaker.saveBoardAs(self.lblBoardPath.text(), saveAsPath)
+            self.leBoardName.setText(self.leSaveAsName.text())
+            self.finalise()
+            self.resetBoardMaker()
+            self.lblBoardMakerInfo.setText("Board saved with new name - " + saveAsPath)        
+        else:
+            self.lblBoardMakerInfo.setText("Enter a Board Name to Save As")
+
     def openExistingBoard(self):
         global addButtonCount
+        global openExistingFlag
         
         self.resetBoardMaker()
+        
+        openExistingFlag = 1
         boardPath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Board files (*.brd)")[0]
         imagePath = str(boardMaker.getBoardImagePath(boardPath))
         #print(boardPath, ",", imagePath)
@@ -315,22 +331,28 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 addButtonCount += 1
             
             self.lblImagePath.setText(imagePath)
+            self.lblBoardPath.setText(boardPath)
             boardName = os.path.splitext(os.path.basename(boardPath))[0]
             #print(boardName)
             self.leBoardName.setText(boardName)
+            self.leBoardName.setEnabled(False)
             self.lblBoardMakerInfo.setText("Board loaded")
             self.pbFinalise.setEnabled(True)
             self.pbSkipHold.setEnabled(True)
             self.pbUndoAddHold.setEnabled(True)
             self.pbBuildBoard.setEnabled(True)
             self.pbSetText.setEnabled(True)
+            self.pbSaveAs.show()
+            self.leSaveAsName.show()
         else:
             self.lblBoardMakerInfo.setText("Unable to load a board!")
     
     def resetBoardMaker(self):
         global addButtonCount
         global firstMirrorHold
-        
+        global openExistingFlag
+
+        openExistingFlag = 0        
         firstMirrorHold = 0
         
         self.pbUndoAddHold.setEnabled(False)
@@ -339,9 +361,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbSkipHold.setEnabled(False)
         self.pbReset.setEnabled(False)
         self.pbSetText.setEnabled(False)
-        self.lblImagePath.setText("Selected image")
+        self.leBoardName.setEnabled(False)
+        self.pbSaveAs.hide()
+        self.leSaveAsName.hide()
+        self.leBoardName.setText("")
+        self.leSaveAsName.setText("")
+        self.lblBoardPath.setText("")
+        self.lblImagePath.setText("")
+        self.leHoldText.setText("")
         self.lblImagePath.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
-        self.lblBoardMakerInfo.setText("Load an image of the board to begin")
+        self.lblBoardMakerInfo.setText("Load an existing board or an image to begin")
         self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("")}')
         self.lblImagePath.setText("Select an image")
         self.lblImagePath.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -356,66 +385,67 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def makeMirrorTable(self):
         global firstMirrorHold
-        #print("mirror")
-        boardPath = "/home/pi/Desktop/LEDBoard-2/" + self.leBoardName.text() + ".brd"
-        #print(boardPath)
-        #get mirror table
-        try:
-            mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
-        except:
-            mirrorTable = []
-        #print(mirrorTable)
-        if firstMirrorHold == 0:
-            #get number of hold
-            holdNumber = self.getHoldNumberFromButton(self.sender())
-            #print(holdNumber)
-            #if the mirror hold already exists then we are going to remove it
-            if holdNumber in (MyApp.column(mirrorTable,0)):
-                #find the matching hold in mirror table and set that hold to grey
-                matchingIndex = (MyApp.column(mirrorTable,0)).index(holdNumber)
-                #print(matchingIndex)
-                self.sender().setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")#grey
-                mirrorToDel = mirrorTable[matchingIndex][1]#the mirrored hold - delete later
-                del mirrorTable[matchingIndex]#delete the entry to mirror table
-                #find the mirrored hold button, set grey and delete the entry to mirror table
-                widget_name = self.frmBoard.findChild(DragButton, "pbx{}".format(mirrorToDel))
+        if self.leBoardName.text() == "":
+            QtWidgets.QMessageBox.warning(self, "No Board Name", "Please write in a Board Name before creating Mirrors")
+        else:
+            boardPath = "/home/pi/Desktop/LEDBoard-2/" + self.leBoardName.text() + ".brd"
+            #get mirror table
+            try:
+                mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
+            except:
+                mirrorTable = []
+            #print(mirrorTable)
+            if firstMirrorHold == 0:
+                #get number of hold
+                holdNumber = self.getHoldNumberFromButton(self.sender())
+                #print(holdNumber)
+                #if the mirror hold already exists then we are going to remove it
+                if holdNumber in (MyApp.column(mirrorTable,0)):
+                    #find the matching hold in mirror table and set that hold to grey
+                    matchingIndex = (MyApp.column(mirrorTable,0)).index(holdNumber)
+                    #print(matchingIndex)
+                    self.sender().setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")#grey
+                    mirrorToDel = mirrorTable[matchingIndex][1]#the mirrored hold - delete later
+                    del mirrorTable[matchingIndex]#delete the entry to mirror table
+                    #find the mirrored hold button, set grey and delete the entry to mirror table
+                    widget_name = self.frmBoard.findChild(DragButton, "pbx{}".format(mirrorToDel))
+                    if widget_name != None:
+                        widget_name.setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")#grey
+                    if mirrorToDel in (MyApp.column(mirrorTable,0)):
+                        matchingIndex = (MyApp.column(mirrorTable,0)).index(mirrorToDel)
+                        del mirrorTable[matchingIndex]
+                    text = "Removed hold pairing -\n" + str(holdNumber) + ", " + str(mirrorToDel)
+                    self.lblBoardMakerInfo.setText(text)
+                else:#not already in mirror table - a new entry
+                    #change hold to a colour - purple
+                    self.sender().setStyleSheet("background: rgba(240, 0, 240, 50%); border: none;")
+                    firstMirrorHold = self.getHoldNumberFromButton(self.sender())#save hold for when user clicks second hold
+                    #print(firstMirrorHold)
+                    text = "Click another hold to create pair"
+                    self.lblBoardMakerInfo.setText(text)
+            else:#firstMirrorHold > 1 - we are waiting for user to click second hold
+                #change both holds to a new colour - yellow
+                self.sender().setStyleSheet("background: rgba(240, 240, 0, 50%); border: none;")
+                widget_name = self.frmBoard.findChild(DragButton, "pbx{}".format(firstMirrorHold))
                 if widget_name != None:
-                    widget_name.setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")#grey
-                if mirrorToDel in (MyApp.column(mirrorTable,0)):
-                    matchingIndex = (MyApp.column(mirrorTable,0)).index(mirrorToDel)
-                    del mirrorTable[matchingIndex]
-                text = "Removed hold pairing -\n" + str(holdNumber) + ", " + str(mirrorToDel)
-                self.lblBoardMakerInfo.setText(text)
-            else:#not already in mirror table - a new entry
-                #change hold to a colour - purple
-                self.sender().setStyleSheet("background: rgba(240, 0, 240, 50%); border: none;")
-                firstMirrorHold = self.getHoldNumberFromButton(self.sender())#save hold for when user clicks second hold
-                #print(firstMirrorHold)
-                text = "Click another hold to create pair"
-                self.lblBoardMakerInfo.setText(text)
-        else:#firstMirrorHold > 1 - we are waiting for user to click second hold
-            #change both holds to a new colour - yellow
-            self.sender().setStyleSheet("background: rgba(240, 240, 0, 50%); border: none;")
-            widget_name = self.frmBoard.findChild(DragButton, "pbx{}".format(firstMirrorHold))
-            if widget_name != None:
-                widget_name.setStyleSheet("background: rgba(240, 240, 0, 50%); border: none;")        
-            #create the new entry/ies to the mirror table
-            secondMirrorHold = self.getHoldNumberFromButton(self.sender())
-            #print(secondMirrorHold)
-            if firstMirrorHold == secondMirrorHold:
-                newEntry = [firstMirrorHold, secondMirrorHold]
-                mirrorTable.append(newEntry)
-            else:
-                newEntry = [firstMirrorHold, secondMirrorHold]
-                mirrorTable.append(newEntry)
-                newEntry = [secondMirrorHold, firstMirrorHold]
-                mirrorTable.append(newEntry)
-            text = "Created hold pair -\n" + str(firstMirrorHold) + ", " + str(secondMirrorHold)
-            self.lblBoardMakerInfo.setText(text)    
-            #reset
-            firstMirrorHold = 0
-            
-        boardMaker.setBoardMirrorTable(boardPath, mirrorTable)
+                    widget_name.setStyleSheet("background: rgba(240, 240, 0, 50%); border: none;")        
+                #create the new entry/ies to the mirror table
+                secondMirrorHold = self.getHoldNumberFromButton(self.sender())
+                #print(secondMirrorHold)
+                if firstMirrorHold == secondMirrorHold:
+                    newEntry = [firstMirrorHold, secondMirrorHold]
+                    mirrorTable.append(newEntry)
+                else:
+                    newEntry = [firstMirrorHold, secondMirrorHold]
+                    mirrorTable.append(newEntry)
+                    newEntry = [secondMirrorHold, firstMirrorHold]
+                    mirrorTable.append(newEntry)
+                text = "Created hold pair -\n" + str(firstMirrorHold) + ", " + str(secondMirrorHold)
+                self.lblBoardMakerInfo.setText(text)    
+                #reset
+                firstMirrorHold = 0
+            #save the mirrorTable - what if no boardPath?    
+            boardMaker.setBoardMirrorTable(boardPath, mirrorTable)
         
     def changeHoldText(self):
         global addButtonCount
@@ -452,7 +482,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if (filename != ""):
             filename = '/home/pi/Desktop/LEDBoard-2/' + filename + '.brd'
             const.setIMAGEPATH(self.lblImagePath.text())
-            #const.setTOTAL_LED_COUNT(addButtonCount-1)
             const.setBOARDNAME(filename)
             
             #find every hold button and append their position to a list (newBoard)
@@ -466,7 +495,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             boardMaker.saveBoard(filename, newBoard, const.IMAGEPATH) 
             self.resetBoardMaker()
             self.pbReset.setEnabled(True)
-            text = "Saved as - " + filename +"\nClick RESET to active new board"
+            text = "Saved as - " + filename +"\nClick RESET to activate new board"
             self.lblBoardMakerInfo.setText(text)
         else:
             text = "Enter a name to save"
@@ -474,6 +503,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def addButton(self):
         global addButtonCount
+        global openExistingFlag
         #print(addButtonCount)
         #light the LED that corrisponds to the button being added
         self.lightSingleLED(addButtonCount)
@@ -494,6 +524,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.pbBuildBoard.setEnabled(True)
             self.pbFinalise.setEnabled(True)
             self.pbSkipHold.setEnabled(True)
+            if openExistingFlag != 1:
+                self.leBoardName.setEnabled(True)
         text = "LED - " + str(addButtonCount-1)
         self.leHoldText.setText(str(addButtonCount-1))
         self.lblBoardMakerInfo.setText(text)
@@ -507,7 +539,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("' + fname + '")}')
         #enable the next buttons
         self.pbBuildBoard.setEnabled(True)     
-        self.pbSkipHold.setEnabled(True)                               
+        self.pbSkipHold.setEnabled(True)
         text = "Image loaded\nAdd Hold to begin"
         self.lblBoardMakerInfo.setText(text)
         

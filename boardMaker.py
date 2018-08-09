@@ -61,13 +61,19 @@ class boardMaker:
         #this gets board image path from the first line of the brd file
         try:
             with open(boardPath, 'r') as file:
-                #filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
                 data = file.readlines()
         except:#no file yet
             data = ['\n','']#file doesn't exist create something
         data[1] = str(mirrorTable) + "\n"  
         with open(boardPath, 'w') as file:
             file.writelines(data)
+
+    def saveBoardAs(boardPath, saveAsPath):
+        #basically copies a file to a new file
+        with open(boardPath, 'r') as file:
+            data = file.readlines()
+        with open(saveAsPath, 'w') as file:
+            file.writelines(data)            
                     
     def deleteLastLine(filePath):
         #bodge to delete extra <CR> that appears when a problem is added
