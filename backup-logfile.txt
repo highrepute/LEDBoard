@@ -1,17 +1,19 @@
-2018/08/07 20:01:18 INFO  : 
-Transferred:      0 Bytes (0 Bytes/s)
+2018/08/08 20:00:27 INFO  : problems.csv: Copied (replaced existing)
+2018/08/08 20:00:29 INFO  : logs.csv: Copied (replaced existing)
+2018/08/08 20:00:59 INFO  : Google drive root 'LEDBoard-James': Waiting for checks to finish
+2018/08/08 20:00:59 INFO  : Google drive root 'LEDBoard-James': Waiting for transfers to finish
+2018/08/08 20:01:13 INFO  : 
+Transferred:   4.842 kBytes (68 Bytes/s)
 Errors:                 0
 Checks:                 5
-Transferred:            0
-Elapsed time:     1m16.3s
+Transferred:            2
+Elapsed time:     1m12.1s
 
-2018/08/07 20:01:19 INFO  : Google drive root 'LEDBoard-James': Waiting for checks to finish
-2018/08/07 20:01:19 INFO  : Google drive root 'LEDBoard-James': Waiting for transfers to finish
-2018/08/07 20:01:19 INFO  : Waiting for deletions to finish
-2018/08/07 20:01:19 INFO  : 
-Transferred:      0 Bytes (0 Bytes/s)
+2018/08/08 20:01:56 INFO  : Waiting for deletions to finish
+2018/08/08 20:01:56 INFO  : 
+Transferred:   4.842 kBytes (43 Bytes/s)
 Errors:                 0
 Checks:                 5
-Transferred:            0
-Elapsed time:     1m17.3s
+Transferred:            2
+Elapsed time:       1m55s
 

@@ -526,17 +526,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 rowN = self.lbUserFilter.selectedIndexes()[0].row()
                 user = self.lbUserFilter.item(rowN).text()
                 userFilter = user
-                self.pbFilterByUser.setStyleSheet("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #080, stop: 1 #fff);") 
+                self.pbFilterByUser.setStyleSheet("background-color: #f0f0f0;") 
                 text = "Filtering by user - " + user
                 self.lblUserFilter.setText(text)
                 self.lblInfo.setText(text)                 
             except:
                 userFilter = ""
-                self.pbFilterByUser.setStyleSheet("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #cef, stop: 1 #fff);")
+                self.pbFilterByUser.setStyleSheet("background-color: #080;")#green
                 self.lblUserFilter.setText("Select a user before filtering")
                 self.lblInfo.setText("Not filtering by user")
         else:
-            self.pbFilterByUser.setStyleSheet("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #cef, stop: 1 #fff);")
+            self.pbFilterByUser.setStyleSheet("background-color: #f0f0f0;")
             self.lblUserFilter.setText("Not filtering by user")
             self.lblInfo.setText("Not filtering by user")
             userFilter = ""
@@ -733,7 +733,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             #turn off show two problem mode
             showTwoProbsFlag = 0
-            self.pbShowTwoProbs.setStyleSheet("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #cef, stop: 1 #fff);")
+            self.pbShowTwoProbs.setStyleSheet("background-color: #f0f0f0;")
             self.lightProblem()
         
     def showSequence(self):
