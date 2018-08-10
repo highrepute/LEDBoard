@@ -1,17 +1,25 @@
-2018/08/07 20:01:18 INFO  : 
+2018/08/09 20:00:16 INFO  : test1.brd: Updated modification time in destination
+2018/08/09 20:01:14 INFO  : 
 Transferred:      0 Bytes (0 Bytes/s)
 Errors:                 0
 Checks:                 5
 Transferred:            0
-Elapsed time:     1m16.3s
+Elapsed time:     1m12.1s
 
-2018/08/07 20:01:19 INFO  : Google drive root 'LEDBoard-James': Waiting for checks to finish
-2018/08/07 20:01:19 INFO  : Google drive root 'LEDBoard-James': Waiting for transfers to finish
-2018/08/07 20:01:19 INFO  : Waiting for deletions to finish
-2018/08/07 20:01:19 INFO  : 
+2018/08/09 20:02:12 INFO  : Google drive root 'LEDBoard-James': Waiting for checks to finish
+2018/08/09 20:02:12 INFO  : Google drive root 'LEDBoard-James': Waiting for transfers to finish
+2018/08/09 20:02:14 INFO  : 
 Transferred:      0 Bytes (0 Bytes/s)
 Errors:                 0
 Checks:                 5
 Transferred:            0
-Elapsed time:     1m17.3s
+Elapsed time:     2m12.1s
+
+2018/08/09 20:02:35 INFO  : Waiting for deletions to finish
+2018/08/09 20:02:35 INFO  : 
+Transferred:      0 Bytes (0 Bytes/s)
+Errors:                 0
+Checks:                 5
+Transferred:            0
+Elapsed time:     2m33.2s
 

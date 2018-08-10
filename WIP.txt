@@ -1,11 +1,11 @@
 Work In Progress...
 Priority 1
-Bugs
-Problem information
-	- Number of repeats - display in table to allow sorting by
-Remote desktop
-Appearance
-	- logo and name
+To Test
+	- shutdown button
+	- shutdown script turns off LEDs
+Button
+	- drill hole and put on woody
+Priority 2
 Priority 3
 Mobile App
 Button/LDRs on holds

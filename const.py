@@ -29,6 +29,7 @@ class const:
         const.BOARDNAME = str(const.getBOARDNAME())
         const.ADMIN = str(const.getADMIN())
         const.WALLLOGOPATH = str(const.getWALLLOGOPATH())
+        const.BOARDLOGOPATH = str(const.getBOARDLOGOPATH())
     
     def loadConfig():
         config = configparser.ConfigParser()
@@ -128,7 +129,17 @@ class const:
         config = const.loadConfig()
         config.set('BOARD', 'WALLLOGOPATH', str(value))
         const.writeConfig(config)
-        const.WALLLOGOPATH = value        
+        const.WALLLOGOPATH = value
+        
+    def getBOARDLOGOPATH():
+        config = const.loadConfig()
+        return config.get('BOARD', 'BOARDLOGOPATH')
+    
+    def setBOARDLOGOPATH(value):
+        config = const.loadConfig()
+        config.set('DEFAULT', 'BOARDLOGOPATH', str(value))
+        const.writeConfig(config)
+        const.BOARDLOGOPATH = value         
 
     def getADMIN():
         config = const.loadConfig()

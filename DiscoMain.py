@@ -83,7 +83,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             moveTab = QtCore.QPoint((m[0].width - 1141)/2, ((m[0].height - 871)/2)+50);
         moveWallLogo = moveTab + QtCore.QPoint(800, -80);
-        moveBoardLogo = moveTab + QtCore.QPoint(0, -60);
+        moveBoardLogo = moveTab + QtCore.QPoint(0, -80);
         self.tabWidget.move(moveTab)
         self.frmWallLogo.move(moveWallLogo)
         self.frmBoardLogo.move(moveBoardLogo)
@@ -213,10 +213,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def initLogos(self):
         if const.WALLLOGOPATH != None:
             self.frmWallLogo.setObjectName("frmWallLogo");
-            self.frmWallLogo.setStyleSheet('QWidget#frmWallLogo { border-image: url("' + const.WALLLOGOPATH + '")}')
+            self.frmWallLogo.setStyleSheet('#frmWallLogo { background-image: url("' + const.WALLLOGOPATH + '"); background-repeat: no-repeat; background-position: top right;}')
         if const.BOARDLOGOPATH != None:
             self.frmBoardLogo.setObjectName("frmBoardLogo");
-            self.frmBoardLogo.setStyleSheet('QWidget#frmBoardLogo { border-image: url("' + const.BOARDLOGOPATH + '")}')
+            self.frmBoardLogo.setStyleSheet('#frmBoardLogo { background-image: url("' + const.BOARDLOGOPATH + '"); background-repeat: no-repeat; background-position: top right;}')
         
     def setWallLogo(self):
         imagePath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg *.png *.gif)")[0]
