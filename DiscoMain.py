@@ -302,50 +302,59 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         openExistingFlag = 1
         boardPath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Board files (*.brd)")[0]
-        imagePath = str(boardMaker.getBoardImagePath(boardPath))
-        #print(boardPath, ",", imagePath)
-        boardHolds = boardMaker.loadBoard(boardPath)
-        if boardHolds != None:
-            #set background image of frame
-            self.frmBoard.setObjectName("frmBoard");
-            self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("' + imagePath + '")}')
-                                        
-            #get the mirror table
-            mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
-        
-            #create the holds from the file
-            for hold in boardHolds:                
-                w = QtWidgets.QWidget()
-                button = DragButton(str(hold[0]), w)
-                button.resize(31,31)
-                button.setParent(self.frmBoard)
-                button.move(int(hold[1]),int(hold[2]))
-                button.setObjectName("pbx{}".format(str(hold[0])))
-                button.setText(str(hold[3]))
-                if int(hold[0]) in (MyApp.column(mirrorTable,0)):
-                    button.setStyleSheet("background: rgba(240, 240, 0, 50%); border: none;")
-                else:
-                    button.setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")
-                button.clicked.connect(self.makeMirrorTable)
-                button.show()
-                addButtonCount += 1
+        print(boardPath)
+        if boardPath != None:
+            try:
+                imagePath = str(boardMaker.getBoardImagePath(boardPath))
+                #print(boardPath, ",", imagePath)
+                boardHolds = boardMaker.loadBoard(boardPath)
+            except:
+                boardHolds = None
+            if boardHolds != None:
+                #set background image of frame
+                self.frmBoard.setObjectName("frmBoard");
+                self.frmBoard.setStyleSheet('QWidget#frmBoard { border-image: url("' + imagePath + '")}')
+                                            
+                #get the mirror table
+                mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
             
-            self.lblImagePath.setText(imagePath)
-            self.lblBoardPath.setText(boardPath)
-            boardName = os.path.splitext(os.path.basename(boardPath))[0]
-            #print(boardName)
-            self.leBoardName.setText(boardName)
-            self.leBoardName.setEnabled(False)
-            self.lblBoardMakerInfo.setText("Board loaded")
-            self.pbFinalise.setEnabled(True)
-            self.pbSkipHold.setEnabled(True)
-            self.pbUndoAddHold.setEnabled(True)
-            self.pbBuildBoard.setEnabled(True)
-            self.pbSetText.setEnabled(True)
-            self.pbSaveAs.show()
-            self.leSaveAsName.show()
+                #create the holds from the file
+                for hold in boardHolds:                
+                    w = QtWidgets.QWidget()
+                    button = DragButton(str(hold[0]), w)
+                    button.resize(31,31)
+                    button.setParent(self.frmBoard)
+                    button.move(int(hold[1]),int(hold[2]))
+                    button.setObjectName("pbx{}".format(str(hold[0])))
+                    button.setText(str(hold[3]))
+                    if int(hold[0]) in (MyApp.column(mirrorTable,0)):
+                        button.setStyleSheet("background: rgba(240, 240, 0, 50%); border: none;")
+                    else:
+                        button.setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")
+                    button.clicked.connect(self.makeMirrorTable)
+                    button.show()
+                    addButtonCount += 1
+                
+                self.lblImagePath.setText(imagePath)
+                self.lblBoardPath.setText(boardPath)
+                boardName = os.path.splitext(os.path.basename(boardPath))[0]
+                #print(boardName)
+                self.leBoardName.setText(boardName)
+                self.leBoardName.setEnabled(False)
+                self.lblBoardMakerInfo.setText("Board loaded")
+                self.pbFinalise.setEnabled(True)
+                self.pbSkipHold.setEnabled(True)
+                self.pbUndoAddHold.setEnabled(True)
+                self.pbBuildBoard.setEnabled(True)
+                self.pbSetText.setEnabled(True)
+                self.pbSaveAs.show()
+                self.leSaveAsName.show()
+            else:
+                self.resetBoardMaker()
+                self.lblBoardMakerInfo.setText("Unable to load a board!")
         else:
-            self.lblBoardMakerInfo.setText("Unable to load a board!")
+            self.resetBoardMaker()
+            self.lblBoardMakerInfo.setText("Unable to load a board!")    
     
     def resetBoardMaker(self):
         global addButtonCount

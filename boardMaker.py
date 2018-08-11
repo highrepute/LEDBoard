@@ -14,7 +14,10 @@ class boardMaker:
         #appends a new user to the list of users
         
         #we want to keep the mirror table so extract it before writing the file
-        mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
+        try:
+            mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
+        except:
+            mirrorTable = []
         #print(mirrorTable)
         #print(mirrorTable[0])
         with open(boardPath, 'w') as f:
