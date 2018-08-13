@@ -1,11 +1,8 @@
 Work In Progress...
 Priority 1
-To Test
-	- shutdown button
-	- shutdown script turns off LEDs
-Button
-	- drill hole and put on woody
 Priority 2
+	- LED Board layout - add picture of board with holds lit up
+		- compress other menus - collapse when not in use?
 Priority 3
 Mobile App
 Button/LDRs on holds

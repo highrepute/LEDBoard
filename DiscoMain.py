@@ -201,6 +201,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.saveBoardMaker = self.tabWidget.widget( 6 )
         self.tabWidget.removeTab( 6 )
         self.tabWidget.removeTab( 5 )
+        self.initProbInfo()
         
         #dispaly full screen
         self.showFullScreen()
@@ -208,8 +209,59 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #make tables read only
         self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
-        self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers) 
+        self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         
+    def clearDisplayProblem(self):
+        #clear any existing buttons
+        for num in range (1,const.TOTAL_LED_COUNT+1):#attempt to clear all holds
+            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(num))
+            if widget_name != None:
+                widget_name.setStyleSheet("background: rgba(240, 240, 240, 25%); border: none;")#grey
+        
+    def setDisplayProblem(self, startHolds, probHolds, finHolds):
+        #clear any currently lit holds
+        self.clearDisplayProblem()
+        #find holds and set colours
+        for hold in startHolds:
+            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(hold))
+            if widget_name != None:
+                widget_name.setStyleSheet("background: rgba(0, 128, 0, 30%); border: none;")#green
+        for hold in probHolds:
+            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(hold))
+            if widget_name != None:
+                widget_name.setStyleSheet("background: rgba(0, 0, 255, 30%); border: none;")#green
+        for hold in finHolds:
+            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(hold))
+            if widget_name != None:
+                widget_name.setStyleSheet("background: rgba(255, 0, 0, 30%); border: none;")#green
+    
+    def initProbInfo(self):
+        #clear any existing buttons
+        for num in range (1,const.TOTAL_LED_COUNT+1):#attempt to clear all holds
+            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(num))
+            if widget_name != None:
+                widget_name.hide()
+                widget_name.setParent(None)
+        #load the individual buttons
+        boardHolds = boardMaker.loadBoard(const.BOARDNAME)
+        #print(boardHolds)
+        if boardHolds != None:
+            scaleHeight = self.frame_6.height()/self.frmDispProb.height()
+            scaleWidth  = self.frame_6.width()/self.frmDispProb.width()
+            #set background image of add problems frame
+            self.frmDispProb.setStyleSheet('#frmDispProb { border-image: url("' + const.IMAGEPATH + '")}')
+        
+            for hold in boardHolds:
+                #print(hold)
+                button = QtWidgets.QPushButton("",self)
+                button.resize(16,16)
+                button.setParent(self.frmDispProb)
+                button.move(int(hold[1])/scaleWidth,int(hold[2])/scaleHeight)
+                button.setObjectName("pbi{}".format(hold[0]))
+                button.show()
+                button.setStyleSheet("background-color: rgba(240, 240, 240, 25%); border: none;")
+                button = None
+
     def initLogos(self):
         if const.WALLLOGOPATH != None:
             self.frmWallLogo.setObjectName("frmWallLogo");
@@ -242,6 +294,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #initialise variout bits
         self.initProblemTable()
         self.populateProblemTable()
+        self.clearDisplayProblem()
              
         self.populateFilterTab()
         #self.populateComboBoxes()
@@ -578,7 +631,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 rowN = self.lbUserFilter.selectedIndexes()[0].row()
                 user = self.lbUserFilter.item(rowN).text()
                 userFilter = user
-                self.pbFilterByUser.setStyleSheet("background-color: #f0f0f0;") 
+                self.pbFilterByUser.setStyleSheet("background-color: #fff;") 
                 text = "Filtering by user - " + user
                 self.lblUserFilter.setText(text)
                 self.lblInfo.setText(text)                 
@@ -588,7 +641,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.lblUserFilter.setText("Select a user before filtering")
                 self.lblInfo.setText("Not filtering by user")
         else:
-            self.pbFilterByUser.setStyleSheet("background-color: #f0f0f0;")
+            self.pbFilterByUser.setStyleSheet("background-color: #fff;")
             self.lblUserFilter.setText("Not filtering by user")
             self.lblInfo.setText("Not filtering by user")
             userFilter = ""
@@ -616,12 +669,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 
     def setDefaultBoard(self):
         boardPath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Board files (*.brd)")[0]
-        const.setBOARDNAME(os.path.basename(boardPath))
-        self.lblDefaultBoard.setText(const.BOARDNAME)  
-        self.lblAdminState.setText("New Default Board set - click RESET to load")   
-        #board = boardMaker.loadBoard(boardPath)
-        #const.setTOTAL_LED_COUNT(len(board))
+        const.setBOARDNAME(boardPath)
+        self.lblDefaultBoard.setText(const.BOARDNAME)
         const.setIMAGEPATH(boardMaker.getBoardImagePath(boardPath))
+        self.lblAdminState.setText("New Default Board set - click RESET to load")
         
     def deleteRow(self):
         model = self.tblEdit.model()
@@ -773,19 +824,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.pbShowTwoProbs.setStyleSheet("background-color: rgba(0, 128, 0 100%)")#green
             #get holds for both problems
             self.lightTwoLEDs(startHolds, probHolds, finHolds, startHoldsS2P, probHoldsS2P, finHoldsS2P)
-            #print("start ",startHolds, startHoldsS2P, "prob ",probHoldsS2P, probHolds, "fin ",finHoldsS2P, finHolds)
             #figure out any holds that are on both problems
+            #these are handled in the quick timer
             S2PStartMatches = list(set(startHolds) & set(startHoldsS2P+probHoldsS2P+finHoldsS2P))     
             S2PProbMatches = list(set(probHolds) & set(startHoldsS2P+probHoldsS2P+finHoldsS2P))  
             S2PFinMatches = list(set(finHolds) & set(startHoldsS2P+probHoldsS2P+finHoldsS2P)) 
             S2P2StartMatches = list(set(startHoldsS2P) & set(startHolds+probHolds+finHolds))     
             S2P2ProbMatches = list(set(probHoldsS2P) & set(startHolds+probHolds+finHolds))  
             S2P2FinMatches = list(set(finHoldsS2P) & set(startHolds+probHolds+finHolds))            
-            #print("matches ", S2PStartMatches, S2PProbMatches, S2PFinMatches, S2P2StartMatches, S2P2ProbMatches, S2P2FinMatches)
         else:
             #turn off show two problem mode
             showTwoProbsFlag = 0
-            self.pbShowTwoProbs.setStyleSheet("background-color: #f0f0f0;")
+            self.pbShowTwoProbs.setStyleSheet("background-color: #ffff;")
             self.lightProblem()
         
     def showSequence(self):
@@ -1619,6 +1669,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         finHolds = problemClass.getFinHolds(rowProb)
         probHolds = problemClass.getHolds(rowProb)   
         MyApp.lightLEDs(startHolds, probHolds, finHolds)
+        self.setDisplayProblem(startHolds, probHolds, finHolds)
         text = "Problem displayed on board - " + probName 
         self.lblInfo.setText(text)
         if showTwoProbsFlag == 1:
