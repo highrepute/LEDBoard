@@ -1,8 +1,9 @@
 Work In Progress...
 Priority 1
+	- Simon
+		- pull latest code
+		- change cron scheduled task
 Priority 2
-	- LED Board layout - add picture of board with holds lit up
-		- compress other menus - collapse when not in use?
 Priority 3
 Mobile App
 Button/LDRs on holds
