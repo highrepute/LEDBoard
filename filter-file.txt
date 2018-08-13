@@ -1,0 +1,7 @@
+# filter file for the backup script - using rclone
+- /.git/**
+- /__pycache__/**
++ *.brd
++ *.jpg
++ *.csv
+- *

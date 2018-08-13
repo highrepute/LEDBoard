@@ -210,6 +210,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+
+    def setThemeColour(self):
+        #set the stylesheet to our theme colour
         
     def clearDisplayProblem(self):
         #clear any existing buttons
