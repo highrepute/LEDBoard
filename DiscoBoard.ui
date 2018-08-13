@@ -1163,8 +1163,8 @@ QComboBox QAbstractItemView {
       <rect>
        <x>20</x>
        <y>420</y>
-       <width>47</width>
-       <height>13</height>
+       <width>171</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="font">
@@ -1179,10 +1179,10 @@ QComboBox QAbstractItemView {
     <widget class="QLabel" name="lblMax">
      <property name="geometry">
       <rect>
-       <x>770</x>
+       <x>666</x>
        <y>420</y>
-       <width>47</width>
-       <height>13</height>
+       <width>151</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="font">
