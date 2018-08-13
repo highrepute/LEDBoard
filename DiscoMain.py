@@ -835,7 +835,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             #turn off show two problem mode
             showTwoProbsFlag = 0
-            self.pbShowTwoProbs.setStyleSheet("background-color: #ffff;")
+            self.pbShowTwoProbs.setStyleSheet("background-color: #fff;")
             self.lightProblem()
         
     def showSequence(self):
