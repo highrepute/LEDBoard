@@ -16,6 +16,7 @@ class const:
     ADMIN = None
     WALLLOGOPATH = None
     BOARDLOGOPATH = None
+    THEMECOLOUR = "#fd4"
     
     def initConfigVariables():
         const.LINUX = int(const.getLINUX())
@@ -30,6 +31,7 @@ class const:
         const.ADMIN = str(const.getADMIN())
         const.WALLLOGOPATH = str(const.getWALLLOGOPATH())
         const.BOARDLOGOPATH = str(const.getBOARDLOGOPATH())
+        const.THEMECOLOUR = str(const.getTHEMECOLOUR())
     
     def loadConfig():
         config = configparser.ConfigParser()
@@ -137,7 +139,17 @@ class const:
     
     def setBOARDLOGOPATH(value):
         config = const.loadConfig()
-        config.set('DEFAULT', 'BOARDLOGOPATH', str(value))
+        config.set('BOARD', 'BOARDLOGOPATH', str(value))
+        const.writeConfig(config)
+        const.BOARDLOGOPATH = value
+
+    def getTHEMECOLOUR():
+        config = const.loadConfig()
+        return config.get('DEFAULT', 'THEMECOLOUR')
+    
+    def setTHEMECOLOURBOARDLOGOPATH(value):
+        config = const.loadConfig()
+        config.set('DEFAULT', 'THEMECOLOUR', str(value))
         const.writeConfig(config)
         const.BOARDLOGOPATH = value         
 

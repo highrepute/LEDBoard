@@ -202,6 +202,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tabWidget.removeTab( 6 )
         self.tabWidget.removeTab( 5 )
         self.initProbInfo()
+        self.setThemeColour()
         
         #dispaly full screen
         self.showFullScreen()
@@ -212,8 +213,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
     def setThemeColour(self):
-        #set the stylesheet to our theme colour
-        
+        self.slider.handle.setStyleSheet('QRangeSlider #Span:active { background: %s;} QRangeSlider #Span { background: %s;}' % (const.THEMECOLOUR, const.THEMECOLOUR))
+                                 
     def clearDisplayProblem(self):
         #clear any existing buttons
         for num in range (1,const.TOTAL_LED_COUNT+1):#attempt to clear all holds
@@ -1720,11 +1721,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = MyApp()
-    #set the background colour of the main window
-    #todo - this sets all the backgrounds black - possibly not a bad thing
-    #p = window.palette()
-    #p.setColor(window.backgroundRole(), QtCore.Qt.black)
-    #window.setPalette(p)
     
     window.show()
     LEDState = 0
