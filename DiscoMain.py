@@ -213,7 +213,33 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
     def setThemeColour(self):
+        self.tabWidget.setStyleSheet("QTabBar::tab:!selected { background: %s;}" % (const.THEMECOLOUR))
+        #LED Board
         self.slider.handle.setStyleSheet('QRangeSlider #Span:active { background: %s;} QRangeSlider #Span { background: %s;}' % (const.THEMECOLOUR, const.THEMECOLOUR))
+        self.tabWProbInfo.setStyleSheet("QTabBar::tab:!selected { background: %s;}" % (const.THEMECOLOUR))
+        self.frmStarsGrades.setStyleSheet("QProgressBar::chunk { background-color: %s;} QTextEdit, QListView, QLineEdit { selection-background-color: %s;}" % (const.THEMECOLOUR, const.THEMECOLOUR))
+        self.frmProblems.setStyleSheet("QHeaderView::section { background-color: %s;} QTableView { selection-background-color: %s;}" % (const.THEMECOLOUR, const.THEMECOLOUR))
+        self.frmLogProb.setStyleSheet("QTextEdit, QListView, QLineEdit { selection-background-color: %s;} QComboBox::item:selected { background-color: %s;} QPushButton:hover:!pressed { background-color: %s;} QComboBox QAbstractItemView { selection-background-color: %s;}" % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
+        self.frmProbButtons.setStyleSheet("QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR))
+        self.frmLogin.setStyleSheet("QPushButton:hover:!pressed { background-color: %s;} QTextEdit, QListView, QLineEdit { selection-background-color: %s;}" % (const.THEMECOLOUR, const.THEMECOLOUR))
+        #Filter by user
+        self.frmFilter.setStyleSheet("QTextEdit, QListView, QLineEdit { selection-background-color: %s;} QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR, const.THEMECOLOUR))
+        #Add user
+        self.frmAddUser.setStyleSheet("QTextEdit, QListView, QLineEdit { selection-background-color: %s;} QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR, const.THEMECOLOUR))
+        #Admin
+        self.frmAdmin.setStyleSheet("QTextEdit, QListView, QLineEdit { selection-background-color: %s;}" % (const.THEMECOLOUR))
+        self.frmAdmin.setStyleSheet("QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR))
+        self.frmAdmin.setStyleSheet("QTableView { selection-background-color: %s;}" % (const.THEMECOLOUR))
+        self.frmAdmin.setStyleSheet("QHeaderView::section { background-color: %s;}" % (const.THEMECOLOUR))        
+        #Board Maker
+        self.frmBoardMaker.setStyleSheet("QTextEdit, QListView, QLineEdit { selection-background-color: %s;}" % (const.THEMECOLOUR))
+        self.frmBoardMaker.setStyleSheet("QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR))
+        #Add Problem
+        self.frmAddProb.setStyleSheet("QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR))
+        self.frmAddUser.setStyleSheet("QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR))
+        #Logbook
+        self.frmLogbook.setStyleSheet("QTableView { selection-background-color: %s;}" % (const.THEMECOLOUR))
+        self.frmLogbook.setStyleSheet("QHeaderView::section { background-color: %s;}" % (const.THEMECOLOUR))
                                  
     def clearDisplayProblem(self, startHolds, probHolds, finHolds):
         #clear any existing buttons
