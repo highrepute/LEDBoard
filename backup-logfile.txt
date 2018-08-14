@@ -1,11 +1,11 @@
-2018/08/13 12:55:07 NOTICE: users.csv: Not copying as --dry-run
-2018/08/13 12:55:07 INFO  : Google drive root 'LEDBoard-James': Waiting for checks to finish
-2018/08/13 12:55:07 INFO  : Google drive root 'LEDBoard-James': Waiting for transfers to finish
-2018/08/13 12:55:07 INFO  : Waiting for deletions to finish
-2018/08/13 12:55:07 INFO  : 
-Transferred:      0 Bytes (0 Bytes/s)
+2018/08/13 20:05:12 INFO  : Google drive root 'LEDBoard-James': Waiting for checks to finish
+2018/08/13 20:05:12 INFO  : Google drive root 'LEDBoard-James': Waiting for transfers to finish
+2018/08/13 20:05:14 INFO  : users.csv: Copied (replaced existing)
+2018/08/13 20:05:14 INFO  : Waiting for deletions to finish
+2018/08/13 20:05:14 INFO  : 
+Transferred:    142 Bytes (10 Bytes/s)
 Errors:                 0
 Checks:                 5
 Transferred:            1
-Elapsed time:        6.3s
+Elapsed time:       13.1s
 

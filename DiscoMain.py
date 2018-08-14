@@ -215,16 +215,22 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def setThemeColour(self):
         self.slider.handle.setStyleSheet('QRangeSlider #Span:active { background: %s;} QRangeSlider #Span { background: %s;}' % (const.THEMECOLOUR, const.THEMECOLOUR))
                                  
-    def clearDisplayProblem(self):
+    def clearDisplayProblem(self, startHolds, probHolds, finHolds):
         #clear any existing buttons
-        for num in range (1,const.TOTAL_LED_COUNT+1):#attempt to clear all holds
-            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(num))
+        for hold in startHolds:
+            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(hold))
             if widget_name != None:
-                widget_name.setStyleSheet("background: rgba(240, 240, 240, 25%); border: none;")#grey
+                widget_name.setStyleSheet("background: rgba(240, 240, 240, 10%); border: none;")#grey
+        for hold in probHolds:
+            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(hold))
+            if widget_name != None:
+                widget_name.setStyleSheet("background: rgba(240, 240, 240, 10%); border: none;")#grey
+        for hold in finHolds:
+            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(hold))
+            if widget_name != None:
+                widget_name.setStyleSheet("background: rgba(240, 240, 240, 10%); border: none;")#grey
         
     def setDisplayProblem(self, startHolds, probHolds, finHolds):
-        #clear any currently lit holds
-        self.clearDisplayProblem()
         #find holds and set colours
         for hold in startHolds:
             widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(hold))
@@ -263,7 +269,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 button.move(int(hold[1])/scaleWidth,int(hold[2])/scaleHeight)
                 button.setObjectName("pbi{}".format(hold[0]))
                 button.show()
-                button.setStyleSheet("background-color: rgba(240, 240, 240, 25%); border: none;")
+                button.setStyleSheet("background-color: rgba(240, 240, 240, 10%); border: none;")
                 button = None
 
     def initLogos(self):
@@ -1673,6 +1679,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         finHolds = problemClass.getFinHolds(rowProb)
         probHolds = problemClass.getHolds(rowProb)   
         MyApp.lightLEDs(startHolds, probHolds, finHolds)
+        self.clearDisplayProblem(startHoldsS2P, probHoldsS2P, finHoldsS2P)
         self.setDisplayProblem(startHolds, probHolds, finHolds)
         text = "Problem displayed on board - " + probName 
         self.lblInfo.setText(text)

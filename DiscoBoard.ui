@@ -625,7 +625,7 @@ QComboBox QAbstractItemView {
       <string/>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabProbInfo">
       <attribute name="title">
@@ -1858,7 +1858,7 @@ QComboBox QAbstractItemView {
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>0</height>
+           <height>31</height>
           </size>
          </property>
          <property name="font">
@@ -2092,7 +2092,7 @@ QComboBox QAbstractItemView {
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>31</height>
          </size>
         </property>
         <property name="font">
@@ -2113,7 +2113,7 @@ QComboBox QAbstractItemView {
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>31</height>
          </size>
         </property>
         <property name="font">
@@ -2134,7 +2134,7 @@ QComboBox QAbstractItemView {
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>31</height>
          </size>
         </property>
         <property name="font">
@@ -2155,7 +2155,7 @@ QComboBox QAbstractItemView {
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>31</height>
          </size>
         </property>
         <property name="font">
@@ -2176,7 +2176,7 @@ QComboBox QAbstractItemView {
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>31</height>
          </size>
         </property>
         <property name="font">
@@ -2236,7 +2236,7 @@ QComboBox QAbstractItemView {
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>31</height>
          </size>
         </property>
         <property name="font">
@@ -2266,7 +2266,7 @@ QComboBox QAbstractItemView {
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>31</height>
          </size>
         </property>
         <property name="font">
@@ -2308,7 +2308,7 @@ QComboBox QAbstractItemView {
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>31</height>
          </size>
         </property>
         <property name="font">
@@ -2329,7 +2329,7 @@ QComboBox QAbstractItemView {
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>31</height>
          </size>
         </property>
         <property name="font">
