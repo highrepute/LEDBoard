@@ -3,6 +3,8 @@
 *.csv
 *.jpg
 *.ini
+backup-logfile.txt
+logfile.txt
 
 
 # Byte-compiled / optimized / DLL files
