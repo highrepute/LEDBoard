@@ -116,6 +116,8 @@ QPushButton {
 	border: 1px solid silver;
 	border-radius: 0px;
     background-color:  #fff;
+	min-height: 31px;
+	min-width: 31px;
 }
 
 QPushButton:pressed {
@@ -185,7 +187,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="currentIndex">
-    <number>5</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tabProbInfo">
     <attribute name="title">
@@ -306,8 +308,8 @@ QComboBox QAbstractItemView {
           <widget class="QPushButton" name="pbLogProblem">
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>31</height>
+             <width>33</width>
+             <height>33</height>
             </size>
            </property>
            <property name="font">
@@ -479,8 +481,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbLogout">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -546,8 +548,8 @@ QComboBox QAbstractItemView {
           <widget class="QPushButton" name="pbLogin">
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>31</height>
+             <width>33</width>
+             <height>33</height>
             </size>
            </property>
            <property name="font">
@@ -1445,8 +1447,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -1472,8 +1474,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -1499,8 +1501,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -1526,8 +1528,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -1577,8 +1579,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -1736,8 +1738,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbSave">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -1982,8 +1984,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbAddNewUsers">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -2259,8 +2261,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbAdminLogin">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -2310,8 +2312,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbDefaultBoard">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -2364,8 +2366,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbEditUsers">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -2385,8 +2387,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbEditLogs">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -2406,8 +2408,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbEditProblems">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -2427,8 +2429,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbEditSave">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -2448,8 +2450,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbDeleteRow">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -2467,13 +2469,13 @@ QComboBox QAbstractItemView {
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>281</x>
         <y>130</y>
         <width>501</width>
-        <height>33</height>
+        <height>35</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -2481,8 +2483,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbSetWallLogo">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -2502,8 +2504,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbSetThemeColour">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -2523,8 +2525,8 @@ QComboBox QAbstractItemView {
         <widget class="QPushButton" name="pbReset_2">
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>31</height>
+           <width>33</width>
+           <height>33</height>
           </size>
          </property>
          <property name="font">
@@ -2599,8 +2601,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -2626,8 +2628,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -2699,8 +2701,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -2726,8 +2728,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -2753,8 +2755,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -2780,8 +2782,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -2807,8 +2809,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -2958,8 +2960,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -2985,8 +2987,8 @@ QComboBox QAbstractItemView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>33</width>
+        <height>33</height>
        </size>
       </property>
       <property name="font">
@@ -3008,9 +3010,9 @@ QComboBox QAbstractItemView {
    <property name="geometry">
     <rect>
      <x>70</x>
-     <y>20</y>
+     <y>10</y>
      <width>221</width>
-     <height>61</height>
+     <height>71</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -3024,9 +3026,9 @@ QComboBox QAbstractItemView {
    <property name="geometry">
     <rect>
      <x>870</x>
-     <y>20</y>
+     <y>10</y>
      <width>341</width>
-     <height>81</height>
+     <height>91</height>
     </rect>
    </property>
    <property name="frameShape">

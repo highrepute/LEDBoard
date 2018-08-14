@@ -217,7 +217,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         colour = QtWidgets.QColorDialog.getColor()
         print(colour.name())
         const.setTHEMECOLOUR(colour.name())
-        self.lblInfo.setText("New theme colour set. Click Reset to apply new theme")
+        self.lblAdminState.setText("New theme colour set - click Reset to apply new theme")
 
     def setThemeColour(self):
         self.tabWidget.setStyleSheet("QTabBar::tab:!selected { background: %s;}" % (const.THEMECOLOUR))
@@ -281,20 +281,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 widget_name.setStyleSheet("background: rgba(255, 0, 0, 30%); border: none;")#green
     
     def initProbInfo(self):
-        #clear any existing buttons
-#        for num in range (1,const.TOTAL_LED_COUNT+1):#attempt to clear all holds
-#            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(num))
-#            if widget_name != None:
-#                widget_name.hide()
-#                widget_name.setParent(None)
         #load the individual buttons
         boardHolds = boardMaker.loadBoard(const.BOARDNAME)
         #print(boardHolds)
         if boardHolds != None:
             scaleHeight = self.frame_6.height()/self.frmDispProb.height()
             scaleWidth  = self.frame_6.width()/self.frmDispProb.width()
-            #set background image of add problems frame
-            self.frmDispProb.setStyleSheet('#frmDispProb { border-image: url("' + const.IMAGEPATH + '")}')
+            #set background image of add problems frame and allow smaller buttons
+            self.frmDispProb.setStyleSheet('#frmDispProb { border-image: url("' + const.IMAGEPATH + '")} QPushButton { min-height: 16px; min-width: 16px;}')
         
             for hold in boardHolds:
                 #print(hold)
@@ -313,7 +307,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.frmWallLogo.setStyleSheet('#frmWallLogo { background-image: url("' + const.WALLLOGOPATH + '"); background-repeat: no-repeat; background-position: top right;}')
         if const.BOARDLOGOPATH != None:
             self.frmBoardLogo.setObjectName("frmBoardLogo");
-            self.frmBoardLogo.setStyleSheet('#frmBoardLogo { background-image: url("' + const.BOARDLOGOPATH + '"); background-repeat: no-repeat; background-position: top right;}')
+            self.frmBoardLogo.setStyleSheet('#frmBoardLogo { background-image: url("' + const.BOARDLOGOPATH + '"); background-repeat: no-repeat; background-position: bottom left;}')
         
     def setWallLogo(self):
         imagePath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg *.png *.gif)")[0]
