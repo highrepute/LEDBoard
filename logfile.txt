@@ -1,1 +1,0 @@
-libEGL warning: DRI2: failed to authenticate
