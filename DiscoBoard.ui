@@ -185,7 +185,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>5</number>
    </property>
    <widget class="QWidget" name="tabProbInfo">
     <attribute name="title">
@@ -1415,27 +1415,6 @@ QComboBox QAbstractItemView {
       <column/>
       <column/>
      </widget>
-     <zorder>lblMin</zorder>
-     <zorder>tblProblems</zorder>
-     <zorder>verticalLayoutWidget</zorder>
-     <zorder>lblMax</zorder>
-     <zorder>label_20</zorder>
-     <zorder>label_22</zorder>
-     <zorder>tblAscents</zorder>
-     <zorder>tblProblems</zorder>
-     <zorder>lblMax</zorder>
-     <zorder>label_20</zorder>
-     <zorder>lblMin</zorder>
-     <zorder>label_22</zorder>
-     <zorder>frmSlider</zorder>
-     <zorder>tblAscents</zorder>
-     <zorder>tblProblems</zorder>
-     <zorder>lblMax</zorder>
-     <zorder>label_20</zorder>
-     <zorder>lblMin</zorder>
-     <zorder>label_22</zorder>
-     <zorder>frmSlider</zorder>
-     <zorder>tblAscents</zorder>
     </widget>
     <widget class="QFrame" name="frmProbButtons">
      <property name="geometry">
@@ -1564,13 +1543,6 @@ QComboBox QAbstractItemView {
       </property>
      </widget>
     </widget>
-    <zorder>frmLogProb</zorder>
-    <zorder>frmLogin</zorder>
-    <zorder>tabWProbInfo</zorder>
-    <zorder>frame_3</zorder>
-    <zorder>lblInfo</zorder>
-    <zorder>frmProblems</zorder>
-    <zorder>frmProbButtons</zorder>
    </widget>
    <widget class="QWidget" name="tab_6">
     <attribute name="title">
@@ -2200,9 +2172,9 @@ QComboBox QAbstractItemView {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>140</y>
+        <y>180</y>
         <width>1011</width>
-        <height>561</height>
+        <height>521</height>
        </rect>
       </property>
       <property name="font">
@@ -2327,9 +2299,9 @@ QComboBox QAbstractItemView {
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>90</y>
-        <width>781</width>
+        <x>280</x>
+        <y>80</y>
+        <width>501</width>
         <height>35</height>
        </rect>
       </property>
@@ -2373,48 +2345,6 @@ QComboBox QAbstractItemView {
          </property>
          <property name="text">
           <string>Default board</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pbReset_2">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>31</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="toolTip">
-          <string>Reset the board to load the new .brd file</string>
-         </property>
-         <property name="text">
-          <string>RESET</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pbSetWallLogo">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>31</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-         <property name="toolTip">
-          <string>Change the logo in the top right of the screen</string>
-         </property>
-         <property name="text">
-          <string>Set your logo</string>
          </property>
         </widget>
        </item>
@@ -2532,6 +2462,81 @@ QComboBox QAbstractItemView {
          </property>
          <property name="text">
           <string>Delete row</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>281</x>
+        <y>130</y>
+        <width>501</width>
+        <height>33</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QPushButton" name="pbSetWallLogo">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Change the logo in the top right of the screen</string>
+         </property>
+         <property name="text">
+          <string>Set your logo</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pbSetThemeColour">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Change the logo in the top right of the screen</string>
+         </property>
+         <property name="text">
+          <string>Set Theme Colour</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pbReset_2">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>31</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Reset the board to load the new .brd file</string>
+         </property>
+         <property name="text">
+          <string>RESET</string>
          </property>
         </widget>
        </item>
@@ -3081,7 +3086,6 @@ QComboBox QAbstractItemView {
   <tabstop>pbEditSave</tabstop>
   <tabstop>pbEditProblems</tabstop>
   <tabstop>pbDefaultBoard</tabstop>
-  <tabstop>pbReset_2</tabstop>
   <tabstop>pbAdminLogin</tabstop>
   <tabstop>tblAscents</tabstop>
   <tabstop>pbEditUsers</tabstop>

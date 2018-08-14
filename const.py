@@ -147,11 +147,11 @@ class const:
         config = const.loadConfig()
         return config.get('DEFAULT', 'THEMECOLOUR')
     
-    def setTHEMECOLOURBOARDLOGOPATH(value):
+    def setTHEMECOLOUR(value):
         config = const.loadConfig()
         config.set('DEFAULT', 'THEMECOLOUR', str(value))
         const.writeConfig(config)
-        const.BOARDLOGOPATH = value         
+        const.THEMECOLOUR = value         
 
     def getADMIN():
         config = const.loadConfig()

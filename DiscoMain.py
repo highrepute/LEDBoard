@@ -123,6 +123,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbDefaultBoard.clicked.connect(self.setDefaultBoard)
         self.pbReset_2.clicked.connect(self.resetSoftware)
         self.pbSetWallLogo.clicked.connect(self.setWallLogo)
+        self.pbSetThemeColour.clicked.connect(self.setDefaultThemeColour)
         
         #filter tab
         self.pbFilterByUser.clicked.connect(self.filterByUser)
@@ -197,12 +198,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.initSlider()
         self.initLogos()
         self.start_timer()
+        self.initProbInfo()
+        self.setThemeColour()
         self.saveAdmin = self.tabWidget.widget( 5 )
         self.saveBoardMaker = self.tabWidget.widget( 6 )
         self.tabWidget.removeTab( 6 )
         self.tabWidget.removeTab( 5 )
-        self.initProbInfo()
-        self.setThemeColour()
         
         #dispaly full screen
         self.showFullScreen()
@@ -212,35 +213,43 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
+    def setDefaultThemeColour(self):
+        colour = QtWidgets.QColorDialog.getColor()
+        print(colour.name())
+        const.setTHEMECOLOUR(colour.name())
+        self.lblInfo.setText("New theme colour set. Click Reset to apply new theme")
+
     def setThemeColour(self):
         self.tabWidget.setStyleSheet("QTabBar::tab:!selected { background: %s;}" % (const.THEMECOLOUR))
         #LED Board
         self.slider.handle.setStyleSheet('QRangeSlider #Span:active { background: %s;} QRangeSlider #Span { background: %s;}' % (const.THEMECOLOUR, const.THEMECOLOUR))
         self.tabWProbInfo.setStyleSheet("QTabBar::tab:!selected { background: %s;}" % (const.THEMECOLOUR))
-        self.frmStarsGrades.setStyleSheet("QProgressBar::chunk { background-color: %s;} QTextEdit, QListView, QLineEdit { selection-background-color: %s;}" % (const.THEMECOLOUR, const.THEMECOLOUR))
-        self.frmProblems.setStyleSheet("QHeaderView::section { background-color: %s;} QTableView { selection-background-color: %s;}" % (const.THEMECOLOUR, const.THEMECOLOUR))
-        self.frmLogProb.setStyleSheet("QTextEdit, QListView, QLineEdit { selection-background-color: %s;} QComboBox::item:selected { background-color: %s;} QPushButton:hover:!pressed { background-color: %s;} QComboBox QAbstractItemView { selection-background-color: %s;}" % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
-        self.frmProbButtons.setStyleSheet("QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR))
-        self.frmLogin.setStyleSheet("QPushButton:hover:!pressed { background-color: %s;} QTextEdit, QListView, QLineEdit { selection-background-color: %s;}" % (const.THEMECOLOUR, const.THEMECOLOUR))
+        text = "QTextEdit, QListView, QLineEdit { selection-background-color: %s;} QPushButton:hover:!pressed { background-color: %s;} QTableView { selection-background-color: %s;} QHeaderView::section { background-color: %s;} QScrollBar::handle:vertical { background: %s;} QComboBox::item:selected{ background-color: %s;} QProgressBar::chunk { background-color: %s;}"
+        self.frmStarsGrades.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR,  const.THEMECOLOUR))
+        self.frmProblems.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
+        self.frmLogProb.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
+        self.frmProbButtons.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
+        self.frmLogin.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
         #Filter by user
-        self.frmFilter.setStyleSheet("QTextEdit, QListView, QLineEdit { selection-background-color: %s;} QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR, const.THEMECOLOUR))
+        self.frmFilter.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
         #Add user
-        self.frmAddUser.setStyleSheet("QTextEdit, QListView, QLineEdit { selection-background-color: %s;} QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR, const.THEMECOLOUR))
+        self.frmAddUser.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
         #Admin
-        self.frmAdmin.setStyleSheet("QTextEdit, QListView, QLineEdit { selection-background-color: %s;}" % (const.THEMECOLOUR))
-        self.frmAdmin.setStyleSheet("QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR))
-        self.frmAdmin.setStyleSheet("QTableView { selection-background-color: %s;}" % (const.THEMECOLOUR))
-        self.frmAdmin.setStyleSheet("QHeaderView::section { background-color: %s;}" % (const.THEMECOLOUR))        
+        self.frmAdmin.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
         #Board Maker
-        self.frmBoardMaker.setStyleSheet("QTextEdit, QListView, QLineEdit { selection-background-color: %s;}" % (const.THEMECOLOUR))
-        self.frmBoardMaker.setStyleSheet("QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR))
+        self.frmBoardMaker.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
         #Add Problem
-        self.frmAddProb.setStyleSheet("QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR))
-        self.frmAddUser.setStyleSheet("QPushButton:hover:!pressed { background-color: %s;}" % (const.THEMECOLOUR))
+        self.frmAddProb.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
         #Logbook
-        self.frmLogbook.setStyleSheet("QTableView { selection-background-color: %s;}" % (const.THEMECOLOUR))
-        self.frmLogbook.setStyleSheet("QHeaderView::section { background-color: %s;}" % (const.THEMECOLOUR))
-                                 
+        self.frmLogbook.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
+        
+    def  hardClearDisplayProblem(self):
+        #clears any lit holds - takes a long time!
+        for num in range (1,const.TOTAL_LED_COUNT+1):
+            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(num))
+            if widget_name != None:
+                widget_name.setStyleSheet("background: rgba(240, 240, 240, 10%); border: none;")#grey
+    
     def clearDisplayProblem(self, startHolds, probHolds, finHolds):
         #clear any existing buttons
         for hold in startHolds:
@@ -273,11 +282,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def initProbInfo(self):
         #clear any existing buttons
-        for num in range (1,const.TOTAL_LED_COUNT+1):#attempt to clear all holds
-            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(num))
-            if widget_name != None:
-                widget_name.hide()
-                widget_name.setParent(None)
+#        for num in range (1,const.TOTAL_LED_COUNT+1):#attempt to clear all holds
+#            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(num))
+#            if widget_name != None:
+#                widget_name.hide()
+#                widget_name.setParent(None)
         #load the individual buttons
         boardHolds = boardMaker.loadBoard(const.BOARDNAME)
         #print(boardHolds)
@@ -318,7 +327,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lblMax.setText(str(const.GRADES[-1]))
         
     def resetSoftware(self):
-        #diable so an't be pressed twice
+        #diable so can't be pressed twice
         self.pbReset.setEnabled(False)
         self.pbReset_2.setEnabled(False)
         self.tabWidget.setCurrentIndex(0)#set startup tab 
@@ -330,7 +339,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #initialise variout bits
         self.initProblemTable()
         self.populateProblemTable()
-        self.clearDisplayProblem()
+        self.hardClearDisplayProblem()
+        self.setThemeColour()
              
         self.populateFilterTab()
         #self.populateComboBoxes()
@@ -822,6 +832,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbDefaultBoard.setEnabled(loggedIn)
         self.pbReset_2.setEnabled(loggedIn)
         self.pbSetWallLogo.setEnabled(loggedIn)
+        self.pbSetThemeColour.setEnabled(loggedIn)
     
     def sliderChange(self):
         global sliderFlag
@@ -1110,6 +1121,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if (MyApp.find(usersLoggedIn, username[0])[0] == -1):
                 #QtWidgets.QMessageBox.warning(self, "Success!", "Well done, logged in!")
                 text = username[0] +  " logged in"
+                self.setThemeColour()
                 self.lblInfo.setText(text)
                 usersLoggedIn.append([username[0],time.time()])
                 self.lbUsers.clear()
