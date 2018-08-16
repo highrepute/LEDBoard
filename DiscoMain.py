@@ -108,6 +108,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbLogProblem.clicked.connect(self.logProblem)
         self.pbSequence.clicked.connect(self.showSequence)
         self.pbShowTwoProbs.clicked.connect(self.showTwoProbs)
+        #self.frmLogin.enterEvent.connect(self.showLogin)
+        #self.frmLogin.leaveEvent.connect(self.hideLogin)
+        self.setMouseTracking(True)
         
         #Add user tab
         self.pbAddNewUsers.clicked.connect(self.addNewUser)
@@ -212,6 +215,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+
+    def enterEvent(self):
+        print("showLogin")
+
+    def leaveEvent(self):
+        print("hideLogin")
 
     def setDefaultThemeColour(self):
         colour = QtWidgets.QColorDialog.getColor()

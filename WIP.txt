@@ -3,6 +3,16 @@ Priority 1
 	- Simon
 		- pull latest code
 		- change cron scheduled task
+	- fresh install
+		- Raspbian Stretch
+		- python3
+		- neopixel
+		- pyqt5
+		- vnc
+		- rclone
+		- boot script
+		- daily backup scheduler
+		- power button
 Priority 2
 Priority 3
 Mobile App
