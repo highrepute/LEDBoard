@@ -1,6 +1,4 @@
 import sys
-#fixes problem where screeninfo import throws as error
-sys.path.append("/home/pi/.local/lib/python3.5/site-packages/screeninfo/")
 from PyQt5 import QtWidgets, uic, QtCore#, QtGui
 from PyQt5.QtCore import QTimer
 #from PyQt5.QtWidgets import QSizePolicy
@@ -11,6 +9,7 @@ import os
 from screeninfo import get_monitors
 
 from collections import Counter
+
 from problemFuncs import problemClass
 from mirror import mirror
 from usersFuncs import userClass
@@ -78,13 +77,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
 
-        moveTab = QtWidgets.QApplication.desktop().screen().rect().center() - self.rect().center()
+		#find monitor resolution and position everything in the centre of screen       
         if (m[0].width == 1024) & (m[0].height == 768):
             moveTab = QtCore.QPoint(0, 0);
         else:
             moveTab = QtCore.QPoint((m[0].width - 1141)/2, ((m[0].height - 871)/2)+50);
-        #####major bodge as I can't get screeninfo to import!!!
-        #moveTab = QtCore.QPoint((1280 - 1141)/2, ((1024- 871)/2)+50);
         moveWallLogo = moveTab + QtCore.QPoint(800, -80);
         moveBoardLogo = moveTab + QtCore.QPoint(0, -80);
         self.tabWidget.move(moveTab)
@@ -111,9 +108,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbLogProblem.clicked.connect(self.logProblem)
         self.pbSequence.clicked.connect(self.showSequence)
         self.pbShowTwoProbs.clicked.connect(self.showTwoProbs)
-        #self.frmLogin.enterEvent.connect(self.showLogin)
-        #self.frmLogin.leaveEvent.connect(self.hideLogin)
-        self.setMouseTracking(True)
         
         #Add user tab
         self.pbAddNewUsers.clicked.connect(self.addNewUser)
@@ -129,7 +123,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbDefaultBoard.clicked.connect(self.setDefaultBoard)
         self.pbReset_2.clicked.connect(self.resetSoftware)
         self.pbSetWallLogo.clicked.connect(self.setWallLogo)
-        self.pbSetThemeColour.clicked.connect(self.setDefaultThemeColour)
         
         #filter tab
         self.pbFilterByUser.clicked.connect(self.filterByUser)
@@ -204,12 +197,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.initSlider()
         self.initLogos()
         self.start_timer()
-        self.initProbInfo()
-        self.setThemeColour()
         self.saveAdmin = self.tabWidget.widget( 5 )
         self.saveBoardMaker = self.tabWidget.widget( 6 )
         self.tabWidget.removeTab( 6 )
         self.tabWidget.removeTab( 5 )
+        self.initProbInfo()
+        self.setThemeColour()
         
         #dispaly full screen
         self.showFullScreen()
@@ -219,19 +212,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
-    #def enterEvent(self):
-    #    print("showLogin")
-
-    #def leaveEvent(self):
-    #    print("hideLogin")
-
-    def setDefaultThemeColour(self):
-        colour = QtWidgets.QColorDialog.getColor()
-        print(colour.name())
-        const.setTHEMECOLOUR(colour.name())
-        self.lblAdminState.setText("New theme colour set - click Reset to apply new theme")
-
-    def setThemeColour(self):
+def setThemeColour(self):
         self.tabWidget.setStyleSheet("QTabBar::tab:!selected { background: %s;}" % (const.THEMECOLOUR))
         #LED Board
         self.slider.handle.setStyleSheet('QRangeSlider #Span:active { background: %s;} QRangeSlider #Span { background: %s;}' % (const.THEMECOLOUR, const.THEMECOLOUR))
@@ -255,13 +236,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #Logbook
         self.frmLogbook.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
         
-    def  hardClearDisplayProblem(self):
-        #clears any lit holds - takes a long time!
-        for num in range (1,const.TOTAL_LED_COUNT+1):
-            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(num))
-            if widget_name != None:
-                widget_name.setStyleSheet("background: rgba(240, 240, 240, 10%); border: none;")#grey
-    
     def clearDisplayProblem(self, startHolds, probHolds, finHolds):
         #clear any existing buttons
         for hold in startHolds:
@@ -293,14 +267,20 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 widget_name.setStyleSheet("background: rgba(255, 0, 0, 30%); border: none;")#green
     
     def initProbInfo(self):
+        #clear any existing buttons
+        for num in range (1,const.TOTAL_LED_COUNT+1):#attempt to clear all holds
+            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(num))
+            if widget_name != None:
+                widget_name.hide()
+                widget_name.setParent(None)
         #load the individual buttons
         boardHolds = boardMaker.loadBoard(const.BOARDNAME)
         #print(boardHolds)
         if boardHolds != None:
             scaleHeight = self.frame_6.height()/self.frmDispProb.height()
             scaleWidth  = self.frame_6.width()/self.frmDispProb.width()
-            #set background image of add problems frame and allow smaller buttons
-            self.frmDispProb.setStyleSheet('#frmDispProb { border-image: url("' + const.IMAGEPATH + '")} QPushButton { min-height: 16px; min-width: 16px;}')
+            #set background image of add problems frame
+            self.frmDispProb.setStyleSheet('#frmDispProb { border-image: url("' + const.IMAGEPATH + '")}')
         
             for hold in boardHolds:
                 #print(hold)
@@ -319,7 +299,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.frmWallLogo.setStyleSheet('#frmWallLogo { background-image: url("' + const.WALLLOGOPATH + '"); background-repeat: no-repeat; background-position: top right;}')
         if const.BOARDLOGOPATH != None:
             self.frmBoardLogo.setObjectName("frmBoardLogo");
-            self.frmBoardLogo.setStyleSheet('#frmBoardLogo { background-image: url("' + const.BOARDLOGOPATH + '"); background-repeat: no-repeat; background-position: bottom left;}')
+            self.frmBoardLogo.setStyleSheet('#frmBoardLogo { background-image: url("' + const.BOARDLOGOPATH + '"); background-repeat: no-repeat; background-position: top right;}')
         
     def setWallLogo(self):
         imagePath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg *.png *.gif)")[0]
@@ -333,7 +313,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lblMax.setText(str(const.GRADES[-1]))
         
     def resetSoftware(self):
-        #diable so can't be pressed twice
+        #diable so an't be pressed twice
         self.pbReset.setEnabled(False)
         self.pbReset_2.setEnabled(False)
         self.tabWidget.setCurrentIndex(0)#set startup tab 
@@ -345,8 +325,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #initialise variout bits
         self.initProblemTable()
         self.populateProblemTable()
-        self.hardClearDisplayProblem()
-        self.setThemeColour()
+        self.clearDisplayProblem()
              
         self.populateFilterTab()
         #self.populateComboBoxes()
@@ -838,7 +817,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbDefaultBoard.setEnabled(loggedIn)
         self.pbReset_2.setEnabled(loggedIn)
         self.pbSetWallLogo.setEnabled(loggedIn)
-        self.pbSetThemeColour.setEnabled(loggedIn)
     
     def sliderChange(self):
         global sliderFlag
@@ -1127,7 +1105,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if (MyApp.find(usersLoggedIn, username[0])[0] == -1):
                 #QtWidgets.QMessageBox.warning(self, "Success!", "Well done, logged in!")
                 text = username[0] +  " logged in"
-                self.setThemeColour()
                 self.lblInfo.setText(text)
                 usersLoggedIn.append([username[0],time.time()])
                 self.lbUsers.clear()
