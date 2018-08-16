@@ -1,6 +1,6 @@
 import sys
+#fixes problem where screeninfo import throws as error
 sys.path.append("/home/pi/.local/lib/python3.5/site-packages/screeninfo/")
-print(sys.path)
 from PyQt5 import QtWidgets, uic, QtCore#, QtGui
 from PyQt5.QtCore import QTimer
 #from PyQt5.QtWidgets import QSizePolicy
