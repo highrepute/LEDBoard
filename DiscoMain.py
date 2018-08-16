@@ -1,4 +1,6 @@
 import sys
+#fixes problem where screeninfo import throws as error
+sys.path.append("/home/pi/.local/lib/python3.5/site-packages/screeninfo/")
 from PyQt5 import QtWidgets, uic, QtCore#, QtGui
 from PyQt5.QtCore import QTimer
 #from PyQt5.QtWidgets import QSizePolicy
@@ -123,6 +125,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbDefaultBoard.clicked.connect(self.setDefaultBoard)
         self.pbReset_2.clicked.connect(self.resetSoftware)
         self.pbSetWallLogo.clicked.connect(self.setWallLogo)
+        self.pbSetThemeColour.clicked.connect(self.setDefaultThemeColour)
         
         #filter tab
         self.pbFilterByUser.clicked.connect(self.filterByUser)
@@ -212,7 +215,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
-def setThemeColour(self):
+    def setDefaultThemeColour(self):
+        colour = QtWidgets.QColorDialog.getColor()
+        print(colour.name())
+        const.setTHEMECOLOUR(colour.name())
+        self.lblAdminState.setText("New theme colour set - click Reset to apply new theme")
+
+    def setThemeColour(self):
         self.tabWidget.setStyleSheet("QTabBar::tab:!selected { background: %s;}" % (const.THEMECOLOUR))
         #LED Board
         self.slider.handle.setStyleSheet('QRangeSlider #Span:active { background: %s;} QRangeSlider #Span { background: %s;}' % (const.THEMECOLOUR, const.THEMECOLOUR))
@@ -235,7 +244,14 @@ def setThemeColour(self):
         self.frmAddProb.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
         #Logbook
         self.frmLogbook.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
-        
+
+    def  hardClearDisplayProblem(self):
+        #clears any lit holds - takes a long time!
+        for num in range (1,const.TOTAL_LED_COUNT+1):
+            widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(num))
+            if widget_name != None:
+                widget_name.setStyleSheet("background: rgba(240, 240, 240, 10%); border: none;")#grey
+            
     def clearDisplayProblem(self, startHolds, probHolds, finHolds):
         #clear any existing buttons
         for hold in startHolds:
@@ -279,8 +295,8 @@ def setThemeColour(self):
         if boardHolds != None:
             scaleHeight = self.frame_6.height()/self.frmDispProb.height()
             scaleWidth  = self.frame_6.width()/self.frmDispProb.width()
-            #set background image of add problems frame
-            self.frmDispProb.setStyleSheet('#frmDispProb { border-image: url("' + const.IMAGEPATH + '")}')
+            #set background image of add problems frame and allow smaller buttons
+            self.frmDispProb.setStyleSheet('#frmDispProb { border-image: url("' + const.IMAGEPATH + '")} QPushButton { min-height: 16px; min-width: 16px;}')
         
             for hold in boardHolds:
                 #print(hold)
@@ -299,7 +315,7 @@ def setThemeColour(self):
             self.frmWallLogo.setStyleSheet('#frmWallLogo { background-image: url("' + const.WALLLOGOPATH + '"); background-repeat: no-repeat; background-position: top right;}')
         if const.BOARDLOGOPATH != None:
             self.frmBoardLogo.setObjectName("frmBoardLogo");
-            self.frmBoardLogo.setStyleSheet('#frmBoardLogo { background-image: url("' + const.BOARDLOGOPATH + '"); background-repeat: no-repeat; background-position: top right;}')
+            self.frmBoardLogo.setStyleSheet('#frmBoardLogo { background-image: url("' + const.BOARDLOGOPATH + '"); background-repeat: no-repeat; background-position: bottom left;}')
         
     def setWallLogo(self):
         imagePath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Image files (*.jpg *.png *.gif)")[0]
@@ -313,7 +329,7 @@ def setThemeColour(self):
         self.lblMax.setText(str(const.GRADES[-1]))
         
     def resetSoftware(self):
-        #diable so an't be pressed twice
+        #diable so can't be pressed twice
         self.pbReset.setEnabled(False)
         self.pbReset_2.setEnabled(False)
         self.tabWidget.setCurrentIndex(0)#set startup tab 
@@ -325,8 +341,9 @@ def setThemeColour(self):
         #initialise variout bits
         self.initProblemTable()
         self.populateProblemTable()
-        self.clearDisplayProblem()
-             
+        self.hardClearDisplayProblem()
+        self.setThemeColour()
+        
         self.populateFilterTab()
         #self.populateComboBoxes()
         self.resetBoardMaker()
@@ -817,6 +834,7 @@ def setThemeColour(self):
         self.pbDefaultBoard.setEnabled(loggedIn)
         self.pbReset_2.setEnabled(loggedIn)
         self.pbSetWallLogo.setEnabled(loggedIn)
+        self.pbSetThemeColour.setEnabled(loggedIn)
     
     def sliderChange(self):
         global sliderFlag
@@ -1105,6 +1123,7 @@ def setThemeColour(self):
             if (MyApp.find(usersLoggedIn, username[0])[0] == -1):
                 #QtWidgets.QMessageBox.warning(self, "Success!", "Well done, logged in!")
                 text = username[0] +  " logged in"
+                self.setThemeColour()
                 self.lblInfo.setText(text)
                 usersLoggedIn.append([username[0],time.time()])
                 self.lbUsers.clear()
