@@ -1,4 +1,6 @@
 import sys
+sys.path.append("/home/pi/.local/lib/python3.5/site-packages/screeninfo/")
+print(sys.path)
 from PyQt5 import QtWidgets, uic, QtCore#, QtGui
 from PyQt5.QtCore import QTimer
 #from PyQt5.QtWidgets import QSizePolicy
@@ -6,7 +8,7 @@ import re
 import datetime
 import time
 import os
-#from screeninfo import get_monitors
+from screeninfo import get_monitors
 
 from collections import Counter
 from problemFuncs import problemClass
@@ -25,13 +27,13 @@ const.initConfigVariables()
 if const.LINUX == 1:
     from neopixel import *
 
-#m = get_monitors()
-#if (m[0].width == 1024) & (m[0].height == 768):
-#    qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard1024x768.ui"
-#else:
-#    qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
+m = get_monitors()
+if (m[0].width == 1024) & (m[0].height == 768):
+    qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard1024x768.ui"
+else:
+    qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
 
-qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
+#qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
  
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
  
@@ -76,13 +78,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
 
-        #moveTab = QtWidgets.QApplication.desktop().screen().rect().center() - self.rect().center()
-        #if (m[0].width == 1024) & (m[0].height == 768):
-        #    moveTab = QtCore.QPoint(0, 0);
-        #else:
-        #    moveTab = QtCore.QPoint((m[0].width - 1141)/2, ((m[0].height - 871)/2)+50);
-        #major bodge as I can't get screeninfo to import!!!
-        moveTab = QtCore.QPoint((1280 - 1141)/2, ((1024- 871)/2)+50);
+        moveTab = QtWidgets.QApplication.desktop().screen().rect().center() - self.rect().center()
+        if (m[0].width == 1024) & (m[0].height == 768):
+            moveTab = QtCore.QPoint(0, 0);
+        else:
+            moveTab = QtCore.QPoint((m[0].width - 1141)/2, ((m[0].height - 871)/2)+50);
+        #####major bodge as I can't get screeninfo to import!!!
+        #moveTab = QtCore.QPoint((1280 - 1141)/2, ((1024- 871)/2)+50);
         moveWallLogo = moveTab + QtCore.QPoint(800, -80);
         moveBoardLogo = moveTab + QtCore.QPoint(0, -80);
         self.tabWidget.move(moveTab)
