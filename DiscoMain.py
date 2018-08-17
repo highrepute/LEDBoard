@@ -700,6 +700,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cbGrade_2.addItems(const.GRADES)
         self.cbStars.addItems(const.STARS)
         self.cbStars_2.addItems(const.STARS)
+        self.cbFootholdSet.addItems(const.FOOTHOLDSETS)
         
     def populateFilterTab(self):
         try:
@@ -1233,6 +1234,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.leProblemName.clear()
         self.cbGrade_2.setCurrentIndex(0)
         self.cbStars_2.setCurrentIndex(0)
+        self.cbFootholdSet.setCurrentIndex(0)
         self.tbComments.clear()
         
         self.lblInfoAddProb.setText("Create a new problem\nClick a hold to begin")
@@ -1282,8 +1284,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             newProblem.append(probName)
             grade = MyApp.find(const.GRADES,self.cbGrade_2.currentText())[0]
             stars = MyApp.find(const.STARS,self.cbStars_2.currentText())[0]
+            footholdSet = self.cbFootholdSet.currentText()
             newProblem.append(grade)
             newProblem.append(stars)
+            newProblem.append(footholdSet)
             now = datetime.datetime.now()
             newProblem.append(now.strftime("%Y-%m-%d"))        
             #append user & comment
@@ -1582,7 +1586,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         probName = problemsDB[rowProb][0]
         grade = const.GRADES[int(problemsDB[rowProb][1])]
         stars = const.STARS[int(problemsDB[rowProb][2])]
-        date = problemsDB[rowProb][3]
+        footholdSet = const.STARS[int(problemsDB[rowProb][3])]
+        date = problemsDB[rowProb][4]
         setter = problemClass.getUser(rowProb)
         notes = problemClass.getNotes(rowProb)
         formatName = "<span style=\" font-size:14pt; font-weight:400; color:#000;\" >"

@@ -1,19 +1,12 @@
 Work In Progress...
 Priority 1
-	- Simon
-		- pull latest code
-		- change cron scheduled task
-	- fresh install
-		- Raspbian Stretch
-		- python3
-		- neopixel
-		- pyqt5
-		- vnc
-		- rclone
-		- boot script
-		- daily backup scheduler
-		- power button
+	-
 Priority 2
+	- dropdown to indicate which feet to use
+		- add problem tab
+		- display in problem info
+		- new [] in config ['Wooden', 'Resin']
+	- make all config.ini variable adjustable within the admin tab
 Priority 3
 Mobile App
 Button/LDRs on holds

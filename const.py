@@ -17,6 +17,7 @@ class const:
     WALLLOGOPATH = None
     BOARDLOGOPATH = None
     THEMECOLOUR = "#fd4"
+    FOOTHOLDSETS = ['Standard']
     
     def initConfigVariables():
         const.LINUX = int(const.getLINUX())
@@ -32,6 +33,7 @@ class const:
         const.WALLLOGOPATH = str(const.getWALLLOGOPATH())
         const.BOARDLOGOPATH = str(const.getBOARDLOGOPATH())
         const.THEMECOLOUR = str(const.getTHEMECOLOUR())
+        const.FOOTHOLDSETS = const.getFOOTHOLDSETS()
     
     def loadConfig():
         config = configparser.ConfigParser()
@@ -65,21 +67,21 @@ class const:
 
     def getTOTAL_LED_COUNT():
         config = const.loadConfig()
-        return int(config.get('BOARD', 'TOTAL_LED_COUNT'))
+        return int(config.get('BOARD', 'TOTALLEDCOUNT'))
     
     def setTOTAL_LED_COUNT(value):
         config = const.loadConfig()
-        config.set('BOARD', 'TOTAL_LED_COUNT', str(value))
+        config.set('BOARD', 'TOTALLEDCOUNT', str(value))
         const.writeConfig(config)
         const.TOTAL_LED_COUNT = value
     
     def getLED_VALUE():
         config = const.loadConfig()
-        return int(config.get('DEFAULT', 'LED_VALUE'))   
+        return int(config.get('DEFAULT', 'LEDBRIGHTNESS'))   
     
     def setLED_VALUE(value):
         config = const.loadConfig()
-        config.set('DEFAULT', 'LED_VALUE', str(value))
+        config.set('DEFAULT', 'LEDBRIGHTNESS', str(value))
         const.writeConfig(config)
         const.LED_VALUE = value
         
@@ -162,10 +164,20 @@ class const:
         config.set('DEFAULT', 'ADMIN', str(value))
         const.writeConfig(config)
         const.LINUX = value        
+
+    def getFOOTHOLDSETS():
+        config = const.loadConfig()
+        return ast.literal_eval(config.get('BOARD', 'FOOTHOLDSETS'))
     
+    def setFOOTHOLDSETS(value):
+        config = const.loadConfig()
+        config.set('BOARD', 'FOOTHOLDSETS', value)
+        const.writeConfig(config)    
+        const.FOOTHOLDSETS = value        
+        
 #print(const.LINUX)
 #const.initConfigVariables()
-#print(const.BOARDNAME)
+#print(const.FOOTHOLDSETS)
 #grades = ['6a', '6a+', '6b', '6b+', '6c', '6c+', '7a']
 #print(str(grades))
 #print(const.IMAGEPATH)
