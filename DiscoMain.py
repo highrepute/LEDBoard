@@ -904,6 +904,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         showSequenceFlag = 1 
         showSequenceCounter = 0
         shownSequenceCount = 0
+        print('show2')
                    
     def logProblem(self):      
         if (self.tblProblems.selectedIndexes() != [])&(self.lbUsers.selectedIndexes() != []):
@@ -1030,37 +1031,43 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global sliderFlag
         
         if (showSequenceFlag == 1):
+            print('here')
             #get index of selected problem in table
-            items = self.tblProblems.selectedIndexes()[0]
-            #get name of problem
-            probName = self.tblProblems.item((items.row()),0).text()
-            text = "Showing sequence of " + probName + "\n" + str(10 - shownSequenceCount)
-            self.lblInfo.setText(text)
-            if (shownSequenceCount < 10):
-                showSequenceCounter = showSequenceCounter + 1
-                if const.LINUX == 1:
-                    for i in range(0,const.TOTAL_LED_COUNT,1):#turn all LED off
-                        strip.setPixelColorRGB(i, 0, 0, 0)
-                    for i in range(0,showSequenceCounter,1):#figure out where in sequence we are and light next LED
-                        if (i < len(startHolds)):
-                            hold = startHolds[i]
-                            strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)
-                        elif (i < (len(startHolds)+len(probHolds))):
-                            hold = probHolds[i-len(startHolds)]
-                            strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)
-                        elif (i < (len(startHolds)+len(probHolds)+len(finHolds))):
-                            hold = finHolds[i-len(startHolds)-len(probHolds)]
-                            strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)                       
-                    strip.show()
-                    if (i == (len(startHolds)+len(probHolds)+len(finHolds))):
-                        #print("reset")
-                        showSequenceCounter = 0
-                        shownSequenceCount = shownSequenceCount + 1   
-            else:
-                shownSequenceCount = 0
-                showSequenceFlag = 0
-                showSequenceCounter = 0
-                self.lblInfo.setText(const.DEFAULTMSG)
+            try:
+                items = self.tblProblems.selectedIndexes()[0]
+            except:
+                items = -9999
+            print(items)
+            if items != -9999:
+                #get name of problem
+                probName = self.tblProblems.item((items.row()),0).text()
+                text = "Showing sequence of " + probName + "\n" + str(10 - shownSequenceCount)
+                self.lblInfo.setText(text)
+                if (shownSequenceCount < 10):
+                    showSequenceCounter = showSequenceCounter + 1
+                    if const.LINUX == 1:
+                        for i in range(0,const.TOTAL_LED_COUNT,1):#turn all LED off
+                            strip.setPixelColorRGB(i, 0, 0, 0)
+                        for i in range(0,showSequenceCounter,1):#figure out where in sequence we are and light next LED
+                            if (i < len(startHolds)):
+                                hold = startHolds[i]
+                                strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)
+                            elif (i < (len(startHolds)+len(probHolds))):
+                                hold = probHolds[i-len(startHolds)]
+                                strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)
+                            elif (i < (len(startHolds)+len(probHolds)+len(finHolds))):
+                                hold = finHolds[i-len(startHolds)-len(probHolds)]
+                                strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)                       
+                        strip.show()
+                        if (i == (len(startHolds)+len(probHolds)+len(finHolds))):
+                            #print("reset")
+                            showSequenceCounter = 0
+                            shownSequenceCount = shownSequenceCount + 1   
+                else:
+                    shownSequenceCount = 0
+                    showSequenceFlag = 0
+                    showSequenceCounter = 0
+                    self.lblInfo.setText(const.DEFAULTMSG)  
         if (showTwoProbsFlag == 1):
             MyApp.toggleLEDs(S2PStartMatches, S2PProbMatches, S2PFinMatches, S2P2StartMatches, S2P2ProbMatches, S2P2FinMatches)
         if (sliderFlag == 1):
@@ -1287,7 +1294,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             footholdSet = self.cbFootholdSet.currentText()
             newProblem.append(grade)
             newProblem.append(stars)
-            newProblem.append(footholdSet)
             now = datetime.datetime.now()
             newProblem.append(now.strftime("%Y-%m-%d"))        
             #append user & comment
@@ -1295,6 +1301,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             comments = self.tbComments.toPlainText().replace('\n', ' ')
             comments = comments.replace(',', '-')
             newProblem.append(comments)
+            #append the selected foothold set
+            newProblem.append(footholdSet)
             #append start holds
             newProblem.append(str(newStartHolds[0]))
             if (len(newStartHolds) == 2):
@@ -1573,8 +1581,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     #checks the grade and stars of the selected problem and updates the log problem dropdowns
     def updateLogProblemDropdowns(self,rowProb):
         problemsDB = problemClass.readProblemFile()
-        grade = int(problemsDB[rowProb][1])
-        stars = int(problemsDB[rowProb][2])
+        grade = int(problemsDB[rowProb][const.GRADECOL])
+        stars = int(problemsDB[rowProb][const.STARSCOL])
         if stars >= 0:
             self.cbStars.setCurrentIndex(stars)
         if grade >= 0:
@@ -1582,21 +1590,21 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def updateProbInfo(self,rowProb):
         problemsDB = problemClass.readProblemFile()
-        
-        probName = problemsDB[rowProb][0]
-        grade = const.GRADES[int(problemsDB[rowProb][1])]
-        stars = const.STARS[int(problemsDB[rowProb][2])]
-        footholdSet = const.STARS[int(problemsDB[rowProb][3])]
-        date = problemsDB[rowProb][4]
+        probName = problemsDB[rowProb][const.PROBNAMECOL]
+        grade = const.GRADES[int(problemsDB[rowProb][const.GRADECOL])]
+        stars = const.STARS[int(problemsDB[rowProb][const.STARSCOL])]
+        footholdSet = problemsDB[rowProb][const.FOOTHOLDSETCOL]
+        date = problemsDB[rowProb][const.DATECOL]
         setter = problemClass.getUser(rowProb)
         notes = problemClass.getNotes(rowProb)
+        
         formatName = "<span style=\" font-size:14pt; font-weight:400; color:#000;\" >"
         formatGrade = "<span style=\" font-size:14pt; font-weight:400; color:#ca3;\" >"
         formatGray = "<span style=\" font-size:12pt; font-weight:300; color:#333;\" >"
         formatInfo = "<span style=\" font-size:13pt; font-weight:300; color:#000;\" >"
         closeSpan = "</span>\n"
         
-        infoText = formatName + probName + "&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatGrade + grade + "&nbsp;" + stars + closeSpan + formatGray + "<br>Date added:&nbsp;&nbsp;" + closeSpan + formatInfo + date + closeSpan + formatGray + "<br>Set by:&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + setter + closeSpan + formatGray + "<br>Comments:&nbsp;&nbsp;" + closeSpan + formatInfo + notes + closeSpan
+        infoText = formatName + probName + "&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatGrade + grade + "&nbsp;" + stars + closeSpan + formatGray + "<br>Date added:&nbsp;&nbsp;" + closeSpan + formatInfo + date + closeSpan + formatGray + "<br>Set by:&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + setter + closeSpan + formatGray + "<br>Footholds:&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + footholdSet + closeSpan + formatGray + "<br>Comments:&nbsp;&nbsp;" + closeSpan + formatInfo + notes + closeSpan
         
         #get and present star votes
         starVotes = logClass.getStarVotes(probName)
@@ -1688,7 +1696,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #get index of selected problem in table
             items = self.tblProblems.selectedIndexes()[0]
             #get name of problem
-            probName = self.tblProblems.item((items.row()),0).text()        
+            probName = self.tblProblems.item((items.row()),const.PROBNAMECOL).text()        
             #find problem in problemDB using problem name from selected row
             rowProb = MyApp.find(problemsDB,probName)[0]
         except:
@@ -1719,6 +1727,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #call function to display problem info
         self.updateProbInfo(rowProb)
         self.updateLogProblemDropdowns(rowProb)
+        
         #load the holds from the problemDB
         startHolds = problemClass.getStartHolds(rowProb)
         finHolds = problemClass.getFinHolds(rowProb)

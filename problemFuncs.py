@@ -9,18 +9,6 @@ import csv
 from operator import itemgetter
 from const import const
 
-NOHOLDSINDEX = 10
-HOLDSINDEX = 11
-STARTHOLDSINDEX = 6
-FINHOLDSINDEX = 8
-
-NAME = 0
-GRADE = 1
-STARS = 2
-DATE = 3
-USER = 4
-NOTES = 5
-
 class problemClass:#funcs that access information in the problem file
     
     def readProblemFile():
@@ -44,25 +32,25 @@ class problemClass:#funcs that access information in the problem file
         problems = problemClass.readProblemFile()
         problemList = []
         #extracts just the name, grade & stars
-        problemList = [[i[NAME],i[GRADE],i[STARS],i[DATE]] for i in problems]
+        problemList = [[i[const.PROBNAMECOL],i[const.GRADECOL],i[const.STARSCOL],i[const.DATECOL]] for i in problems]
         return problemList
     
     def getAllUsers():
         problems = problemClass.readProblemFile()
         userList = []
         #extracts just the name, grade & stars
-        userList = [i[USER] for i in problems]
+        userList = [i[const.USERCOL] for i in problems]
         del userList[0]
         return list(set(userList))
     
     def getUser(problemNumber):
         problems = problemClass.readProblemFile()
-        user = problems[problemNumber][USER]
+        user = problems[problemNumber][const.USERCOL]
         return user
     
     def getNotes(problemNumber):
         problems = problemClass.readProblemFile()
-        notes = problems[problemNumber][NOTES]
+        notes = problems[problemNumber][const.NOTESCOL]
         return notes
     
     def getProblem(problemNumber):
@@ -75,8 +63,8 @@ class problemClass:#funcs that access information in the problem file
         problems = problemClass.readProblemFile()
         #create an array of the holds on the problem
         problemHolds = []
-        problemNoHolds = int(problems[problemNumber][NOHOLDSINDEX])
-        for i in range(HOLDSINDEX,HOLDSINDEX+problemNoHolds):
+        problemNoHolds = int(problems[problemNumber][const.NOHOLDSINDEX])
+        for i in range(const.HOLDSINDEX,const.HOLDSINDEX+problemNoHolds):
                 problemHolds.append(int(problems[problemNumber][i]))
         return problemHolds
     
@@ -84,7 +72,7 @@ class problemClass:#funcs that access information in the problem file
         problems = problemClass.readProblemFile()
         #array of the start holds
         startHolds = []
-        for i in range(STARTHOLDSINDEX,STARTHOLDSINDEX+2):
+        for i in range(const.STARTHOLDSINDEX,const.STARTHOLDSINDEX+2):
                 if (problems[problemNumber][i] != ''):
                     startHolds.append(int(problems[problemNumber][i]))
                 else:
@@ -95,7 +83,7 @@ class problemClass:#funcs that access information in the problem file
         problems = problemClass.readProblemFile()
         #array of the finish holds
         finHolds = []
-        for i in range(FINHOLDSINDEX,FINHOLDSINDEX+2):
+        for i in range(const.FINHOLDSINDEX,const.FINHOLDSINDEX+2):
                 if (problems[problemNumber][i] != ''):
                     finHolds.append(int(problems[problemNumber][i]))
                 else:
@@ -141,7 +129,7 @@ class problemClass:#funcs that access information in the problem file
         problems = problemClass.readProblemFile()
         matches = []
         for grade in range(start,end+1):
-            matches += problemClass.find(str(grade),problemClass.column(problems,1))
+            matches += problemClass.find(str(grade),problemClass.column(problems,const.GRADECOL))
         matches = problemClass.column(matches,0)
         #matches.sort()
         fitleredProblems = []
@@ -154,7 +142,7 @@ class problemClass:#funcs that access information in the problem file
         header = problems[0]
         del problems[0]
         matches = []
-        matches += (problemClass.find(user,problemClass.column(problems,4)))
+        matches += (problemClass.find(user,problemClass.column(problems,const.USERCOL)))
         matches = problemClass.column(matches,0)
         matches.sort()
         fitleredProblems = [header]
@@ -167,7 +155,7 @@ class problemClass:#funcs that access information in the problem file
         header = problems[0]
         del problems[0]
         matches = []
-        matches += problemClass.find(str(stars),problemClass.column(problems,2))
+        matches += problemClass.find(str(stars),problemClass.column(problems,const.STARSCOL))
         matches = problemClass.column(matches,0)
         matches.sort()
         fitleredProblems = [header]
@@ -176,14 +164,15 @@ class problemClass:#funcs that access information in the problem file
         return fitleredProblems      
 
 #example of the functions in the FileIO class in use
-#print(problemClass.getGradeFilteredProblems(4,4))
+#const.initConfigVariables()
 #problems = problemClass.getGradeFilteredProblems(0,6)
 #print(problems)
-#problems = problemClass.getStarFilteredProblems(problems, '*')
-#problems = problemClass.getUserFilteredProblems(problems,"Robyn")
+#problems = problemClass.getStarFilteredProblems(problems, '**')#
+#problems = problemClass.getUserFilteredProblems(problems,"James")
 #print(problems)
 
 #print(problems)
+    
 #print(problemClass.getNotes(problems,1))
 #print(problemClass.getUser(problems,1))
 #print(problemClass.getNameGradeStars())

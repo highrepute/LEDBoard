@@ -2,7 +2,18 @@
 import configparser
 import ast
 
-class const:   
+class const:
+    PROBNAMECOL = 0
+    GRADECOL = 1
+    STARSCOL = 2
+    DATECOL = 3
+    USERCOL = 4
+    NOTESCOL = 5
+    FOOTHOLDSETCOL = 6
+    NOHOLDSINDEX = 11
+    HOLDSINDEX = 12
+    STARTHOLDSINDEX = 7
+    FINHOLDSINDEX = 9
     #initialise these to some default values
     LINUX = 0
     LED_VALUE = 50
