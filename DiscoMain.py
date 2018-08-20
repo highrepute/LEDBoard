@@ -836,7 +836,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lblDefaultBoard.setEnabled(loggedIn)
         self.lblDefaultBoard.setText(const.BOARDNAME)
         self.pbDefaultBoard.setEnabled(loggedIn)
+        self.pbReset_1.setEnabled(loggedIn)
         self.pbReset_2.setEnabled(loggedIn)
+        self.pbReset_3.setEnabled(loggedIn)
         self.pbSetWallLogo.setEnabled(loggedIn)
         self.pbSetThemeColour.setEnabled(loggedIn)
     
