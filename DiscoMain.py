@@ -126,6 +126,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbReset_1.clicked.connect(self.resetSoftware)
         self.pbReset_2.clicked.connect(self.resetSoftware)
         self.pbReset_3.clicked.connect(self.resetSoftware)
+        self.pbReset_4.clicked.connect(self.resetSoftware)
         self.pbSetWallLogo.clicked.connect(self.setWallLogo)
         self.pbSetThemeColour.clicked.connect(self.setDefaultThemeColour)
         
@@ -755,13 +756,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #save the data to the correct file
             if adminFlag == 2:
                 userClass.saveUsersFile(data)
-                self.lblAdminState.setText("Saved users database")
+                self.lblAdminState.setText("Saved users database - click Apply to load changes")
             elif adminFlag == 3:
                 logClass.saveLogFile(data)
-                self.lblAdminState.setText("Saved logbook database")
+                self.lblAdminState.setText("Saved logbook database - click Apply to load changes")
             elif adminFlag == 4:
                 problemClass.saveProblemFile(data)
-                self.lblAdminState.setText("Saved problems database")
+                self.lblAdminState.setText("Saved problems database - click Apply to load changes")
             #set to logged in but no database loaded
             adminFlag = 1
             self.tblEdit.clear()
@@ -773,7 +774,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             adminFlag = 4
             problems = problemClass.readProblemFile()
             self.populateEditTable(problems)
-            self.lblAdminState.setText("Loaded problems database")    
+            self.lblAdminState.setText("Loaded problems database - click Save to save changes")    
     
     def editLogs(self):
         global adminFlag
@@ -782,7 +783,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             adminFlag = 3
             log = logClass.readLogFile()
             self.populateEditTable(log)
-            self.lblAdminState.setText("Loaded logbooks")
+            self.lblAdminState.setText("Loaded logbooks - click Save to save changes")
     
     def editUsers(self):
         global adminFlag
@@ -791,7 +792,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             adminFlag = 2
             users = userClass.readUsersFile()
             self.populateEditTable(users)
-            self.lblAdminState.setText("Loaded users database")
+            self.lblAdminState.setText("Loaded users database - click Save to save changes")
             
     def populateEditTable(self, data):
         self.tblEdit.setRowCount(len(data)-1)
@@ -839,6 +840,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbReset_1.setEnabled(loggedIn)
         self.pbReset_2.setEnabled(loggedIn)
         self.pbReset_3.setEnabled(loggedIn)
+        self.pbReset_4.setEnabled(loggedIn)
         self.pbSetWallLogo.setEnabled(loggedIn)
         self.pbSetThemeColour.setEnabled(loggedIn)
     
