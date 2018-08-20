@@ -608,7 +608,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             boardMaker.saveBoard(filename, newBoard, const.IMAGEPATH) 
             self.resetBoardMaker()
             self.pbReset.setEnabled(True)
-            text = "Saved as - " + filename +"\nClick RESET to activate new board"
+            text = "Saved board.\nClick RESET to activate new board"
             self.lblBoardMakerInfo.setText(text)
         else:
             text = "Enter a name to save"
