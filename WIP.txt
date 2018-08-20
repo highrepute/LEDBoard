@@ -9,6 +9,7 @@ Priority 2
 			- list of problems - click to load one
 			- loads all problem details
 			- user can change any of the details and save the problem
+	- filter by users - shows users who have created a problem not all users
 Priority 3
 Mobile App
 Button/LDRs on holds

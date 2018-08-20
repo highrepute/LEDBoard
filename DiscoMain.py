@@ -1340,6 +1340,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             problemClass.addNewProb(newProblem)
             self.resetAddProblemTab()
             self.populateProblemTable()
+            self.populateFilterTab()
             QtWidgets.QMessageBox.warning(self, "Bon Effort!", "Well Done! New problem added!")
             self.tabWidget.setCurrentIndex(0)
             text = "New problem added - " + probName + "\n by user - " + user
