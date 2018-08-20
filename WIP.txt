@@ -1,15 +1,14 @@
 Work In Progress...
 Priority 1
-	- sort column so grades are in order not alphabetical
+	- sort column so grades are in order not alphabetical (!!!)
 Priority 2
 	- make all config.ini variable adjustable within the admin tab
-	- when save new board change the message to just say board saved - hit RESET
-	- make admin tab more user friendly - add an edit problem tab
+	- add an edit problem tab
 		- allow user to select a problem and change it.
 			- list of problems - click to load one
 			- loads all problem details
 			- user can change any of the details and save the problem
-	- filter by users - shows users who have created a problem not all users
 Priority 3
+	- colour code sessions in the logbook view
 Mobile App
 Button/LDRs on holds

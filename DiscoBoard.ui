@@ -2275,7 +2275,7 @@ QComboBox QAbstractItemView {
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QTabWidget" name="tabWidget_2">
+     <widget class="QTabWidget" name="tabAdmin">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -2285,9 +2285,9 @@ QComboBox QAbstractItemView {
        </rect>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>3</number>
       </property>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="tabChangeBoard">
        <attribute name="title">
         <string>Change Board</string>
        </attribute>
@@ -2367,7 +2367,7 @@ QComboBox QAbstractItemView {
         </layout>
        </widget>
       </widget>
-      <widget class="QWidget" name="tab_8">
+      <widget class="QWidget" name="tabSetLogo">
        <attribute name="title">
         <string>Set Logo</string>
        </attribute>
@@ -2426,7 +2426,7 @@ QComboBox QAbstractItemView {
         </layout>
        </widget>
       </widget>
-      <widget class="QWidget" name="tab_10">
+      <widget class="QWidget" name="tabSetColour">
        <attribute name="title">
         <string>Set Colour</string>
        </attribute>
@@ -2485,12 +2485,222 @@ QComboBox QAbstractItemView {
         </layout>
        </widget>
       </widget>
-      <widget class="QWidget" name="tab_11">
+      <widget class="QWidget" name="tabEditProblem">
        <attribute name="title">
         <string>Edit Problem</string>
        </attribute>
+       <widget class="QListWidget" name="lbEditProblemList">
+        <property name="geometry">
+         <rect>
+          <x>80</x>
+          <y>80</y>
+          <width>361</width>
+          <height>441</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>Select a user and click button to show problems by that user</string>
+        </property>
+       </widget>
+       <widget class="QWidget" name="layoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>510</x>
+          <y>170</y>
+          <width>258</width>
+          <height>284</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_9">
+         <item row="5" column="1">
+          <widget class="QComboBox" name="cbEditStars">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Star rating for your new problem</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="0" colspan="2">
+          <widget class="QPushButton" name="pbEditSaveProb">
+           <property name="minimumSize">
+            <size>
+             <width>33</width>
+             <height>33</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Save the new problem</string>
+           </property>
+           <property name="text">
+            <string>Save</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0" colspan="2">
+          <widget class="QLineEdit" name="leEditProblemName">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Enter the name for your new problem</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0" colspan="2">
+          <widget class="QLabel" name="lblAddProb_5">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Comments</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" colspan="2">
+          <widget class="QLabel" name="lblAddProb_6">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Problem Name</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QLabel" name="lblAddProbUser_2">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Update problem info here...</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QComboBox" name="cbEditGrade">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Grade for your new problem</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="0" colspan="2">
+          <widget class="QTextEdit" name="tbEditComments">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Any comments you have about your new problem</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="lblAddProb_7">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Foothold set</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QComboBox" name="cbEditFootholdSet">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Star rating for your new problem</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QPushButton" name="pbReset_5">
+        <property name="geometry">
+         <rect>
+          <x>610</x>
+          <y>490</y>
+          <width>156</width>
+          <height>33</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>33</width>
+          <height>33</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>Reset the board to load the new .brd file</string>
+        </property>
+        <property name="text">
+         <string>Apply</string>
+        </property>
+       </widget>
       </widget>
-      <widget class="QWidget" name="tab_9">
+      <widget class="QWidget" name="tabEditDatabases">
        <attribute name="title">
         <string>Edit Databases</string>
        </attribute>

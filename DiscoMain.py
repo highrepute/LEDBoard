@@ -129,6 +129,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbReset_4.clicked.connect(self.resetSoftware)
         self.pbSetWallLogo.clicked.connect(self.setWallLogo)
         self.pbSetThemeColour.clicked.connect(self.setDefaultThemeColour)
+            #edit problem tab
+        self.tabAdmin.currentChanged.connect(self.stopShowSequence)(self.populateEditProblemList)
         
         #filter tab
         self.pbFilterByUser.clicked.connect(self.filterByUser)
@@ -807,6 +809,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.tblEdit.setItem(i-1,j, item)
                 except:
                     self.tblEdit.setItem(i-1,j, QtWidgets.QTableWidgetItem(''))
+                    
+    def populateEditProblemList(self):
+        problems = prolemClass.getNameGradeStars()[0][:]
+        if (len(problems) > 0):
+                self.lbEditProblemList.addItems(problems)
     
     def adminLogout(self):
         global adminFlag
@@ -843,6 +850,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbReset_4.setEnabled(loggedIn)
         self.pbSetWallLogo.setEnabled(loggedIn)
         self.pbSetThemeColour.setEnabled(loggedIn)
+        self.cbEditFootholdSet.setEnabled(loggedIn)
+        self.cbEditGrade.setEnabled(loggedIn)
+        self.cbEditStars.setEnabled(loggedIn)
+        self.leEditProblemName.setEnabled(loggedIn)
+        self.pbEditSaveProb.setEnabled(loggedIn)
+        self.tbEditComments.setEnabled(loggedIn)
     
     def sliderChange(self):
         global sliderFlag
