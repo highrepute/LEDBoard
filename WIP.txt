@@ -1,11 +1,14 @@
 Work In Progress...
 Priority 1
-	- can't add med/hard problems!
 	- sort column so grades are in order not alphabetical
 Priority 2
 	- make all config.ini variable adjustable within the admin tab
-	- tidy up admin tab - seperate tabs for each possible action
-	- when save new board change
+	- when save new board change the message to just say board saved - hit RESET
+	- make admin tab more user friendly - add an edit problem tab
+		- allow user to select a problem and change it.
+			- list of problems - click to load one
+			- loads all problem details
+			- user can change any of the details and save the problem
 Priority 3
 Mobile App
 Button/LDRs on holds

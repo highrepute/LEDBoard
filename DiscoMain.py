@@ -123,7 +123,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbEditSave.clicked.connect(self.editSave)
         self.pbDeleteRow.clicked.connect(self.deleteRow)
         self.pbDefaultBoard.clicked.connect(self.setDefaultBoard)
+        self.pbReset_1.clicked.connect(self.resetSoftware)
         self.pbReset_2.clicked.connect(self.resetSoftware)
+        self.pbReset_3.clicked.connect(self.resetSoftware)
         self.pbSetWallLogo.clicked.connect(self.setWallLogo)
         self.pbSetThemeColour.clicked.connect(self.setDefaultThemeColour)
         
@@ -219,7 +221,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         colour = QtWidgets.QColorDialog.getColor()
         print(colour.name())
         const.setTHEMECOLOUR(colour.name())
-        self.lblAdminState.setText("New theme colour set - click Reset to apply new theme")
+        self.lblAdminState.setText("New theme colour set - click Apply to see new theme")
 
     def setThemeColour(self):
         self.tabWidget.setStyleSheet("QTabBar::tab:!selected { background: %s;}" % (const.THEMECOLOUR))
@@ -323,6 +325,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.frmWallLogo.setObjectName("frmWallLogo");
         self.frmWallLogo.setStyleSheet('QWidget#frmWallLogo { border-image: url("' + imagePath + '")}')
         const.setWALLLOGOPATH(imagePath)
+        self.lblAdminState.setText("New logo set - click Apply to see new logo")
         
     def initSlider(self):
         self.lblMin.setText(str(const.GRADES[0]))
@@ -391,7 +394,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.leBoardName.setText(self.leSaveAsName.text())
             self.finalise()
             self.resetBoardMaker()
-            self.lblBoardMakerInfo.setText("Board saved with new name - " + saveAsPath)        
+            self.lblBoardMakerInfo.setText("Board saved with new name - press Apply to load board")        
         else:
             self.lblBoardMakerInfo.setText("Enter a Board Name to Save As")
 
@@ -721,7 +724,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         const.setBOARDNAME(boardPath)
         self.lblDefaultBoard.setText(const.BOARDNAME)
         const.setIMAGEPATH(boardMaker.getBoardImagePath(boardPath))
-        self.lblAdminState.setText("New Default Board set - click RESET to load")
+        self.lblAdminState.setText("New Default Board set - click Apply to load new board")
         
     def deleteRow(self):
         model = self.tblEdit.model()
