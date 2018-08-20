@@ -130,7 +130,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbSetWallLogo.clicked.connect(self.setWallLogo)
         self.pbSetThemeColour.clicked.connect(self.setDefaultThemeColour)
             #edit problem tab
-        self.tabAdmin.currentChanged.connect(self.stopShowSequence)(self.populateEditProblemList)
+        #self.tabAdmin.currentChanged.connect(self.populateEditProblemList)
+        self.lbEditProblemList.selectionModel().selectionChanged.connect(self.loadEditProblem)
+        self.pbEditSaveProb.clicked.connect(self.saveEditProblem)
         
         #filter tab
         self.pbFilterByUser.clicked.connect(self.filterByUser)
@@ -707,6 +709,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cbStars.addItems(const.STARS)
         self.cbStars_2.addItems(const.STARS)
         self.cbFootholdSet.addItems(const.FOOTHOLDSETS)
+        self.cbEditStars.addItems(const.STARS)
+        self.cbEditGrade.addItems(const.GRADES)
+        self.cbEditFootholdSet.addItems(const.FOOTHOLDSETS)
         
     def populateFilterTab(self):
         try:
@@ -811,10 +816,41 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.tblEdit.setItem(i-1,j, QtWidgets.QTableWidgetItem(''))
                     
     def populateEditProblemList(self):
-        problems = prolemClass.getNameGradeStars()[0][:]
+        self.lbEditProblemList.clear()
+        problems = problemClass.getNameGradeStars()
+        problems = MyApp.column(problems,0)
+        del problems[0]
         if (len(problems) > 0):
                 self.lbEditProblemList.addItems(problems)
-    
+                
+
+    def loadEditProblem(self):
+        rowN = self.lbEditProblemList.selectedIndexes()[0].row()+1
+        problem = problemClass.getProblem(rowN)
+        self.leEditProblemName.setText(problem[const.PROBNAMECOL])
+        grade = int(problem[const.GRADECOL])
+        stars = int(problem[const.STARSCOL])
+        foothold = MyApp.find(const.FOOTHOLDSETS,problem[const.FOOTHOLDSETCOL])[0]
+        if stars >= 0:
+            self.cbEditStars.setCurrentIndex(stars)
+        if grade >= 0:
+            self.cbEditGrade.setCurrentIndex(grade)
+        if foothold >= 0:
+            self.cbEditFootholdSet.setCurrentIndex(foothold)
+        self.tbEditComments.setText(problem[const.NOTESCOL])
+
+    def saveEditProblem(self):
+        rowN = self.lbEditProblemList.selectedIndexes()[0].row()+1
+        problem = problemClass.getProblem(rowN)
+        problem[const.PROBNAMECOL] = self.leEditProblemName.text()
+        problem[const.GRADECOL] = str(self.cbEditStars.currentIndex())
+        problem[const.STARSCOL] = str(self.cbEditGrade.currentIndex())
+        problem[const.FOOTHOLDSETCOL] = self.cbEditFootholdSet.currentText()
+        comments = self.tbEditComments.toPlainText().replace('\n', ' ')
+        comments = comments.replace(',', '-')
+        problem[const.NOTESCOL] = comments
+        print('6',problem)        
+
     def adminLogout(self):
         global adminFlag
         adminFlag = 0
@@ -831,6 +867,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.leAdminPassword.clear()
                 self.lblAdminState.setText("Logged In")
                 self.initAdminTab(True)
+                self.populateEditProblemList()
             else:
                 self.lblInfo.setText("Oh no!\nI'm sorry your password is incorrect")
                 
@@ -856,6 +893,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.leEditProblemName.setEnabled(loggedIn)
         self.pbEditSaveProb.setEnabled(loggedIn)
         self.tbEditComments.setEnabled(loggedIn)
+        self.tabAdmin.setEnabled(loggedIn)
     
     def sliderChange(self):
         global sliderFlag

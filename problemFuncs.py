@@ -190,3 +190,5 @@ class problemClass:#funcs that access information in the problem file
 #print(newProblem)
 #problemClass.addNewProb(newProblem)
 #print(problemClass.getAllUsers())
+#oneProblem = problemClass.getProblem(6)
+#print(oneProblem)
