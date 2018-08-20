@@ -1289,7 +1289,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #append name, grade, stars & date
             probName = self.leProblemName.text()
             newProblem.append(probName)
+            print(const.GRADES, self.cbGrade_2.currentText())
             grade = MyApp.find(const.GRADES,self.cbGrade_2.currentText())[0]
+            findResult = MyApp.find(const.GRADES,self.cbGrade_2.currentText())
+            print(findResult, grade)
             stars = MyApp.find(const.STARS,self.cbStars_2.currentText())[0]
             footholdSet = self.cbFootholdSet.currentText()
             newProblem.append(grade)
@@ -1575,7 +1578,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 column = i.index(elem)
             except ValueError:
                 continue
-            return row, column
+            if (column  == 0):
+                return row, column
         return [-1,-1]
     
     #checks the grade and stars of the selected problem and updates the log problem dropdowns

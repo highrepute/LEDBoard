@@ -1,12 +1,11 @@
 Work In Progress...
 Priority 1
-	-
+	- can't add med/hard problems!
+	- sort column so grades are in order not alphabetical
 Priority 2
-	- dropdown to indicate which feet to use
-		- add problem tab
-		- display in problem info
-		- new [] in config ['Wooden', 'Resin']
 	- make all config.ini variable adjustable within the admin tab
+	- tidy up admin tab - seperate tabs for each possible action
+	- when save new board change
 Priority 3
 Mobile App
 Button/LDRs on holds
