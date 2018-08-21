@@ -27,6 +27,12 @@ class problemClass:#funcs that access information in the problem file
                 if const.LINUX == 0:
                     #delete line seems to be required in windows but not in linux!
                     problemClass.deleteLastLine()    
+
+    def updateProblemFile(problem, row):
+        #replaces an entry in the problem file with 'problem'
+        problems = problemClass.readProblemFile()
+        problems[row] = problem
+        problemClass.saveProblemFile(problems)
         
     def getNameGradeStars():  
         problems = problemClass.readProblemFile()
