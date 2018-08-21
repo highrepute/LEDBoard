@@ -3,11 +3,8 @@ Priority 1
 	- sort column so grades are in order not alphabetical (!!!)
 Priority 2
 	- make all config.ini variable adjustable within the admin tab
-	- add an edit problem tab
-		- allow user to select a problem and change it.
-			- list of problems - click to load one
-			- loads all problem details
-			- user can change any of the details and save the problem
+	- led colour for show 2 problems - use shades yellow/orange/red - purple/blue/green
+	- show sequence - some kind of complex blinking pattern - change colour to help follow LEDs
 Priority 3
 	- colour code sessions in the logbook view
 Mobile App

@@ -135,6 +135,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #self.tabAdmin.currentChanged.connect(self.populateEditProblemList)
         self.lbEditProblemList.selectionModel().selectionChanged.connect(self.loadEditProblem)
         self.pbEditSaveProb.clicked.connect(self.saveEditProblem)
+            #edit config tab
+        self.pbConfigurationSave.clicked.connect(self.saveEditConfig)
         
         #filter tab
         self.pbFilterByUser.clicked.connect(self.filterByUser)
@@ -875,16 +877,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print('there')
             
     def populateEditConfig(self):
+        self.cbAdminUser.clear()
         self.sbLEDBrightness.setValue(const.LED_VALUE)
         self.tbWelcomeMessage.setText(const.DEFAULTMSG)
-        problems = problemClass.getNameGradeStars()
-        users = MyApp.column(problems,0)
-        self.cbAdminUser.addItems(users)#
+        users = userClass.getUserNames()
+        self.cbAdminUser.addItems(users)
         
     def saveEditConfig(self):
-        const.setLED_VALUE = self.sbLEDBrightness.value()
-        const.setDEFAULTMSG = self.tbWelcomeMessage.toPlainText()
-        const.setADMIN = self.cbAdminUSer.currentText()
+        print('set new config')
+        const.setLED_VALUE(self.sbLEDBrightness.value())
+        const.setDEFAULTMSG(self.tbWelcomeMessage.toPlainText())
+        const.setADMIN(self.cbAdminUser.currentText())
         self.lblAdminState.setText('New config values saved - Click Appy to see changes')
 
     def adminLogout(self):
