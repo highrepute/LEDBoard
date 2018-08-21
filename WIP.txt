@@ -4,6 +4,7 @@ Priority 1
 Priority 2
 	- make all config.ini variable adjustable within the admin tab
 	- led colour for show 2 problems - use shades yellow/orange/red - purple/blue/green
+		- needs testing
 	- show sequence - some kind of complex blinking pattern - change colour to help follow LEDs
 Priority 3
 	- colour code sessions in the logbook view

@@ -1457,7 +1457,7 @@ QComboBox QAbstractItemView {
        </font>
       </property>
       <property name="toolTip">
-       <string>Shows the last two selected problem (green, blue red/cyan, yellow, magenta)</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shows the last two selected problem (yellow, orange, red/teal, teal/blue, blue)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
        <string>Show two probs</string>
@@ -2999,6 +2999,9 @@ QComboBox QAbstractItemView {
             <font>
              <pointsize>12</pointsize>
             </font>
+           </property>
+           <property name="maximum">
+            <number>255</number>
            </property>
           </widget>
          </item>
