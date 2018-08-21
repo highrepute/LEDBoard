@@ -823,7 +823,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         del problems[0]
         if (len(problems) > 0):
                 self.lbEditProblemList.addItems(problems)
-        self.lbEditInfo.setText('Select a problem and make changes')
+        #self.lbEditInfo.setText('Select a problem and make changes')
                 
 
     def loadEditProblem(self):
@@ -847,27 +847,31 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lbEditInfo.setText('Edit problem and click Save to save changes')
 
     def saveEditProblem(self):
-        rowN = self.lbEditProblemList.selectedIndexes()[0].row()+1
-        problem = problemClass.getProblem(rowN)
-        problem[const.PROBNAMECOL] = self.leEditProblemName.text()
-        problem[const.GRADECOL] = str(self.cbEditGrade.currentIndex())
-        problem[const.STARSCOL] = str(self.cbEditStars.currentIndex())
-        problem[const.FOOTHOLDSETCOL] = self.cbEditFootholdSet.currentText()
-        comments = self.tbEditComments.toPlainText().replace('\n', ' ')
-        comments = comments.replace(',', '-')
-        problem[const.NOTESCOL] = comments
-        print('6',problem)
-        problemClass.updateProblemFile(problem,rowN)
-        self.lblAdminState.setText('Problem called - ' + problem[const.PROBNAMECOL] + ' - updated')
-        self.lbEditInfo.setText('Problem called - ' + problem[const.PROBNAMECOL] + ' - updated\nClick Apply to reset and show changes')
-        #self.leEditProblemName.clear()
-        #self.cbEditStars.setCurrentIndex(0)
-        #self.cbEditGrade.setCurrentIndex(0)
-        #self.cbEditFootholdSet.setCurrentIndex(0)
-        #self.tbEditComments.clear()
-        print('here')
-        self.populateEditProblemList()
-        print('there')
+        try:
+            rowN = self.lbEditProblemList.selectedIndexes()[0].row()+1
+        except:
+            rowN = -999
+        if rowN != -999:
+            problem = problemClass.getProblem(rowN)
+            problem[const.PROBNAMECOL] = self.leEditProblemName.text()
+            problem[const.GRADECOL] = str(self.cbEditGrade.currentIndex())
+            problem[const.STARSCOL] = str(self.cbEditStars.currentIndex())
+            problem[const.FOOTHOLDSETCOL] = self.cbEditFootholdSet.currentText()
+            comments = self.tbEditComments.toPlainText().replace('\n', ' ')
+            comments = comments.replace(',', '-')
+            problem[const.NOTESCOL] = comments
+            print('6',problem)
+            problemClass.updateProblemFile(problem,rowN)
+            self.lblAdminState.setText('Problem called - ' + problem[const.PROBNAMECOL] + ' - updated')
+            self.lbEditInfo.setText('Problem called - ' + problem[const.PROBNAMECOL] + ' - updated\nClick Apply to reset and show changes')
+            #self.leEditProblemName.clear()
+            #self.cbEditStars.setCurrentIndex(0)
+            #self.cbEditGrade.setCurrentIndex(0)
+            #self.cbEditFootholdSet.setCurrentIndex(0)
+            #self.tbEditComments.clear()
+            print('here')
+            self.populateEditProblemList()
+            print('there')
 
     def adminLogout(self):
         global adminFlag
@@ -886,6 +890,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.lblAdminState.setText("Logged In")
                 self.initAdminTab(True)
                 self.populateEditProblemList()
+                self.lbEditInfo.setText('Select a problem and make changes')
             else:
                 self.lblInfo.setText("Oh no!\nI'm sorry your password is incorrect")
                 
