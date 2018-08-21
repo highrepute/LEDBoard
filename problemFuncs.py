@@ -29,7 +29,8 @@ class problemClass:#funcs that access information in the problem file
                     problemClass.deleteLastLine()    
 
     def updateProblemFile(problem, row):
-        #replaces an entry in the problem file with 'problem'
+        #replaces an entry at 'row' in the problem file with 'problem'
+        #row should take into account the header
         problems = problemClass.readProblemFile()
         problems[row] = problem
         problemClass.saveProblemFile(problems)
@@ -192,9 +193,9 @@ class problemClass:#funcs that access information in the problem file
 
 #print(fin)
             
-#newProblem = ['new',  '7a',  '3',  '11/04/2018', 'James', 'comments go here',    '1', '',   '9', '',   '3',     '1', '5', '9']
+#newProblem = ['new',  '3',  '3',  '2018-08-21', 'James', 'comments go here',  'circles',  '1', '',   '9', '',   '3',     '1', '5', '9']
 #print(newProblem)
-#problemClass.addNewProb(newProblem)
+#problemClass.updateProblemFile(newProblem,2)
 #print(problemClass.getAllUsers())
 #oneProblem = problemClass.getProblem(6)
 #print(oneProblem)

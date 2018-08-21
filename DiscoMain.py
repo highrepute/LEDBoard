@@ -825,31 +825,45 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 
 
     def loadEditProblem(self):
-        rowN = self.lbEditProblemList.selectedIndexes()[0].row()+1
-        problem = problemClass.getProblem(rowN)
-        self.leEditProblemName.setText(problem[const.PROBNAMECOL])
-        grade = int(problem[const.GRADECOL])
-        stars = int(problem[const.STARSCOL])
-        foothold = MyApp.find(const.FOOTHOLDSETS,problem[const.FOOTHOLDSETCOL])[0]
-        if stars >= 0:
-            self.cbEditStars.setCurrentIndex(stars)
-        if grade >= 0:
-            self.cbEditGrade.setCurrentIndex(grade)
-        if foothold >= 0:
-            self.cbEditFootholdSet.setCurrentIndex(foothold)
-        self.tbEditComments.setText(problem[const.NOTESCOL])
+        try:
+            rowN = self.lbEditProblemList.selectedIndexes()[0].row()+1
+        except:
+            rowN = -999
+        if rowN != -999:
+            problem = problemClass.getProblem(rowN)
+            self.leEditProblemName.setText(problem[const.PROBNAMECOL])
+            grade = int(problem[const.GRADECOL])
+            stars = int(problem[const.STARSCOL])
+            foothold = MyApp.find(const.FOOTHOLDSETS,problem[const.FOOTHOLDSETCOL])[0]
+            if stars >= 0:
+                self.cbEditStars.setCurrentIndex(stars)
+            if grade >= 0:
+                self.cbEditGrade.setCurrentIndex(grade)
+            if foothold >= 0:
+                self.cbEditFootholdSet.setCurrentIndex(foothold)
+            self.tbEditComments.setText(problem[const.NOTESCOL])
 
     def saveEditProblem(self):
         rowN = self.lbEditProblemList.selectedIndexes()[0].row()+1
         problem = problemClass.getProblem(rowN)
         problem[const.PROBNAMECOL] = self.leEditProblemName.text()
-        problem[const.GRADECOL] = str(self.cbEditStars.currentIndex())
-        problem[const.STARSCOL] = str(self.cbEditGrade.currentIndex())
+        problem[const.GRADECOL] = str(self.cbEditGrade.currentIndex())
+        problem[const.STARSCOL] = str(self.cbEditStars.currentIndex())
         problem[const.FOOTHOLDSETCOL] = self.cbEditFootholdSet.currentText()
         comments = self.tbEditComments.toPlainText().replace('\n', ' ')
         comments = comments.replace(',', '-')
         problem[const.NOTESCOL] = comments
-        print('6',problem)        
+        print('6',problem)
+        problemClass.updateProblemFile(problem,rowN)
+        self.lblAdminState.setText('Problem called - ' + problem[const.PROBNAMECOL] + ' - updated')
+        #self.leEditProblemName.clear()
+        #self.cbEditStars.setCurrentIndex(0)
+        #self.cbEditGrade.setCurrentIndex(0)
+        #self.cbEditFootholdSet.setCurrentIndex(0)
+        #self.tbEditComments.clear()
+        print('here')
+        self.populateEditProblemList()
+        print('there')
 
     def adminLogout(self):
         global adminFlag
