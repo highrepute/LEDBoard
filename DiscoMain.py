@@ -127,6 +127,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbReset_2.clicked.connect(self.resetSoftware)
         self.pbReset_3.clicked.connect(self.resetSoftware)
         self.pbReset_4.clicked.connect(self.resetSoftware)
+        self.pbReset_5.clicked.connect(self.resetSoftware)
         self.pbSetWallLogo.clicked.connect(self.setWallLogo)
         self.pbSetThemeColour.clicked.connect(self.setDefaultThemeColour)
             #edit problem tab
@@ -822,6 +823,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         del problems[0]
         if (len(problems) > 0):
                 self.lbEditProblemList.addItems(problems)
+        self.lbEditInfo.setText('Select a problem and make changes')
                 
 
     def loadEditProblem(self):
@@ -842,6 +844,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if foothold >= 0:
                 self.cbEditFootholdSet.setCurrentIndex(foothold)
             self.tbEditComments.setText(problem[const.NOTESCOL])
+            self.lbEditInfo.setText('Edit problem and click Save to save changes')
 
     def saveEditProblem(self):
         rowN = self.lbEditProblemList.selectedIndexes()[0].row()+1
@@ -856,6 +859,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         print('6',problem)
         problemClass.updateProblemFile(problem,rowN)
         self.lblAdminState.setText('Problem called - ' + problem[const.PROBNAMECOL] + ' - updated')
+        self.lbEditInfo.setText('Problem called - ' + problem[const.PROBNAMECOL] + ' - updated\nClick Apply to reset and show changes')
         #self.leEditProblemName.clear()
         #self.cbEditStars.setCurrentIndex(0)
         #self.cbEditGrade.setCurrentIndex(0)

@@ -2257,9 +2257,9 @@ QComboBox QAbstractItemView {
      <widget class="QLabel" name="lblAdminState">
       <property name="geometry">
        <rect>
-        <x>240</x>
+        <x>140</x>
         <y>50</y>
-        <width>571</width>
+        <width>771</width>
         <height>27</height>
        </rect>
       </property>
@@ -2357,7 +2357,7 @@ QComboBox QAbstractItemView {
             </font>
            </property>
            <property name="toolTip">
-            <string>Reset the board to load the new .brd file</string>
+            <string>Reset the board and show changes</string>
            </property>
            <property name="text">
             <string>Apply</string>
@@ -2416,7 +2416,7 @@ QComboBox QAbstractItemView {
             </font>
            </property>
            <property name="toolTip">
-            <string>Reset the board to load the new .brd file</string>
+            <string>Reset the board and show changes</string>
            </property>
            <property name="text">
             <string>Apply</string>
@@ -2430,7 +2430,7 @@ QComboBox QAbstractItemView {
        <attribute name="title">
         <string>Set Colour</string>
        </attribute>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>360</x>
@@ -2475,7 +2475,7 @@ QComboBox QAbstractItemView {
             </font>
            </property>
            <property name="toolTip">
-            <string>Reset the board to load the new .brd file</string>
+            <string>Reset the board and show changes</string>
            </property>
            <property name="text">
             <string>Apply</string>
@@ -2495,7 +2495,7 @@ QComboBox QAbstractItemView {
           <x>80</x>
           <y>80</y>
           <width>361</width>
-          <height>441</height>
+          <height>471</height>
          </rect>
         </property>
         <property name="font">
@@ -2511,7 +2511,7 @@ QComboBox QAbstractItemView {
         <property name="geometry">
          <rect>
           <x>510</x>
-          <y>170</y>
+          <y>200</y>
           <width>258</width>
           <height>284</height>
          </rect>
@@ -2676,7 +2676,7 @@ QComboBox QAbstractItemView {
         <property name="geometry">
          <rect>
           <x>610</x>
-          <y>490</y>
+          <y>520</y>
           <width>156</width>
           <height>33</height>
          </rect>
@@ -2693,12 +2693,43 @@ QComboBox QAbstractItemView {
          </font>
         </property>
         <property name="toolTip">
-         <string>Reset the board to load the new .brd file</string>
+         <string>Reset the board and show changes</string>
         </property>
         <property name="text">
          <string>Apply</string>
         </property>
        </widget>
+       <widget class="QLabel" name="lbEditInfo">
+        <property name="geometry">
+         <rect>
+          <x>510</x>
+          <y>80</y>
+          <width>251</width>
+          <height>111</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Select a problem and make changes</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <zorder>lbEditProblemList</zorder>
+       <zorder>layoutWidget_2</zorder>
+       <zorder>pbReset_5</zorder>
+       <zorder>lblInfo_2</zorder>
+       <zorder>lbEditInfo</zorder>
       </widget>
       <widget class="QWidget" name="tabEditDatabases">
        <attribute name="title">
@@ -2853,7 +2884,7 @@ QComboBox QAbstractItemView {
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>520</x>
@@ -2898,7 +2929,7 @@ QComboBox QAbstractItemView {
             </font>
            </property>
            <property name="toolTip">
-            <string>Reset the board to load the new .brd file</string>
+            <string>Reset the board and show changes</string>
            </property>
            <property name="text">
             <string>Apply</string>
