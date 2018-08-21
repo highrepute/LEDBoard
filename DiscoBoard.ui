@@ -2938,12 +2938,12 @@ QComboBox QAbstractItemView {
        <attribute name="title">
         <string>Edit Configuration</string>
        </attribute>
-       <widget class="QPushButton" name="pbReset_11">
+       <widget class="QPushButton" name="pbReset_6">
         <property name="geometry">
          <rect>
-          <x>530</x>
+          <x>535</x>
           <y>300</y>
-          <width>156</width>
+          <width>151</width>
           <height>33</height>
          </rect>
         </property>
@@ -2971,40 +2971,10 @@ QComboBox QAbstractItemView {
           <x>240</x>
           <y>145</y>
           <width>451</width>
-          <height>132</height>
+          <height>146</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_10">
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="leEditProblemName_5">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>31</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="toolTip">
-            <string>Enter the name for your new problem</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="lblAddProb_10">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Admin user</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="0">
           <widget class="QLabel" name="lblAddProb_8">
            <property name="font">
@@ -3017,26 +2987,8 @@ QComboBox QAbstractItemView {
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="leEditProblemName_2">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>31</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="toolTip">
-            <string>Enter the name for your new problem</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="1">
-          <widget class="QSpinBox" name="spinBox">
+          <widget class="QSpinBox" name="sbLEDBrightness">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -3062,7 +3014,76 @@ QComboBox QAbstractItemView {
            </property>
           </widget>
          </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="lblAddProb_10">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Admin user</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="cbAdminUser">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>31</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Grade for your new problem</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QTextEdit" name="tbWelcomeMessage">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Any comments you have about your new problem</string>
+           </property>
+          </widget>
+         </item>
         </layout>
+       </widget>
+       <widget class="QPushButton" name="pbConfigurationSave">
+        <property name="geometry">
+         <rect>
+          <x>370</x>
+          <y>300</y>
+          <width>151</width>
+          <height>33</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>33</width>
+          <height>33</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>Save the new problem</string>
+        </property>
+        <property name="text">
+         <string>Save</string>
+        </property>
        </widget>
       </widget>
      </widget>

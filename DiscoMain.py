@@ -128,6 +128,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbReset_3.clicked.connect(self.resetSoftware)
         self.pbReset_4.clicked.connect(self.resetSoftware)
         self.pbReset_5.clicked.connect(self.resetSoftware)
+        self.pbReset_6.clicked.connect(self.resetSoftware)
         self.pbSetWallLogo.clicked.connect(self.setWallLogo)
         self.pbSetThemeColour.clicked.connect(self.setDefaultThemeColour)
             #edit problem tab
@@ -872,6 +873,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print('here')
             self.populateEditProblemList()
             print('there')
+            
+    def populateEditConfig(self):
+        self.sbLEDBrightness.setValue(const.LED_VALUE)
+        self.tbWelcomeMessage.setText(const.DEFAULTMSG)
+        problems = problemClass.getNameGradeStars()
+        users = MyApp.column(problems,0)
+        self.cbAdminUser.addItems(users)#
+        
+    def saveEditConfig(self):
+        const.setLED_VALUE = self.sbLEDBrightness.value()
+        const.setDEFAULTMSG = self.tbWelcomeMessage.toPlainText()
+        const.setADMIN = self.cbAdminUSer.currentText()
+        self.lblAdminState.setText('New config values saved - Click Appy to see changes')
 
     def adminLogout(self):
         global adminFlag
@@ -891,6 +905,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.initAdminTab(True)
                 self.populateEditProblemList()
                 self.lbEditInfo.setText('Select a problem and make changes')
+                self.populateEditConfig()
             else:
                 self.lblInfo.setText("Oh no!\nI'm sorry your password is incorrect")
                 
