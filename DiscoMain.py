@@ -1622,13 +1622,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             for hold in startHolds:
                 strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE, 0)#yellow
             for hold in probHolds:
-                strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE/2, 0)#orange
+                strip.setPixelColorRGB(hold-1, const.LED_VALUE, int(const.LED_VALUE/2), 0)#orange
             for hold in finHolds:
                 strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)#red 
             for hold in startHolds2:
                 strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, const.LED_VALUE)#teal
             for hold in probHolds2:
-                strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE/2, const.LED_VALUE)#teal/blue
+                strip.setPixelColorRGB(hold-1, 0, int(const.LED_VALUE/2), const.LED_VALUE)#teal/blue
             for hold in finHolds2:
                 strip.setPixelColorRGB(hold-1, 0, 0,const.LED_VALUE )#blue
             strip.show()
@@ -1650,7 +1650,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 for hold in startHolds:
                     strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE, 0)#yellow
                 for hold in probHolds:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE/2, 0)#orange
+                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, int(const.LED_VALUE/2), 0)#orange
                 for hold in finHolds:
                     strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)#red                              
             elif toggleLEDFlag == 1:
@@ -1665,7 +1665,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 for hold in startHolds2:
                     strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, const.LED_VALUE)#teal
                 for hold in probHolds2:
-                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE/2, const.LED_VALUE)#teal/blue
+                    strip.setPixelColorRGB(hold-1, 0, int(const.LED_VALUE/2), const.LED_VALUE)#teal/blue
                 for hold in finHolds2:
                     strip.setPixelColorRGB(hold-1, 0, 0,const.LED_VALUE )#blue                     
             strip.show()
