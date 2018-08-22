@@ -5,6 +5,7 @@
 *.ini
 backup-logfile.txt
 logfile.txt
+backupLED.sh
 
 
 # Byte-compiled / optimized / DLL files
