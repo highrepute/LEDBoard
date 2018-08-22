@@ -410,6 +410,11 @@ QComboBox QAbstractItemView {
            </item>
            <item>
             <property name="text">
+             <string>1st Go</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>2nd Go</string>
             </property>
            </item>
