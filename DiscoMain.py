@@ -1623,17 +1623,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
             for hold in startHolds:
-                strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE, 0)#yellow
+                strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, int(const.LED_VALUE/2))#pink
             for hold in probHolds:
-                strip.setPixelColorRGB(hold-1, const.LED_VALUE, int(const.LED_VALUE/2), 0)#orange
+                strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE, 0)#yellow
             for hold in finHolds:
                 strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)#red 
             for hold in startHolds2:
-                strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, const.LED_VALUE)#teal
+                strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, int(const.LED_VALUE/2))#green-ish
             for hold in probHolds2:
-                strip.setPixelColorRGB(hold-1, 0, int(const.LED_VALUE/2), const.LED_VALUE)#teal/blue
+                strip.setPixelColorRGB(hold-1, 0, int(const.LED_VALUE/2), const.LED_VALUE)#blue/teal
             for hold in finHolds2:
-                strip.setPixelColorRGB(hold-1, 0, 0,const.LED_VALUE )#blue
+                strip.setPixelColorRGB(hold-1, int(const.LED_VALUE/2), 0,const.LED_VALUE )#purple
             strip.show()
     
     #used in show two prob mode to toggle colour of an LED that is on both problems
@@ -1651,11 +1651,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 for hold in finHolds2:
                     strip.setPixelColorRGB(hold-1, 0, 0, 0)                
                 for hold in startHolds:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE, 0)#yellow
+                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, int(const.LED_VALUE/2))#pink
                 for hold in probHolds:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, int(const.LED_VALUE/2), 0)#orange
+                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE, 0)#yellow
                 for hold in finHolds:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)#red                              
+                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)#red                               
             elif toggleLEDFlag == 1:
                 toggleLEDFlag = 0
                 #print("toggle 1")
@@ -1666,11 +1666,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 for hold in finHolds:
                     strip.setPixelColorRGB(hold-1, 0, 0, 0)                
                 for hold in startHolds2:
-                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, const.LED_VALUE)#teal
+                    strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, int(const.LED_VALUE/2))#green-ish
                 for hold in probHolds2:
-                    strip.setPixelColorRGB(hold-1, 0, int(const.LED_VALUE/2), const.LED_VALUE)#teal/blue
+                    strip.setPixelColorRGB(hold-1, 0, int(const.LED_VALUE/2), const.LED_VALUE)#blue/teal
                 for hold in finHolds2:
-                    strip.setPixelColorRGB(hold-1, 0, 0,const.LED_VALUE )#blue                     
+                    strip.setPixelColorRGB(hold-1, int(const.LED_VALUE/2), 0,const.LED_VALUE )#purple                     
             strip.show()
     
     #find item elem in list l    
