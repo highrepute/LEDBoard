@@ -230,7 +230,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         colour = QtWidgets.QColorDialog.getColor()
         print(colour.name())
         const.setTHEMECOLOUR(colour.name())
-        self.lblAdminState.setText("New theme colour set - click Apply to see new theme")
+        self.lblAdminState.setText("New theme colour set - press Apply to see new theme")
 
     def setThemeColour(self):
         self.tabWidget.setStyleSheet("QTabBar::tab:!selected { background: %s;}" % (const.THEMECOLOUR))
@@ -334,7 +334,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.frmWallLogo.setObjectName("frmWallLogo");
         self.frmWallLogo.setStyleSheet('QWidget#frmWallLogo { border-image: url("' + imagePath + '")}')
         const.setWALLLOGOPATH(imagePath)
-        self.lblAdminState.setText("New logo set - click Apply to see new logo")
+        self.lblAdminState.setText("New logo set - press Apply to see new logo")
         
     def initSlider(self):
         self.lblMin.setText(str(const.GRADES[0]))
@@ -355,7 +355,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.populateProblemTable()
         self.hardClearDisplayProblem()
         self.setThemeColour()
-        
+        self.initProbInfo()
         self.populateFilterTab()
         #self.populateComboBoxes()
         self.resetBoardMaker()
@@ -389,7 +389,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 button.show()
                 button.setStyleSheet("background-color: rgba(240, 240, 240, 25%); border: none;")
                 button = None
-            self.lblInfoAddProb.setText("Create a new problem\nClick a hold to begin")
+            self.lblInfoAddProb.setText("Create a new problem\nPress a hold to begin")
         else:
             #can't load a board - assume first use
             #const.setTOTAL_LED_COUNT(1000)#this allows test LED button to work on a new system - for max 1000 LEDs
@@ -617,7 +617,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             boardMaker.saveBoard(filename, newBoard, const.IMAGEPATH) 
             self.resetBoardMaker()
             self.pbReset.setEnabled(True)
-            text = "Saved board.\nClick RESET to activate new board"
+            text = "Saved\n\nPress RESET to activate new board"
             self.lblBoardMakerInfo.setText(text)
         else:
             text = "Enter a name to save"
@@ -736,7 +736,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         const.setBOARDNAME(boardPath)
         self.lblDefaultBoard.setText(const.BOARDNAME)
         const.setIMAGEPATH(boardMaker.getBoardImagePath(boardPath))
-        self.lblAdminState.setText("New Default Board set - click Apply to load new board")
+        self.lblAdminState.setText("New Default Board set - press Apply to load new board")
         
     def deleteRow(self):
         model = self.tblEdit.model()
@@ -767,13 +767,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #save the data to the correct file
             if adminFlag == 2:
                 userClass.saveUsersFile(data)
-                self.lblAdminState.setText("Saved users database - click Apply to load changes")
+                self.lblAdminState.setText("Saved users database - press Apply to load changes")
             elif adminFlag == 3:
                 logClass.saveLogFile(data)
-                self.lblAdminState.setText("Saved logbook database - click Apply to load changes")
+                self.lblAdminState.setText("Saved logbook database - press Apply to load changes")
             elif adminFlag == 4:
                 problemClass.saveProblemFile(data)
-                self.lblAdminState.setText("Saved problems database - click Apply to load changes")
+                self.lblAdminState.setText("Saved problems database - press Apply to load changes")
             #set to logged in but no database loaded
             adminFlag = 1
             self.tblEdit.clear()
@@ -785,7 +785,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             adminFlag = 4
             problems = problemClass.readProblemFile()
             self.populateEditTable(problems)
-            self.lblAdminState.setText("Loaded problems database - click Save to save changes")    
+            self.lblAdminState.setText("Loaded problems database - press Save to save changes")    
     
     def editLogs(self):
         global adminFlag
@@ -794,7 +794,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             adminFlag = 3
             log = logClass.readLogFile()
             self.populateEditTable(log)
-            self.lblAdminState.setText("Loaded logbooks - click Save to save changes")
+            self.lblAdminState.setText("Loaded logbooks - press Save to save changes")
     
     def editUsers(self):
         global adminFlag
@@ -803,7 +803,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             adminFlag = 2
             users = userClass.readUsersFile()
             self.populateEditTable(users)
-            self.lblAdminState.setText("Loaded users database - click Save to save changes")
+            self.lblAdminState.setText("Loaded users database - press Save to save changes")
             
     def populateEditTable(self, data):
         self.tblEdit.setRowCount(len(data)-1)
@@ -847,7 +847,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if foothold >= 0:
                 self.cbEditFootholdSet.setCurrentIndex(foothold)
             self.tbEditComments.setText(problem[const.NOTESCOL])
-            self.lbEditInfo.setText('Edit problem and click Save to save changes')
+            self.lbEditInfo.setText('Edit problem and press Save to save changes')
 
     def saveEditProblem(self):
         try:
@@ -866,7 +866,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print('6',problem)
             problemClass.updateProblemFile(problem,rowN)
             self.lblAdminState.setText('Problem called - ' + problem[const.PROBNAMECOL] + ' - updated')
-            self.lbEditInfo.setText('Problem called - ' + problem[const.PROBNAMECOL] + ' - updated\nClick Apply to reset and show changes')
+            self.lbEditInfo.setText('Problem called - ' + problem[const.PROBNAMECOL] + ' - updated\nPress Apply to reset and show changes')
             #self.leEditProblemName.clear()
             #self.cbEditStars.setCurrentIndex(0)
             #self.cbEditGrade.setCurrentIndex(0)
@@ -891,7 +891,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         const.setLED_VALUE(self.sbLEDBrightness.value())
         const.setDEFAULTMSG(self.tbWelcomeMessage.toPlainText())
         const.setADMIN(self.cbAdminUser.currentText())
-        self.lblAdminState.setText('New config values saved - Click Appy to see changes')
+        self.lblAdminState.setText('New config values saved - Press Appy to see changes')
 
     def adminLogout(self):
         global adminFlag
@@ -1346,7 +1346,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cbFootholdSet.setCurrentIndex(0)
         self.tbComments.clear()
         
-        self.lblInfoAddProb.setText("Create a new problem\nClick a hold to begin")
+        self.lblInfoAddProb.setText("Create a new problem\nPress a hold to begin")
         
         #init new problem globals
         newProbCounter = 0
