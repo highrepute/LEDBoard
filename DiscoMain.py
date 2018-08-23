@@ -882,6 +882,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tbWelcomeMessage.setText(const.DEFAULTMSG)
         users = userClass.getUserNames()
         self.cbAdminUser.addItems(users)
+        #set the dropdown to the current admin user
+        index = MyApp.find(users, const.ADMIN)[0]
+        self.cbAdminUser.setCurrentIndex(index)
         
     def saveEditConfig(self):
         print('set new config')
