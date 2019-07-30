@@ -1,3 +1,7 @@
+#############################################################
+# check file path in const.py - comment for RasPi or windows#
+#                                                           #
+#############################################################
 import sys
 #fixes problem where screeninfo import throws as error
 sys.path.append("/home/pi/.local/lib/python3.5/site-packages/screeninfo/")
@@ -8,7 +12,6 @@ import re
 import datetime
 import time
 import os
-from screeninfo import get_monitors
 
 from collections import Counter
 
@@ -22,17 +25,24 @@ from boardMaker import boardMaker
 
 from qrangeslider import QRangeSlider
 
+if const.LINUX == 1:
+    from screeninfo import get_monitors
+
 #load that configuration variables from config.ini
 const.initConfigVariables()
 
 if const.LINUX == 1:
     from neopixel import *
 
-m = get_monitors()
-if (m[0].width == 1024) & (m[0].height == 768):
-    qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard1024x768.ui"
+if const.LINUX == 1:
+    m = get_monitors()
+    if (m[0].width == 1024) & (m[0].height == 768):
+        qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard1024x768.ui"
 else:
-    qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
+    if const.LINUX == 1:
+        qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
+    else:
+        qtCreatorFile = "DiscoBoard.ui"
 
 #qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
  
@@ -79,11 +89,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
 
-		#find monitor resolution and position everything in the centre of screen       
-        if (m[0].width == 1024) & (m[0].height == 768):
-            moveTab = QtCore.QPoint(0, 0);
+        if const.LINUX == 1:
+    		#find monitor resolution and position everything in the centre of screen       
+            if (m[0].width == 1024) & (m[0].height == 768):
+                moveTab = QtCore.QPoint(0, 0);
+            else:
+                moveTab = QtCore.QPoint((m[0].width - 1141)/2, ((m[0].height - 871)/2)+50);
         else:
-            moveTab = QtCore.QPoint((m[0].width - 1141)/2, ((m[0].height - 871)/2)+50);
+            moveTab = QtCore.QPoint(0, 0);
         moveWallLogo = moveTab + QtCore.QPoint(800, -80);
         moveBoardLogo = moveTab + QtCore.QPoint(0, -80);
         self.tabWidget.move(moveTab)

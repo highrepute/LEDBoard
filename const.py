@@ -29,6 +29,9 @@ class const:
     BOARDLOGOPATH = None
     THEMECOLOUR = "#fd4"
     FOOTHOLDSETS = ['Standard']
+    USERSPATH = None
+    LOGPATH = None
+    PROBPATH = None
     
     def initConfigVariables():
         const.LINUX = int(const.getLINUX())
@@ -45,15 +48,20 @@ class const:
         const.BOARDLOGOPATH = str(const.getBOARDLOGOPATH())
         const.THEMECOLOUR = str(const.getTHEMECOLOUR())
         const.FOOTHOLDSETS = const.getFOOTHOLDSETS()
+        const.USERSPATH = str(const.getUSERSPATH())
+        const.LOGPATH = str(const.getLOGPATH())
+        const.PROBPATH = str(const.getPROBPATH())
     
     def loadConfig():
         config = configparser.ConfigParser()
         config.optionxform = str
-        config.read('/home/pi/Desktop/LEDBoard-2/config.ini')
+        #config.read('/home/pi/Desktop/LEDBoard-2/config.ini') #RasPi
+        config.read('config.ini') #Windows
         return config
     
     def writeConfig(config):
-        with open('/home/pi/Desktop/LEDBoard-2/config.ini', 'w') as configfile:
+        with open('config.ini', 'w') as configfile: #Windows
+        #with open('/home/pi/Desktop/LEDBoard-2/config.ini', 'w') as configfile: #RasPi
             config.write(configfile)
 
     def getLINUX():
@@ -65,6 +73,18 @@ class const:
         config.set('DEFAULT', 'LINUX', str(value))
         const.writeConfig(config)
         const.LINUX = value
+        
+    def getUSERSPATH():
+        config = const.loadConfig()
+        return config.get('PATHS', 'USERSPATH')
+
+    def getLOGPATH():
+        config = const.loadConfig()
+        return config.get('PATHS', 'LOGPATH')
+
+    def getPROBPATH():
+        config = const.loadConfig()
+        return config.get('PATHS', 'PROBPATH')        
         
     def getBOARDNAME():
         config = const.loadConfig()
@@ -190,9 +210,8 @@ class const:
 #const.initConfigVariables()
 #print(const.FOOTHOLDSETS)
 #grades = ['6a', '6a+', '6b', '6b+', '6c', '6c+', '7a']
-#print(str(grades))
-#print(const.IMAGEPATH)
-#print(const.LINUX)
+#print(str(const.GRADES))
+#print(const.LOGPATH)
 #const.setIMAGEPATH("C:/Users/James.Jacobs/Desktop/Temp/LED/20180411_210921_2.jpg")
 #const.setLINUX("1")
 #print(const.IMAGEPATH)

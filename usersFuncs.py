@@ -11,14 +11,14 @@ class userClass:#funcs that access information in the users file
     
     def readUsersFile():
         #this gets the contents of the csv file into a list
-        with open('/home/pi/Desktop/LEDBoard-2/users.csv', newline='') as csvfile:
+        with open(const.USERSPATH, newline='') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
             users = list(filereader)
         return users
     
     def saveUsersFile(users):
         #appends a new user to the list of users
-        with open('/home/pi/Desktop/LEDBoard-2/users.csv', 'w') as f:
+        with open(const.USERSPATH, 'w') as f:
             writer = csv.writer(f, dialect='excel')
             for row in users:
                 writer.writerow(row)
@@ -51,10 +51,11 @@ class userClass:#funcs that access information in the users file
     
     def deleteLastLine():
         #bodge to delete extra <CR> that appears when a problem is added
-        readFile = open("/home/pi/Desktop/LEDBoard-2/users.csv")
+        readFile = open(const.USERSPATH)
         lines = readFile.readlines()
         readFile.close()
-        w = open("/home/pi/Desktop/LEDBoard-2/users.csv",'w')
+        #w = open("/home/pi/Desktop/LEDBoard-2/users.csv",'w')
+        w = open(const.USERSPATH,'w')
         w.writelines([item for item in lines[:-1]])
         w.close()
         
@@ -70,7 +71,7 @@ class userClass:#funcs that access information in the users file
     
     def addNewUser(newUser):
         #appends a new user to the list of users
-        with open('/home/pi/Desktop/LEDBoard-2/users.csv', 'a') as f:
+        with open(const.USERSPATH, 'a') as f:            
             writer = csv.writer(f, dialect='excel')
             writer.writerow(newUser)
         f.close()

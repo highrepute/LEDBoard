@@ -12,14 +12,14 @@ class logClass:
     
     def readLogFile():
         #this gets the contents of the csv file into a list
-        with open('/home/pi/Desktop/LEDBoard-2/logs.csv', newline='') as csvfile:
+        with open(const.LOGPATH, newline='') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
             log = list(filereader)
         return log
     
     def saveLogFile(log):
         #appends a new user to the list of users
-        with open('/home/pi/Desktop/LEDBoard-2/logs.csv', 'w') as f:
+        with open(const.LOGPATH, 'w') as f:            
             writer = csv.writer(f, dialect='excel')
             for row in log:
                 writer.writerow(row)
@@ -36,16 +36,16 @@ class logClass:
     
     def deleteLastLine():
         #bodge to delete extra <CR> that appears when a problem is added
-        readFile = open("/home/pi/Desktop/LEDBoard-2/logs.csv")
+        readFile = open(const.LOGPATH)
         lines = readFile.readlines()
         readFile.close()
-        w = open("logs.csv",'w')
+        w = open(const.LOGPATH,'w')
         w.writelines([item for item in lines[:-1]])
         w.close()    
     
     def logProblem(newLogProb):
         #appends a new user to the list of users
-        with open('/home/pi/Desktop/LEDBoard-2/logs.csv', 'a') as f:
+        with open(const.LOGPATH, 'a') as f:
             writer = csv.writer(f, dialect='excel')
             writer.writerow(newLogProb)
         f.close()
