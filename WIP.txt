@@ -1,12 +1,8 @@
 Work In Progress...
 Priority 1
+	- add in logout timeout within edit config tab under admin
 Priority 2
-	- led colour for show 2 problems
-		- needs testing
-		- simon says it's ok
-	- show sequence - some kind of complex blinking pattern - change colour to help follow LEDs
-	- when you chagne the board image it is updated in the problem info tab until restart
 Priority 3
 	- colour code sessions in the logbook view
-Mobile App
-Button/LDRs on holds
+	- Mobile App (https://developers.google.com/web/progressive-web-apps/)
+	- Button/LDRs on holds
