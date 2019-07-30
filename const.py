@@ -32,6 +32,7 @@ class const:
     USERSPATH = None
     LOGPATH = None
     PROBPATH = None
+    LOGOUTTIMEOUT = 1800
     
     def initConfigVariables():
         const.LINUX = int(const.getLINUX())
@@ -51,6 +52,7 @@ class const:
         const.USERSPATH = str(const.getUSERSPATH())
         const.LOGPATH = str(const.getLOGPATH())
         const.PROBPATH = str(const.getPROBPATH())
+        const.LOGOUTTIMEOUT = int(const.getLOGOUTTIMEOUT())
     
     def loadConfig():
         config = configparser.ConfigParser()
@@ -73,6 +75,16 @@ class const:
         config.set('DEFAULT', 'LINUX', str(value))
         const.writeConfig(config)
         const.LINUX = value
+        
+    def getLOGOUTTIMEOUT():
+        config = const.loadConfig()
+        return int(config.get('DEFAULT', 'LOGOUTTIMEOUT'))
+    
+    def setLOGOUTTIMEOUT(value):
+        config = const.loadConfig()
+        config.set('DEFAULT', 'LOGOUTTIMEOUT', str(value))
+        const.writeConfig(config)
+        const.LOGOUTTIMEOUT = value
         
     def getUSERSPATH():
         config = const.loadConfig()
@@ -208,6 +220,7 @@ class const:
         
 #print(const.LINUX)
 #const.initConfigVariables()
+#print(const.LOGOUTTIMEOUT)
 #print(const.FOOTHOLDSETS)
 #grades = ['6a', '6a+', '6b', '6b+', '6c', '6c+', '7a']
 #print(str(const.GRADES))

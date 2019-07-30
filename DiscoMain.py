@@ -901,6 +901,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def saveEditConfig(self):
         print('set new config')
+        ##TODO - add in logout timeout field here
         const.setLED_VALUE(self.sbLEDBrightness.value())
         const.setDEFAULTMSG(self.tbWelcomeMessage.toPlainText())
         const.setADMIN(self.cbAdminUser.currentText())
@@ -1117,7 +1118,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         for user,timeIn in usersLoggedIn:
             #if time since logged-in is 30mins (1800sec)
             #print(time.time() - timeIn)
-            if ((time.time() - timeIn) > 1800):
+            if ((time.time() - timeIn) > const.LOGOUTTIMEOUT):
                 #log out that user
                 index = MyApp.find(usersLoggedIn,user)[0]
                 del usersLoggedIn[index]
