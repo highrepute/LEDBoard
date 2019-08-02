@@ -25,11 +25,11 @@ from boardMaker import boardMaker
 
 from qrangeslider import QRangeSlider
 
-if const.LINUX == 1:
-    from screeninfo import get_monitors
-
 #load that configuration variables from config.ini
 const.initConfigVariables()
+
+if const.LINUX == 1:
+    from screeninfo import get_monitors
 
 if const.LINUX == 1:
     from neopixel import *
@@ -38,6 +38,8 @@ if const.LINUX == 1:
     m = get_monitors()
     if (m[0].width == 1024) & (m[0].height == 768):
         qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard1024x768.ui"
+    else:
+        qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
 else:
     if const.LINUX == 1:
         qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
