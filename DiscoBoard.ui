@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1267</width>
-    <height>948</height>
+    <height>956</height>
    </rect>
   </property>
   <property name="font">
@@ -280,7 +280,7 @@ QComboBox QAbstractItemView {
         <x>20</x>
         <y>40</y>
         <width>501</width>
-        <height>150</height>
+        <height>158</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_8">
@@ -297,6 +297,20 @@ QComboBox QAbstractItemView {
           <widget class="QTextEdit" name="tbLogComments">
            <property name="toolTip">
             <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QTextEdit" name="tbLogTags">
+           <property name="toolTip">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="lblLog_3">
+           <property name="text">
+            <string>Tags/keywords</string>
            </property>
           </widget>
          </item>
@@ -1583,7 +1597,7 @@ QComboBox QAbstractItemView {
    </widget>
    <widget class="QWidget" name="tab_6">
     <attribute name="title">
-     <string>Filter by User</string>
+     <string>Filters</string>
     </attribute>
     <widget class="QFrame" name="frmFilter">
      <property name="geometry">
@@ -1664,6 +1678,91 @@ QComboBox QAbstractItemView {
       </property>
       <property name="text">
        <string>Not filtering by user</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frmTagsFilter">
+     <property name="geometry">
+      <rect>
+       <x>510</x>
+       <y>40</y>
+       <width>421</width>
+       <height>571</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Select a user and click button to show problems by that user</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QPushButton" name="pbFilterByTags">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>520</y>
+        <width>161</width>
+        <height>35</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>33</width>
+        <height>33</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>Select a user and click button to show problems by that user</string>
+      </property>
+      <property name="text">
+       <string>Filter by tags</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="lbTagsFilter">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>60</y>
+        <width>361</width>
+        <height>441</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>Select a user and click button to show problems by that user</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblTagsFilter">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>20</y>
+        <width>361</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Not filtering by tag</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -2350,7 +2449,7 @@ QComboBox QAbstractItemView {
           <x>510</x>
           <y>200</y>
           <width>258</width>
-          <height>284</height>
+          <height>368</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_9">
@@ -2372,7 +2471,7 @@ QComboBox QAbstractItemView {
            </property>
           </widget>
          </item>
-         <item row="9" column="0" colspan="2">
+         <item row="11" column="0" colspan="2">
           <widget class="QPushButton" name="pbEditSaveProb">
            <property name="minimumSize">
             <size>
@@ -2507,13 +2606,37 @@ QComboBox QAbstractItemView {
            </property>
           </widget>
          </item>
+         <item row="9" column="0" colspan="2">
+          <widget class="QLabel" name="lblAddProb_11">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Tags/keywords</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="0" colspan="2">
+          <widget class="QTextEdit" name="tbEditTags">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Any comments you have about your new problem</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
        <widget class="QPushButton" name="pbReset_5">
         <property name="geometry">
          <rect>
           <x>610</x>
-          <y>520</y>
+          <y>580</y>
           <width>156</width>
           <height>33</height>
          </rect>
