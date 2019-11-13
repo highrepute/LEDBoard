@@ -2,6 +2,20 @@ Work In Progress...
 Priority 1
 	- add in logout timeout within edit config tab under admin
 	- ability to tag problems
+		- problem class functions
+		- UI additions
+			- Filter by tags listBox in filter tab
+			- Filter by tags button
+			- add tag button on problems tab
+			- drop down of all tags
+			-admin tab
+				- edit tags - via 10 textboxes?
+		- main functions
+			- display tags in problem info
+			- addTag()
+			- filterByTags()
+			- populateFilterByTagsBox()
+			
 Priority 2
 Priority 3
 	- colour code sessions in the logbook view
