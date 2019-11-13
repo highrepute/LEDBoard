@@ -1,6 +1,7 @@
 Work In Progress...
 Priority 1
 	- add in logout timeout within edit config tab under admin
+	- ability to tag problems
 Priority 2
 Priority 3
 	- colour code sessions in the logbook view

@@ -19,14 +19,14 @@ class problemClass:#funcs that access information in the problem file
         return problems
     
     def saveProblemFile(problems):
-        #appends a new user to the list of users
+        #appends a new problem to the list of problems
         with open(const.PROBPATH, 'w') as f:
             writer = csv.writer(f, dialect='excel')
             for row in problems:
                 writer.writerow(row)
                 if const.LINUX == 0:
                     #delete line seems to be required in windows but not in linux!
-                    problemClass.deleteLastLine()    
+                    problemClass.deleteLastLine()
 
     def updateProblemFile(problem, row):
         #replaces an entry at 'row' in the problem file with 'problem'
@@ -42,13 +42,22 @@ class problemClass:#funcs that access information in the problem file
         problemList = [[i[const.PROBNAMECOL],i[const.GRADECOL],i[const.STARSCOL],i[const.DATECOL]] for i in problems]
         return problemList
     
-    def getAllUsers():
+    def getAllUsers():#returns all unique users
         problems = problemClass.readProblemFile()
         userList = []
         #extracts just the name, grade & stars
         userList = [i[const.USERCOL] for i in problems]
         del userList[0]
         return list(set(userList))
+    
+    def getUniqueTags():#returns all unique tags
+        problems = problemClass.readProblemFile()
+        #extracts just the tags
+        tagList = [[i[const.TAGSCOL],i[const.TAGSCOL+1],i[const.TAGSCOL+2],i[const.TAGSCOL+3],i[const.TAGSCOL+4],i[const.TAGSCOL+5],i[const.TAGSCOL+6],i[const.TAGSCOL+7],i[const.TAGSCOL+8],i[const.TAGSCOL+9]] for i in problems]
+        del tagList[0]
+        #gets unique items from the list of tags
+        newList = list(set(x for l in tagList for x in l))
+        return newList
     
     def getUser(problemNumber):
         problems = problemClass.readProblemFile()
@@ -58,7 +67,7 @@ class problemClass:#funcs that access information in the problem file
     def getNotes(problemNumber):
         problems = problemClass.readProblemFile()
         notes = problems[problemNumber][const.NOTESCOL]
-        return notes
+        return notes  
     
     def getProblem(problemNumber):
         problems = problemClass.readProblemFile()
@@ -115,6 +124,29 @@ class problemClass:#funcs that access information in the problem file
         if (const.LINUX == 0):
             problemClass.deleteLastLine()
             
+    def addNewTag(problemNumber, newTag):#adds a new tag if space
+        problems = problemClass.readProblemFile()#get problem database
+        tags = problems[problemNumber][const.TAGSCOL:const.TAGSCOL+10]
+        if '' in tags:#check there is a blank entry
+            if newTag in tags: #check if tag already exists
+                return -1 #tag alreayd present
+            else:
+                #get indices of first blank entry
+                i = 0
+                for tag in tags:
+                    if tag == '':
+                        index = i
+                        break 
+                    i = i + 1
+                #add newTag to problem
+                problem = problems[problemNumber]
+                problem[const.TAGSCOL+index] = newTag
+                #save to problem file
+                problemClass.updateProblemFile(problem, problemNumber)
+                return 0
+        else:
+            return -2 #can't add tag
+            
     def sortProblems(sortBy):
         problems = problemClass.readProblemFile()
         problems = sorted(problems, key=itemgetter(sortBy), reverse=True)
@@ -168,12 +200,33 @@ class problemClass:#funcs that access information in the problem file
         fitleredProblems = [header]
         for match in matches:
             fitleredProblems.append(problems[match][0:5])
-        return fitleredProblems      
+        return fitleredProblems    
+      
+    def getTagsFilteredProblems(problems,tags):
+        header = problems[0]
+        del problems[0]
+        matches = []
+        for tag in tags:#go through array of tags
+            for i in range(10):#for each tag column in database find matching tag
+                matches += (problemClass.find(str(tag),problemClass.column(problems,const.TAGSCOL+i)))
+        matches = problemClass.column(matches,0)
+        matches = list(set(matches))
+        matches.sort()
+        #create filtered problem list for output
+        fitleredProblems = [header[0:7]]
+        for match in matches:
+            fitleredProblems.append(problems[match][0:5])
+        return fitleredProblems    
 
 #example of the functions in the FileIO class in use
 #const.initConfigVariables()
+#problems = problemClass.readProblemFile()
 #problems = problemClass.getGradeFilteredProblems(0,6)
 #print(problems)
+#problems = problemClass.getTagsFilteredProblems(problems,['heel hookey','morpho'])
+#print(problems)
+#print(problemClass.addNewTag(3, 'pockets'))
+#print(problemClass.getUniqueTags())
 #problems = problemClass.getStarFilteredProblems(problems, '**')#
 #problems = problemClass.getUserFilteredProblems(problems,"James")
 #print(problems)

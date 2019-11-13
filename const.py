@@ -10,10 +10,11 @@ class const:
     USERCOL = 4
     NOTESCOL = 5
     FOOTHOLDSETCOL = 6
-    NOHOLDSINDEX = 11
-    HOLDSINDEX = 12
-    STARTHOLDSINDEX = 7
-    FINHOLDSINDEX = 9
+    TAGSCOL = 7
+    STARTHOLDSINDEX = 17
+    FINHOLDSINDEX = 19  
+    NOHOLDSINDEX = 21
+    HOLDSINDEX = 22
     #initialise these to some default values
     LINUX = 0
     LED_VALUE = 50
@@ -57,13 +58,13 @@ class const:
     def loadConfig():
         config = configparser.ConfigParser()
         config.optionxform = str
-        config.read('/home/pi/Desktop/LEDBoard-2/config.ini') #RasPi
-        #config.read('config.ini') #Windows
+        #config.read('/home/pi/Desktop/LEDBoard-2/config.ini') #RasPi
+        config.read('config.ini') #Windows
         return config
     
     def writeConfig(config):
-        #with open('config.ini', 'w') as configfile: #Windows
-        with open('/home/pi/Desktop/LEDBoard-2/config.ini', 'w') as configfile: #RasPi
+        with open('config.ini', 'w') as configfile: #Windows
+        #with open('/home/pi/Desktop/LEDBoard-2/config.ini', 'w') as configfile: #RasPi
             config.write(configfile)
 
     def getLINUX():
