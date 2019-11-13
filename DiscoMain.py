@@ -743,7 +743,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 rowN = self.lbTagsFilter.selectedIndexes()[0].row()
                 tags = self.lbTagsFilter.item(rowN).text()
                 tagsFilter = tags
-                self.pbFilterByUser.setStyleSheet("background-color: #fff;") 
+                self.pbFilterByTags.setStyleSheet("background-color: #fff;") 
                 text = "Filtering by tags - " + tags
                 self.lblTagsFilter.setText(text)
                 self.lblInfo.setText(text)                 
@@ -1379,7 +1379,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
         #print("FILTER2", problemList)
         problemList = problemClass.getTagsFilteredProblems(problemList, tagsFilter)
-        
         self.tblProblems.setSortingEnabled(False)
         self.tblProblems.setRowCount(len(problemList)-1)
         for i in range(1,len(problemList),1):
