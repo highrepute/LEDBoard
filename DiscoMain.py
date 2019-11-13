@@ -83,6 +83,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global sliderFlag
         global adminFlag
         global userFilter
+        global tagsFilter
         global addButtonCount
         global firstMirrorHold
         global openExistingFlag
@@ -214,7 +215,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
         
-        #initialise variout bits
+        #initialise various bits
         self.initProblemTable()
         self.populateProblemTable()
         self.tabWidget.setCurrentIndex(0)#set startup tab
@@ -721,6 +722,42 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lblInfo.setText("Not filtering by user")
             userFilter = ""
         self.populateProblemTable()
+        
+    def filterTagsChange(self):
+        global tagsFilter 
+        if tagsFilter != "":
+            rowN = self.lbTagsFilter.selectedIndexes()[0].row()
+            tags = self.lbTagsFilter.item(rowN).text()
+            #TODO - have multiple tags?
+            tagsFilter = tags
+            text = "Filtering by tag - " + tags
+            self.lblTagsFilter.setText(text)
+            self.lblInfo.setText(text)
+            self.populateProblemTable()
+        
+    def filterByTags(self):
+        global tagsFilter
+        
+        if tagsFilter == "":
+            try:
+                rowN = self.lbTagsFilter.selectedIndexes()[0].row()
+                tags = self.lbTagsFilter.item(rowN).text()
+                tagsFilter = tags
+                self.pbFilterByUser.setStyleSheet("background-color: #fff;") 
+                text = "Filtering by tags - " + tags
+                self.lblTagsFilter.setText(text)
+                self.lblInfo.setText(text)                 
+            except:
+                tagsFilter = ""
+                self.pbFilterByTags.setStyleSheet("background-color: #080;")#green
+                self.lblTagsFilter.setText("Select a tag before filtering")
+                self.lblInfo.setText("Not filtering by tags")
+        else:
+            self.pbFilterByTags.setStyleSheet("background-color: #fff;")
+            self.lblTagsFilter.setText("Not filtering by tags")
+            self.lblInfo.setText("Not filtering by tags")
+            tagsFilter = ""
+        self.populateProblemTable()        
     
     def populateComboBoxes(self):
         self.cbGrade.addItems(const.GRADES)
@@ -734,17 +771,32 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def populateFilterTab(self):
         try:
-            rowN = self.lbUserFilter.selectedIndexes()[0].row()
+            #if a user is selected then keep them selected
+            rowUser = self.lbUserFilter.selectedIndexes()[0].row()
             users = problemClass.getAllUsers()
             self.lbUserFilter.clear()
             if (len(users) > 0):
                 self.lbUserFilter.addItems(users)
-            self.lbUserFilter.setCurrentRow(rowN)
+            self.lbUserFilter.setCurrentRow(rowUser)
         except:
+            #populate listbox users and tags
             users = problemClass.getAllUsers()
             self.lbUserFilter.clear()
             if (len(users) > 0):
-                self.lbUserFilter.addItems(users)    
+                self.lbUserFilter.addItems(users) 
+        try:
+            #if a tag is selected then keep them selected
+            rowTags = self.lbTagsFilter.selectedIndexes()[0].row()
+            tags = problemClass.getUniqueTags()
+            self.lbTagsFilter.clear()
+            if (len(tags) > 0):
+                self.lbTagsFilter.addItems(tags)
+            self.lbTagsFilter.setCurrentRow(rowTags)
+        except:
+            tags = problemClass.getUniqueTags()
+            self.lbTagsFilter.clear()
+            if (len(tags) > 0):
+                self.lbTagsFilter.addItems(tags)                        
                 
     def setDefaultBoard(self):
         boardPath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Board files (*.brd)")[0]
@@ -1317,6 +1369,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def populateProblemTable(self):
         global userFilter
+        global tagsFilter
         #populate problem list
         start = self.slider.getRange()[0]
         end = self.slider.getRange()[1] - 1
@@ -1325,6 +1378,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #print("FILTER1", problemList)
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
         #print("FILTER2", problemList)
+        problemList = problemClass.getTagsFilteredProblems(problemList, tagsFilter)
+        
         self.tblProblems.setSortingEnabled(False)
         self.tblProblems.setRowCount(len(problemList)-1)
         for i in range(1,len(problemList),1):
@@ -1721,13 +1776,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         setter = problemClass.getUser(rowProb)
         notes = problemClass.getNotes(rowProb)
         
+        tags = "TAGS: "
+        for i in range(10):
+            if problemsDB[rowProb][const.TAGSCOL+i] != "":
+                tags += problemsDB[rowProb][const.TAGSCOL+i]
+                tags += ", "
+        
         formatName = "<span style=\" font-size:14pt; font-weight:400; color:#000;\" >"
         formatGrade = "<span style=\" font-size:14pt; font-weight:400; color:#ca3;\" >"
         formatGray = "<span style=\" font-size:12pt; font-weight:300; color:#333;\" >"
         formatInfo = "<span style=\" font-size:13pt; font-weight:300; color:#000;\" >"
         closeSpan = "</span>\n"
         
-        infoText = formatName + probName + "&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatGrade + grade + "&nbsp;" + stars + closeSpan + formatGray + "<br>Date added:&nbsp;&nbsp;" + closeSpan + formatInfo + date + closeSpan + formatGray + "<br>Set by:&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + setter + closeSpan + formatGray + "<br>Footholds:&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + footholdSet + closeSpan + formatGray + "<br>Comments:&nbsp;&nbsp;" + closeSpan + formatInfo + notes + closeSpan
+        infoText = formatName + probName + "&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatGrade + grade + "&nbsp;" + stars + closeSpan + formatGray + "<br>Date added:&nbsp;&nbsp;" + closeSpan + formatInfo + date + closeSpan + formatGray + "<br>Set by:&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + setter + closeSpan + formatGray + "<br>Footholds:&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + footholdSet + closeSpan + formatGray + "<br>Comments:&nbsp;&nbsp;" + closeSpan + formatInfo + notes + "<br>" + tags + closeSpan
         
         #get and present star votes
         starVotes = logClass.getStarVotes(probName)
