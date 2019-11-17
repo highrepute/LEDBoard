@@ -167,14 +167,21 @@ class problemClass:#funcs that access information in the problem file
     def getGradeFilteredProblems(start, end):
         problems = problemClass.readProblemFile()
         matches = []
-        for grade in range(start,end+1):
-            matches += problemClass.find(str(grade),problemClass.column(problems,const.GRADECOL))
-        matches = problemClass.column(matches,0)
-        #matches.sort()
+        #get list of problem grades
+        gradesListStr = problemClass.column(problems,const.GRADECOL)
+        del gradesListStr[0]
+        #convert grades list to integer list
+        gradesList = [int(i) for i in gradesListStr]
+        for grade in range(start,end+1):#for each grade input to function
+            i = 1
+            for gradeInList in gradesList:
+                if gradeInList == grade:#if grade matches
+                    matches.append(i)
+                i = i + 1
         fitleredProblems = []
-        fitleredProblems.append(problems[0][0:5])
+        fitleredProblems.append(problems[0][0:5])#get header
         for match in matches:
-            fitleredProblems.append(problems[match][0:5])
+            fitleredProblems.append(problems[match][0:5])#get problems that match
         return fitleredProblems
     
     def getUserFilteredProblems(problems,user):
@@ -221,7 +228,7 @@ class problemClass:#funcs that access information in the problem file
 #example of the functions in the FileIO class in use
 #const.initConfigVariables()
 #problems = problemClass.readProblemFile()
-#problems = problemClass.getGradeFilteredProblems(0,6)
+#problems = problemClass.getGradeFilteredProblems(5,8)
 #print(problems)
 #problems = problemClass.getTagsFilteredProblems(problems,['heel hookey','morpho'])
 #print(problems)
