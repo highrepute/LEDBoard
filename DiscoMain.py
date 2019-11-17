@@ -247,7 +247,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def setDefaultThemeColour(self):
         colour = QtWidgets.QColorDialog.getColor()
-        print(colour.name())
+        #print(colour.name())
         const.setTHEMECOLOUR(colour.name())
         self.lblAdminState.setText("New theme colour set - press Apply to see new theme")
 
@@ -434,7 +434,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         openExistingFlag = 1
         boardPath = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '',"Board files (*.brd)")[0]
-        print(boardPath)
+        #print(boardPath)
         if boardPath != None:
             try:
                 imagePath = str(boardMaker.getBoardImagePath(boardPath))
@@ -740,14 +740,22 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def filterByTags(self):
         global tagsFilter
+        for item in self.lbTagsFilter.selectedIndexes():
+            print(item.row())
+        tagsFilter = []
         
         if tagsFilter == [""]:
             try:
-                rowN = self.lbTagsFilter.selectedIndexes()[0].row()
-                tags = self.lbTagsFilter.item(rowN).text()
-                tagsFilter = [tags]
+                #(self.lbTagsFilter.selectedIndexes()[0].row())
+                print(self.lbTagsFilter.selectedIndexes())
+                #rowN = self.lbTagsFilter.selectedIndexes()[0].row()
+                #tags = self.lbTagsFilter.item(rowN).text()
+                #tagsFilter = [tags]
+                for item in self.lbTagsFilter.selectedIndexes():
+                    tagsFilter.append(self.lbTagsFilter.item(item.row()).text())
+                print(tagsFilter)
                 self.pbFilterByTags.setStyleSheet("background-color: #fff;") 
-                text = "Filtering by tags - " + tags
+                text = "Filtering by tags - "# + tags
                 self.lblTagsFilter.setText(text)
                 self.lblInfo.setText(text)                 
             except:
@@ -933,7 +941,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             comments = self.tbEditComments.toPlainText().replace('\n', ' ')
             comments = comments.replace(',', '-')
             problem[const.NOTESCOL] = comments
-            print('6',problem)
+            #print('6',problem)
             problemClass.updateProblemFile(problem,rowN)
             self.lblAdminState.setText('Problem called - ' + problem[const.PROBNAMECOL] + ' - updated')
             self.lbEditInfo.setText('Problem called - ' + problem[const.PROBNAMECOL] + ' - updated\nPress Apply to reset and show changes')
@@ -942,9 +950,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #self.cbEditGrade.setCurrentIndex(0)
             #self.cbEditFootholdSet.setCurrentIndex(0)
             #self.tbEditComments.clear()
-            print('here')
+            #print('here')
             self.populateEditProblemList()
-            print('there')
+            #print('there')
             
     def populateEditConfig(self):
         self.cbAdminUser.clear()
@@ -957,7 +965,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cbAdminUser.setCurrentIndex(index)
         
     def saveEditConfig(self):
-        print('set new config')
+        #print('set new config')
         ##TODO - add in logout timeout field here
         const.setLED_VALUE(self.sbLEDBrightness.value())
         const.setDEFAULTMSG(self.tbWelcomeMessage.toPlainText())
@@ -1077,7 +1085,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         showSequenceFlag = 1 
         showSequenceCounter = 0
         shownSequenceCount = 0
-        print('show2')
+        #print('show2')
                    
     def logProblem(self):      
         if (self.tblProblems.selectedIndexes() != [])&(self.lbUsers.selectedIndexes() != []):
@@ -1204,13 +1212,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global sliderFlag
         
         if (showSequenceFlag == 1):
-            print('here')
+            #print('here')
             #get index of selected problem in table
             try:
                 items = self.tblProblems.selectedIndexes()[0]
             except:
                 items = -9999
-            print(items)
+            #print(items)
             if items != -9999:
                 #get name of problem
                 probName = self.tblProblems.item((items.row()),0).text()
@@ -1380,7 +1388,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         problemList = problemClass.getGradeFilteredProblems(start, end)
         #print("FILTER1", problemList)
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
-        print(tagsFilter)
+        #print(tagsFilter)
         problemList = problemClass.getTagsFilteredProblems(problemList, tagsFilter)
         self.tblProblems.setSortingEnabled(False)
         self.tblProblems.setRowCount(len(problemList)-1)
@@ -1464,10 +1472,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #append name, grade, stars & date
             probName = self.leProblemName.text()
             newProblem.append(probName)
-            print(const.GRADES, self.cbGrade_2.currentText())
+            #print(const.GRADES, self.cbGrade_2.currentText())
             grade = MyApp.find(const.GRADES,self.cbGrade_2.currentText())[0]
             findResult = MyApp.find(const.GRADES,self.cbGrade_2.currentText())
-            print(findResult, grade)
+            #print(findResult, grade)
             stars = MyApp.find(const.STARS,self.cbStars_2.currentText())[0]
             footholdSet = self.cbFootholdSet.currentText()
             newProblem.append(grade)
