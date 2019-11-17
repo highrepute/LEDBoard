@@ -187,7 +187,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tabProbInfo">
     <attribute name="title">
@@ -1745,6 +1745,9 @@ QComboBox QAbstractItemView {
       </property>
       <property name="toolTip">
        <string>Select a user and click button to show problems by that user</string>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::MultiSelection</enum>
       </property>
      </widget>
      <widget class="QLabel" name="lblTagsFilter">

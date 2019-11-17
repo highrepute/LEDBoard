@@ -179,9 +179,9 @@ class problemClass:#funcs that access information in the problem file
                     matches.append(i)
                 i = i + 1
         fitleredProblems = []
-        fitleredProblems.append(problems[0][0:5])#get header
+        fitleredProblems.append(problems[0][0:17])#get header
         for match in matches:
-            fitleredProblems.append(problems[match][0:5])#get problems that match
+            fitleredProblems.append(problems[match][0:17])#get problems that match
         return fitleredProblems
     
     def getUserFilteredProblems(problems,user):
@@ -193,7 +193,7 @@ class problemClass:#funcs that access information in the problem file
         matches.sort()
         fitleredProblems = [header]
         for match in matches:
-            fitleredProblems.append(problems[match][0:5])
+            fitleredProblems.append(problems[match][0:17])
         return fitleredProblems 
 
     def getStarFilteredProblems(problems,stars):
@@ -206,7 +206,7 @@ class problemClass:#funcs that access information in the problem file
         matches.sort()
         fitleredProblems = [header]
         for match in matches:
-            fitleredProblems.append(problems[match][0:5])
+            fitleredProblems.append(problems[match][0:17])
         return fitleredProblems    
       
     def getTagsFilteredProblems(problems,tags):
@@ -220,7 +220,7 @@ class problemClass:#funcs that access information in the problem file
         matches = list(set(matches))
         matches.sort()
         #create filtered problem list for output
-        fitleredProblems = [header[0:7]]
+        fitleredProblems = [header[0:5]]
         for match in matches:
             fitleredProblems.append(problems[match][0:5])
         return fitleredProblems    
@@ -230,7 +230,7 @@ class problemClass:#funcs that access information in the problem file
 #problems = problemClass.readProblemFile()
 #problems = problemClass.getGradeFilteredProblems(5,8)
 #print(problems)
-#problems = problemClass.getTagsFilteredProblems(problems,['heel hookey','morpho'])
+#problems = problemClass.getTagsFilteredProblems(problems,[])
 #print(problems)
 #print(problemClass.addNewTag(3, 'pockets'))
 #print(problemClass.getUniqueTags())

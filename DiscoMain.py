@@ -210,6 +210,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         sliderFlag = 0
         adminFlag = 0#0-logged out, 1-logged in, 2-editUsers, 3-editlogs, 4-editproblems
         userFilter = ""  
+        tagsFilter = [""]
         addButtonCount = 1     
         firstMirrorHold = 0
         openExistingFlag = 0
@@ -731,7 +732,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             rowN = self.lbTagsFilter.selectedIndexes()[0].row()
             tags = self.lbTagsFilter.item(rowN).text()
             #TODO - have multiple tags?
-            tagsFilter = tags
+            tagsFilter = [tags]
             text = "Filtering by tag - " + tags
             self.lblTagsFilter.setText(text)
             self.lblInfo.setText(text)
@@ -740,17 +741,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def filterByTags(self):
         global tagsFilter
         
-        if tagsFilter == "":
+        if tagsFilter == [""]:
             try:
                 rowN = self.lbTagsFilter.selectedIndexes()[0].row()
                 tags = self.lbTagsFilter.item(rowN).text()
-                tagsFilter = tags
+                tagsFilter = [tags]
                 self.pbFilterByTags.setStyleSheet("background-color: #fff;") 
                 text = "Filtering by tags - " + tags
                 self.lblTagsFilter.setText(text)
                 self.lblInfo.setText(text)                 
             except:
-                tagsFilter = ""
+                tagsFilter = [""]
                 self.pbFilterByTags.setStyleSheet("background-color: #080;")#green
                 self.lblTagsFilter.setText("Select a tag before filtering")
                 self.lblInfo.setText("Not filtering by tags")
@@ -758,7 +759,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.pbFilterByTags.setStyleSheet("background-color: #fff;")
             self.lblTagsFilter.setText("Not filtering by tags")
             self.lblInfo.setText("Not filtering by tags")
-            tagsFilter = ""
+            tagsFilter = [""]
         self.populateProblemTable()        
     
     def populateComboBoxes(self):
@@ -1379,7 +1380,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         problemList = problemClass.getGradeFilteredProblems(start, end)
         #print("FILTER1", problemList)
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
-        #print("FILTER2", problemList)
+        print(tagsFilter)
         problemList = problemClass.getTagsFilteredProblems(problemList, tagsFilter)
         self.tblProblems.setSortingEnabled(False)
         self.tblProblems.setRowCount(len(problemList)-1)
