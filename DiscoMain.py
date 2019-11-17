@@ -157,6 +157,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #filter tab
         self.pbFilterByUser.clicked.connect(self.filterByUser)
         self.lbUserFilter.selectionModel().selectionChanged.connect(self.filterUserChange)
+        self.pbFilterByTags.clicked.connect(self.filterByTags)
+        self.lbTagsFilter.selectionModel().selectionChanged.connect(self.filterTagsChange)        
         
         #changing tabs
         self.tabWidget.currentChanged.connect(self.stopShowSequence)
