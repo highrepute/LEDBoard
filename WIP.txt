@@ -4,17 +4,12 @@ Priority 1
 	- ability to tag problems
 		- problem class functions
 		- UI additions
-			- Filter by tags listBox in filter tab - called lbTagsFilter
-			- Filter by tags button
-			- add tag button on problems tab
-			- drop down of all tags
+			- Filter by tags listBox in filter tab - called -- lbTagsFilter
+			- add tag button on board tab - pbAddTag
+			- combo box of all tags - cbTags
 			-admin tab
 				- edit tags - via 10 textboxes?
 		- main functions
-			- display tags in problem info
-			- addTag()
-			- filterByTags()
-			- populateFilterByTagsBox()
 			
 Priority 2
 Priority 3
