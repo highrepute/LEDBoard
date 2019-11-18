@@ -8,6 +8,7 @@ Created on Wed Feb 14 12:05:16 2018
 import csv
 from operator import itemgetter
 from const import const
+import collections
 
 class problemClass:#funcs that access information in the problem file
     
@@ -218,7 +219,9 @@ class problemClass:#funcs that access information in the problem file
             for i in range(10):#for each tag column in database find matching tag
                 matches += (problemClass.find(str(tag),problemClass.column(problems,const.TAGSCOL+i)))
         matches = problemClass.column(matches,0)
-        matches = list(set(matches))
+        #return only items that are duplicated - i.e. match all the tags
+        if len(tags) > 1:
+            matches = [item for item, count in collections.Counter(matches).items() if count > (len(tags)-1)]
         matches.sort()
         #create filtered problem list for output
         fitleredProblems = [header[0:5]]
@@ -227,12 +230,12 @@ class problemClass:#funcs that access information in the problem file
         return fitleredProblems    
 
 #example of the functions in the FileIO class in use
-const.initConfigVariables()
-problems = problemClass.readProblemFile()
+#const.initConfigVariables()
+#problems = problemClass.readProblemFile()
 #problems = problemClass.getGradeFilteredProblems(5,8)
 #print(problems)
-problems = problemClass.getTagsFilteredProblems(problems,["crimpy","pinchy"])
-print(problems)
+#problems = problemClass.getTagsFilteredProblems(problems,["morpho","crimpy"])
+#print(problems)
 #print(problemClass.addNewTag(3, 'pockets'))
 #print(problemClass.getUniqueTags())
 #problems = problemClass.getStarFilteredProblems(problems, '**')#
