@@ -126,6 +126,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbLogProblem.clicked.connect(self.logProblem)
         self.pbSequence.clicked.connect(self.showSequence)
         self.pbShowTwoProbs.clicked.connect(self.showTwoProbs)
+        self.pbAddTag.clicked.connect(self.addTag)
         
         #Add user tab
         self.pbAddNewUsers.clicked.connect(self.addNewUser)
@@ -275,7 +276,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #Logbook
         self.frmLogbook.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
 
-    def  hardClearDisplayProblem(self):
+    def hardClearDisplayProblem(self):
         #clears any lit holds - takes a long time!
         for num in range (1,const.TOTAL_LED_COUNT+1):
             widget_name = self.frmDispProb.findChild(QtWidgets.QPushButton, "pbi{}".format(num))
@@ -360,7 +361,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lblMax.setText(str(const.GRADES[-1]))
         
     def resetSoftware(self):
-        #diable so can't be pressed twice
+        #disable so can't be pressed twice
         self.pbReset.setEnabled(False)
         self.pbReset_2.setEnabled(False)
         self.tabWidget.setCurrentIndex(0)#set startup tab 
@@ -726,34 +727,37 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             userFilter = ""
         self.populateProblemTable()
         
-    def filterTagsChange(self):
+    def filterTagsChange(self):#list box selection change
         global tagsFilter 
-        if tagsFilter != "":
-            rowN = self.lbTagsFilter.selectedIndexes()[0].row()
-            tags = self.lbTagsFilter.item(rowN).text()
-            #TODO - have multiple tags?
-            tagsFilter = [tags]
-            text = "Filtering by tag - " + tags
+        if tagsFilter != [""]:
+            #rowN = self.lbTagsFilter.selectedIndexes()[0].row()
+            #tags = self.lbTagsFilter.item(rowN).text()
+            #tagsFilter = [tags]
+            for item in self.lbTagsFilter.selectedIndexes():
+                tagsFilter.append(self.lbTagsFilter.item(item.row()).text())            
+            text = "Filtering by tag - "# + tags
             self.lblTagsFilter.setText(text)
             self.lblInfo.setText(text)
             self.populateProblemTable()
+            
+    def addTag(self):
+        if (self.tblProblems.selectedIndexes() != [])&(self.lbUsers.selectedIndexes() != []):
+            rowN = self.tblProblems.selectedIndexes()[0].row()
+            tag = self.cbTags.currentText()
+            problemClass.addNewTag(rowN, tag)
+            #reset combo box
+            self.cbTags.setCurrentIndex(0)
+            problem = self.tblProblems.item(rowN,0).text()
+            text = tag + " added to  " + problem
+            self.lblInfo.setText(text)            
         
-    def filterByTags(self):
+    def filterByTags(self):#push button
         global tagsFilter
-        for item in self.lbTagsFilter.selectedIndexes():
-            print(item.row())
-        tagsFilter = []
         
         if tagsFilter == [""]:
             try:
-                #(self.lbTagsFilter.selectedIndexes()[0].row())
-                print(self.lbTagsFilter.selectedIndexes())
-                #rowN = self.lbTagsFilter.selectedIndexes()[0].row()
-                #tags = self.lbTagsFilter.item(rowN).text()
-                #tagsFilter = [tags]
                 for item in self.lbTagsFilter.selectedIndexes():
                     tagsFilter.append(self.lbTagsFilter.item(item.row()).text())
-                print(tagsFilter)
                 self.pbFilterByTags.setStyleSheet("background-color: #fff;") 
                 text = "Filtering by tags - "# + tags
                 self.lblTagsFilter.setText(text)
@@ -779,6 +783,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.cbEditStars.addItems(const.STARS)
         self.cbEditGrade.addItems(const.GRADES)
         self.cbEditFootholdSet.addItems(const.FOOTHOLDSETS)
+        self.cbTags.addItems(const.TAGS)
         
     def populateFilterTab(self):
         try:
