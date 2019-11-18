@@ -21,6 +21,7 @@ class const:
     DEFAULTMSG = "Welcome to the Board of High Repute"
     GRADES = ['6a', '6a+', '6b', '6b+', '6c', '6c+', '7a']
     STARS = ['-', '*', '**', '***']
+    TAGS = ["Tags"]
     TOTAL_LED_COUNT = 126
     IMAGEPATH = None
     BOARDNAME = None
@@ -54,6 +55,7 @@ class const:
         const.LOGPATH = str(const.getLOGPATH())
         const.PROBPATH = str(const.getPROBPATH())
         const.LOGOUTTIMEOUT = int(const.getLOGOUTTIMEOUT())
+        const.TAGS = str(const.getTAGS())
     
     def loadConfig():
         config = configparser.ConfigParser()
@@ -219,6 +221,16 @@ class const:
         const.writeConfig(config)    
         const.FOOTHOLDSETS = value        
         
+    def getTAGS():
+        config = const.loadConfig()
+        return sorted(ast.literal_eval(config.get('BOARD', 'TAGS')))
+    
+    def setTAGS(value):
+        config = const.loadConfig()
+        config.set('BOARD', 'TAGS', value)
+        const.writeConfig(config)    
+        const.TAGS = value         
+        
 #print(const.LINUX)
 #const.initConfigVariables()
 #print(const.LOGOUTTIMEOUT)
@@ -229,4 +241,4 @@ class const:
 #const.setIMAGEPATH("C:/Users/James.Jacobs/Desktop/Temp/LED/20180411_210921_2.jpg")
 #const.setLINUX("1")
 #print(const.IMAGEPATH)
-#print(const.ADMIN)        
+#print(const.TAGS)        
