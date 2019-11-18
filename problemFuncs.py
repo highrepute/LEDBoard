@@ -57,7 +57,8 @@ class problemClass:#funcs that access information in the problem file
         del tagList[0]
         #gets unique items from the list of tags
         newList = list(set(x for l in tagList for x in l))
-        return newList
+        newList = list(filter(None, newList))
+        return sorted(newList)
     
     def getUser(problemNumber):
         problems = problemClass.readProblemFile()
@@ -226,12 +227,12 @@ class problemClass:#funcs that access information in the problem file
         return fitleredProblems    
 
 #example of the functions in the FileIO class in use
-#const.initConfigVariables()
-#problems = problemClass.readProblemFile()
+const.initConfigVariables()
+problems = problemClass.readProblemFile()
 #problems = problemClass.getGradeFilteredProblems(5,8)
 #print(problems)
-#problems = problemClass.getTagsFilteredProblems(problems,[])
-#print(problems)
+problems = problemClass.getTagsFilteredProblems(problems,["crimpy","pinchy"])
+print(problems)
 #print(problemClass.addNewTag(3, 'pockets'))
 #print(problemClass.getUniqueTags())
 #problems = problemClass.getStarFilteredProblems(problems, '**')#
