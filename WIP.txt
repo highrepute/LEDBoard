@@ -2,14 +2,12 @@ Work In Progress...
 Priority 1
 	- add in logout timeout within edit config tab under admin
 	- ability to tag problems
-		- problem class functions
+		- Needs testing
 		- UI additions
-			- Filter by tags listBox in filter tab - called -- lbTagsFilter
 			- add tag button on board tab - pbAddTag
 			- combo box of all tags - cbTags
 			-admin tab
 				- edit tags - via 10 textboxes?
-		- main functions
 			
 Priority 2
 Priority 3

@@ -735,7 +735,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #tagsFilter = [tags]
             for item in self.lbTagsFilter.selectedIndexes():
                 tagsFilter.append(self.lbTagsFilter.item(item.row()).text())            
-            text = "Filtering by tag - "# + tags
+            text = "Filtering by tag"# + tags
             self.lblTagsFilter.setText(text)
             self.lblInfo.setText(text)
             self.populateProblemTable()
@@ -744,12 +744,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if (self.tblProblems.selectedIndexes() != [])&(self.lbUsers.selectedIndexes() != []):
             rowN = self.tblProblems.selectedIndexes()[0].row()
             tag = self.cbTags.currentText()
-            problemClass.addNewTag(rowN, tag)
-            #reset combo box
-            self.cbTags.setCurrentIndex(0)
-            problem = self.tblProblems.item(rowN,0).text()
-            text = tag + " added to  " + problem
-            self.lblInfo.setText(text)            
+            error = problemClass.addNewTag(rowN, tag)
+            if error == 0:
+                #reset combo box
+                self.cbTags.setCurrentIndex(0)
+                problem = self.tblProblems.item(rowN,0).text()
+                text = tag + " added to  " + problem
+            elif error == -1:
+                text = "Can't add tag\nProblem has too many tags"
+            else:
+                text = "Can't add tag"
+            self.lblInfo.setText(text)             
         
     def filterByTags(self):#push button
         global tagsFilter
@@ -759,7 +764,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 for item in self.lbTagsFilter.selectedIndexes():
                     tagsFilter.append(self.lbTagsFilter.item(item.row()).text())
                 self.pbFilterByTags.setStyleSheet("background-color: #fff;") 
-                text = "Filtering by tags - "# + tags
+                text = "Filtering by tags"# + tags
                 self.lblTagsFilter.setText(text)
                 self.lblInfo.setText(text)                 
             except:
