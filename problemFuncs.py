@@ -212,30 +212,39 @@ class problemClass:#funcs that access information in the problem file
         return fitleredProblems    
       
     def getTagsFilteredProblems(problems,tags):
-        header = problems[0]
-        del problems[0]
-        matches = []
-        for tag in tags:#go through array of tags
-            for i in range(10):#for each tag column in database find matching tag
-                matches += (problemClass.find(str(tag),problemClass.column(problems,const.TAGSCOL+i)))
-        matches = problemClass.column(matches,0)
-        #return only items that are duplicated - i.e. match all the tags
-        if len(tags) > 1:
-            matches = [item for item, count in collections.Counter(matches).items() if count > (len(tags)-1)]
-        matches.sort()
-        #create filtered problem list for output
-        fitleredProblems = [header[0:5]]
-        for match in matches:
-            fitleredProblems.append(problems[match][0:5])
-        return fitleredProblems    
+        if tags[0] != "":
+            header = problems[0]
+            del problems[0]
+            matches = []
+            for tag in tags:#go through array of tags
+                for i in range(10):#for each tag column in database find matching tag
+                    matches += (problemClass.find(str(tag),problemClass.column(problems,const.TAGSCOL+i)))
+            matches = problemClass.column(matches,0)
+            #return only items that are duplicated - i.e. match all the tags
+            if len(tags) > 1:
+                matches = [item for item, count in collections.Counter(matches).items() if count > (len(tags)-1)]
+            matches.sort()
+            #create filtered problem list for output
+            fitleredProblems = [header[0:5]]
+            for match in matches:
+                fitleredProblems.append(problems[match][0:5])
+            return fitleredProblems 
+        else:
+            return [row[0:5] for row in problems]
+        
+    def getRowFromProblemName(problem):
+        problems = [row[const.PROBNAMECOL] for row in problemClass.readProblemFile()]
+        row = problemClass.find(problem,problems)[0][0]#return index of first match
+        return row
 
 #example of the functions in the FileIO class in use
 #const.initConfigVariables()
 #problems = problemClass.readProblemFile()
 #problems = problemClass.getGradeFilteredProblems(5,8)
 #print(problems)
-#problems = problemClass.getTagsFilteredProblems(problems,["morpho","crimpy"])
+#problems = problemClass.getTagsFilteredProblems(problems,[""])
 #print(problems)
+#print(problemClass.getRowFromProblemName('Crimp Test'))
 #print(problemClass.addNewTag(3, 'pockets'))
 #print(problemClass.getUniqueTags())
 #problems = problemClass.getStarFilteredProblems(problems, '**')#

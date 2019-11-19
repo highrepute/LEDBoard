@@ -187,7 +187,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tabProbInfo">
     <attribute name="title">
@@ -300,45 +300,10 @@ QComboBox QAbstractItemView {
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
-          <widget class="QTextEdit" name="tbLogTags">
-           <property name="toolTip">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="lblLog_3">
-           <property name="text">
-            <string>Tags/keywords</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
        <item row="0" column="1">
         <layout class="QGridLayout" name="gridLayout_7">
-         <item row="7" column="0" colspan="2">
-          <widget class="QPushButton" name="pbLogProblem">
-           <property name="minimumSize">
-            <size>
-             <width>33</width>
-             <height>33</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="toolTip">
-            <string>Add the selected problem to your logbook</string>
-           </property>
-           <property name="text">
-            <string>Log Problem</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_8">
            <property name="text">
@@ -452,6 +417,27 @@ QComboBox QAbstractItemView {
              <string>DNF</string>
             </property>
            </item>
+          </widget>
+         </item>
+         <item row="7" column="0" colspan="2">
+          <widget class="QPushButton" name="pbLogProblem">
+           <property name="minimumSize">
+            <size>
+             <width>33</width>
+             <height>33</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Add the selected problem to your logbook</string>
+           </property>
+           <property name="text">
+            <string>Log Problem</string>
+           </property>
           </widget>
          </item>
         </layout>
@@ -1466,6 +1452,14 @@ QComboBox QAbstractItemView {
       <column/>
       <column/>
      </widget>
+     <zorder>tblProblems</zorder>
+     <zorder>lblMax</zorder>
+     <zorder>label_20</zorder>
+     <zorder>lblMin</zorder>
+     <zorder>label_22</zorder>
+     <zorder>frmSlider</zorder>
+     <zorder>tblAscents</zorder>
+     <zorder>pbLogProblem</zorder>
     </widget>
     <widget class="QFrame" name="frmProbButtons">
      <property name="geometry">
@@ -1594,6 +1588,67 @@ QComboBox QAbstractItemView {
       </property>
      </widget>
     </widget>
+    <widget class="QComboBox" name="cbTags">
+     <property name="geometry">
+      <rect>
+       <x>570</x>
+       <y>780</y>
+       <width>131</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>31</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Your personal grade for the problem</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pbAddTag">
+     <property name="geometry">
+      <rect>
+       <x>710</x>
+       <y>780</y>
+       <width>129</width>
+       <height>33</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>33</width>
+       <height>33</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Add the selected problem to your logbook</string>
+     </property>
+     <property name="text">
+      <string>Add Tag</string>
+     </property>
+    </widget>
+    <zorder>frmLogProb</zorder>
+    <zorder>frmLogin</zorder>
+    <zorder>tabWProbInfo</zorder>
+    <zorder>frame_3</zorder>
+    <zorder>frmProblems</zorder>
+    <zorder>frmProbButtons</zorder>
+    <zorder>cbTags</zorder>
+    <zorder>pbAddTag</zorder>
+    <zorder>cbTags</zorder>
+    <zorder>pbAddTag</zorder>
    </widget>
    <widget class="QWidget" name="tab_6">
     <attribute name="title">

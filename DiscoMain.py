@@ -732,7 +732,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if tagsFilter != [""]:
             #rowN = self.lbTagsFilter.selectedIndexes()[0].row()
             #tags = self.lbTagsFilter.item(rowN).text()
-            #tagsFilter = [tags]
+            tagsFilter = []
             for item in self.lbTagsFilter.selectedIndexes():
                 tagsFilter.append(self.lbTagsFilter.item(item.row()).text())            
             text = "Filtering by tag"# + tags
@@ -743,23 +743,29 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def addTag(self):
         if (self.tblProblems.selectedIndexes() != [])&(self.lbUsers.selectedIndexes() != []):
             rowN = self.tblProblems.selectedIndexes()[0].row()
+            problem = self.tblProblems.item(rowN,0).text()
+            row = problemClass.getRowFromProblemName(problem)
             tag = self.cbTags.currentText()
-            error = problemClass.addNewTag(rowN, tag)
+            error = problemClass.addNewTag(row, tag)
             if error == 0:
                 #reset combo box
                 self.cbTags.setCurrentIndex(0)
-                problem = self.tblProblems.item(rowN,0).text()
                 text = tag + " added to  " + problem
+                self.updateProbInfo(row)
             elif error == -1:
                 text = "Can't add tag\nProblem has too many tags"
             else:
                 text = "Can't add tag"
-            self.lblInfo.setText(text)             
+        else:
+            text = "No problem or user selected"
+        self.lblInfo.setText(text)
+                        
         
     def filterByTags(self):#push button
         global tagsFilter
         
         if tagsFilter == [""]:
+            tagsFilter = []
             try:
                 for item in self.lbTagsFilter.selectedIndexes():
                     tagsFilter.append(self.lbTagsFilter.item(item.row()).text())
@@ -976,7 +982,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def saveEditConfig(self):
         #print('set new config')
-        ##TODO - add in logout timeout field here
         const.setLED_VALUE(self.sbLEDBrightness.value())
         const.setDEFAULTMSG(self.tbWelcomeMessage.toPlainText())
         const.setADMIN(self.cbAdminUser.currentText())
@@ -1106,6 +1111,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.resetUserTimeIn(user)
             rowN = self.tblProblems.selectedIndexes()[0].row()
             problem = self.tblProblems.item(rowN,0).text()
+            row = problemClass.getRowFromProblemName(problem)
             date = datetime.datetime.now().strftime("%Y-%m-%d")
             comments = self.tbLogComments.toPlainText().replace('\n', ' ')
             comments = comments.replace(',', '-')
@@ -1124,6 +1130,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.updateLogProblemDropdowns(rowProb)
             text = problem + " logged to " + user + "'s logbook"
             self.lblInfo.setText(text)
+            self.updateProbInfo(row)
         elif (self.tblProblems.selectedIndexes() == []):
             self.lblInfo.setText("Oh no!\nPlease select a problem")
         else:
@@ -1396,10 +1403,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         end = self.slider.getRange()[1] - 1
         #print(start, ",", end)
         problemList = problemClass.getGradeFilteredProblems(start, end)
-        #print("FILTER1", problemList)
+        #print("GRADE FILTER", problemList)
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
+        #print("USER FILTER", problemList)
         #print(tagsFilter)
         problemList = problemClass.getTagsFilteredProblems(problemList, tagsFilter)
+        #print("TAG FILTER", problemList)
         self.tblProblems.setSortingEnabled(False)
         self.tblProblems.setRowCount(len(problemList)-1)
         for i in range(1,len(problemList),1):
@@ -1484,7 +1493,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             newProblem.append(probName)
             #print(const.GRADES, self.cbGrade_2.currentText())
             grade = MyApp.find(const.GRADES,self.cbGrade_2.currentText())[0]
-            findResult = MyApp.find(const.GRADES,self.cbGrade_2.currentText())
+            #findResult = MyApp.find(const.GRADES,self.cbGrade_2.currentText())
             #print(findResult, grade)
             stars = MyApp.find(const.STARS,self.cbStars_2.currentText())[0]
             footholdSet = self.cbFootholdSet.currentText()
