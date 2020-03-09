@@ -212,6 +212,8 @@ class problemClass:#funcs that access information in the problem file
         return fitleredProblems    
       
     def getTagsFilteredProblems(problems,tags):
+        if tags == []:#attempt to catch unwanted empty list
+            tags = [""]
         if tags[0] != "":
             header = problems[0]
             del problems[0]
@@ -238,7 +240,7 @@ class problemClass:#funcs that access information in the problem file
         return row
 
 #example of the functions in the FileIO class in use
-#const.initConfigVariables()
+const.initConfigVariables()
 #problems = problemClass.readProblemFile()
 #problems = problemClass.getGradeFilteredProblems(5,8)
 #print(problems)
@@ -252,6 +254,17 @@ class problemClass:#funcs that access information in the problem file
 #print(problems)
 
 #print(problems)
+#start = 0
+#end = 6
+#problemList = problemClass.getGradeFilteredProblems(start, end)
+#print("GRADE FILTER", problemList)
+#userFilter = ""
+#problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
+#print("USER FILTER", problemList)
+#print(tagsFilter)
+#tagsFilter = []
+#problemList = problemClass.getTagsFilteredProblems(problemList, tagsFilter)
+#print(problemList)
     
 #print(problemClass.getNotes(problems,1))
 #print(problemClass.getUser(problems,1))

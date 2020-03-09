@@ -729,13 +729,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def filterTagsChange(self):#list box selection change
         global tagsFilter 
-        if tagsFilter != [""]:
+        if tagsFilter != [""]:#if we're already filtering by tags and we have selected different tags now
             #rowN = self.lbTagsFilter.selectedIndexes()[0].row()
             #tags = self.lbTagsFilter.item(rowN).text()
             tagsFilter = []
             for item in self.lbTagsFilter.selectedIndexes():
-                tagsFilter.append(self.lbTagsFilter.item(item.row()).text())            
-            text = "Filtering by tag"# + tags
+                tagsFilter.append(self.lbTagsFilter.item(item.row()).text())
+            if tagsFilter == []:#attempt to catch unwanted empty list
+                tagsFilter = [""]
+                self.pbFilterByTags.setStyleSheet("background-color: #fff;")
+                text = "Not filtering by tags"       
+            else:
+                text = "Filtering by tag"# + tags
             self.lblTagsFilter.setText(text)
             self.lblInfo.setText(text)
             self.populateProblemTable()
@@ -764,7 +769,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def filterByTags(self):#push button
         global tagsFilter
         
-        if tagsFilter == [""]:
+        if tagsFilter == [""]:#no tags already selected i.e. not filtering
             tagsFilter = []
             try:
                 for item in self.lbTagsFilter.selectedIndexes():
@@ -778,7 +783,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.pbFilterByTags.setStyleSheet("background-color: #080;")#green
                 self.lblTagsFilter.setText("Select a tag before filtering")
                 self.lblInfo.setText("Not filtering by tags")
-        else:
+        else:#we were filtering and now we are not
             self.pbFilterByTags.setStyleSheet("background-color: #fff;")
             self.lblTagsFilter.setText("Not filtering by tags")
             self.lblInfo.setText("Not filtering by tags")
