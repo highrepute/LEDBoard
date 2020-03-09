@@ -41,10 +41,7 @@ if const.LINUX == 1:
     else:
         qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
 else:
-    if const.LINUX == 1:
-        qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
-    else:
-        qtCreatorFile = "DiscoBoard.ui"
+    qtCreatorFile = "DiscoBoard.ui"
 
 #qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
  
@@ -628,8 +625,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             
             #find every hold button and append their position to a list (newBoard)
             newBoard = []
+            print(addButtonCount)
             for num in range (1,addButtonCount):
+                print(num)
                 widget_name = self.frmBoard.findChild(DragButton, "pbx{}".format(num))
+                print(widget_name.text())
                 if widget_name != None:
                     newHold = [str(num), str(widget_name.pos().x()), str(widget_name.pos().y()), str(widget_name.text())]
                     newBoard.append(newHold)
@@ -1508,6 +1508,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             newProblem.append(comments)
             #append the selected foothold set
             newProblem.append(footholdSet)
+            ##append tags
+            newProblem.extend(["","","","","","","","","",""])#append 10 blanks for tags
             #append start holds
             newProblem.append(str(newStartHolds[0]))
             if (len(newStartHolds) == 2):
@@ -1679,10 +1681,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if (LEDState == 0):
             LEDState = 1
             if const.LINUX == 1:
-#                for i in range(0,500,1):
-#                    strip.setPixelColorRGB(i,int((255/100)*i), 0, 0)
-#                for j in range(256*1):
-                #500 is a guess at the max number of LEDs any system might have
                 for i in range(const.TOTAL_LED_COUNT):
                     strip.setPixelColor(i, MyApp.wheel((i) & 255))
                 strip.show()

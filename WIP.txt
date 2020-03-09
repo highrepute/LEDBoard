@@ -4,8 +4,6 @@ Priority 1
 	- ability to tag problems
 		- Needs testing
 		- UI additions
-			- add tag button on board tab - pbAddTag
-			- combo box of all tags - cbTags
 			-admin tab
 				- edit tags - via 10 textboxes?
 			
