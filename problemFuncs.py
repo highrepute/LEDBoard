@@ -240,7 +240,7 @@ class problemClass:#funcs that access information in the problem file
         return row
 
 #example of the functions in the FileIO class in use
-const.initConfigVariables()
+#const.initConfigVariables()
 #problems = problemClass.readProblemFile()
 #problems = problemClass.getGradeFilteredProblems(5,8)
 #print(problems)
