@@ -757,6 +757,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.cbTags.setCurrentIndex(0)
                 text = tag + " added to  " + problem
                 self.updateProbInfo(row)
+                self.populateFilterTab()
             elif error == -1:
                 text = "Can't add tag\nProblem has too many tags"
             else:
