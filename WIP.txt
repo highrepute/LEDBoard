@@ -1,12 +1,15 @@
 Work In Progress...
 Priority 1
 	- add in logout timeout within edit config tab under admin
+		- code added
+		- add in numeric box to UI
 	- ability to tag problems
 		- Needs testing
 		- UI additions
 			-admin tab
 				- edit tags - via 10 textboxes?
-			
+	- Spare LEDs as lights
+		- code written needs testing
 Priority 2
 Priority 3
 	- colour code sessions in the logbook view

@@ -991,6 +991,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         const.setLED_VALUE(self.sbLEDBrightness.value())
         const.setDEFAULTMSG(self.tbWelcomeMessage.toPlainText())
         const.setADMIN(self.cbAdminUser.currentText())
+        #const.setLOGOUTTIMEOUT(self.sbLogoutTimeout.value())
         self.lblAdminState.setText('New config values saved - Press Appy to see changes')
 
     def adminLogout(self):
@@ -1233,6 +1234,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global S2PProbMatches
         global S2PFinMatches        
         global sliderFlag
+        
+        #light the spare LEDs to use as shed lighting
+        if const.LINUX == 1:
+            for i in range(100,const.TOTAL_LED_COUNT,1):
+                strip.setPixelColorRGB(i, 255, 255, 255)
+            strip.show()
         
         if (showSequenceFlag == 1):
             #print('here')
