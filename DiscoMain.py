@@ -1408,7 +1408,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
     
-    def populateProblemTable(self):
+    def tag(self):
         global userFilter
         global tagsFilter
         #populate problem list
@@ -1815,20 +1815,20 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         date = problemsDB[rowProb][const.DATECOL]
         setter = problemClass.getUser(rowProb)
         notes = problemClass.getNotes(rowProb)
-        
-        tags = "TAGS: "
-        for i in range(10):
-            if problemsDB[rowProb][const.TAGSCOL+i] != "":
-                tags += problemsDB[rowProb][const.TAGSCOL+i]
-                tags += ", "
-        
+              
         formatName = "<span style=\" font-size:14pt; font-weight:400; color:#000;\" >"
         formatGrade = "<span style=\" font-size:14pt; font-weight:400; color:#ca3;\" >"
         formatGray = "<span style=\" font-size:12pt; font-weight:300; color:#333;\" >"
         formatInfo = "<span style=\" font-size:13pt; font-weight:300; color:#000;\" >"
         closeSpan = "</span>\n"
+		
+		tags = formatGray + "Tags:&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo
+        for i in range(10):
+            if problemsDB[rowProb][const.TAGSCOL+i] != "":
+                tags += problemsDB[rowProb][const.TAGSCOL+i]
+                tags += ", "
         
-        infoText = formatName + probName + "&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatGrade + grade + "&nbsp;" + stars + closeSpan + formatGray + "<br>Date added:&nbsp;&nbsp;" + closeSpan + formatInfo + date + closeSpan + formatGray + "<br>Set by:&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + setter + closeSpan + formatGray + "<br>Footholds:&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + footholdSet + closeSpan + formatGray + "<br>Comments:&nbsp;&nbsp;" + closeSpan + formatInfo + notes + "<br>" + tags + closeSpan
+        infoText = formatName + probName + "&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatGrade + grade + "&nbsp;" + stars + closeSpan + formatGray + "<br>Date added:&nbsp;&nbsp;" + closeSpan + formatInfo + date + closeSpan + formatGray + "<br>Set by:&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + setter + closeSpan + formatGray + "<br>Footholds:&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + footholdSet + closeSpan + formatGray + "<br>Comments:&nbsp;&nbsp;" + closeSpan + formatInfo + notes + closeSpan + "<br>" + tags + closeSpan
         
         #get and present star votes
         starVotes = logClass.getStarVotes(probName)
