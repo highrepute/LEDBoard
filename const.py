@@ -1,6 +1,7 @@
 
 import configparser
 import ast
+import os
 
 class const:
     PROBNAMECOL = 0
@@ -60,13 +61,23 @@ class const:
     def loadConfig():
         config = configparser.ConfigParser()
         config.optionxform = str
-        config.read('/home/pi/Desktop/LEDBoard-2/config.ini') #RasPi
+        # Get the directory of the current script
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Construct path to config.ini in the same directory
+        config_path = os.path.join(script_dir, 'config.ini')
+        config.read(config_path) #RasPi
         #config.read('config.ini') #Windows
         return config
     
     def writeConfig(config):
         #with open('config.ini', 'w') as configfile: #Windows
-        with open('/home/pi/Desktop/LEDBoard-2/config.ini', 'w') as configfile: #RasPi
+        # Get the directory of the current script
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Construct path to config.ini in the same directory
+        config_path = os.path.join(script_dir, 'config.ini')
+        with open(config_path, 'w') as configfile: #RasPi
             config.write(configfile)
 
     def getLINUX():

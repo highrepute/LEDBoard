@@ -3,8 +3,6 @@
 #                                                           #
 #############################################################
 import sys
-#fixes problem where screeninfo import throws as error
-sys.path.append("/home/pi/.local/lib/python3.5/site-packages/screeninfo/")
 from PyQt5 import QtWidgets, uic, QtCore#, QtGui
 from PyQt5.QtCore import QTimer
 #from PyQt5.QtWidgets import QSizePolicy
@@ -29,17 +27,36 @@ from qrangeslider import QRangeSlider
 const.initConfigVariables()
 
 if const.LINUX == 1:
-    from screeninfo import get_monitors
+    try:
+        from screeninfo import get_monitors
+    except ImportError:
+        # Pi 3 with Python 3.5 may need the path added manually
+        sys.path.append("/home/pi/.local/lib/python3.5/site-packages/screeninfo/")
+        from screeninfo import get_monitors
 
 if const.LINUX == 1:
-    from neopixel import *
+    try:
+        from rpi_ws281x import PixelStrip, Color  # Pi 4 / modern install
+        _NEOPIXEL_NEW = True
+    except ImportError:
+        from neopixel import *                    # Pi 3 / Adafruit legacy install
+        _NEOPIXEL_NEW = False
 
 if const.LINUX == 1:
+    # Get the directory of the current script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+   
     m = get_monitors()
     if (m[0].width == 1024) & (m[0].height == 768):
-        qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard1024x768.ui"
+        # Construct path to config.ini in the same directory
+        #I did create a ui for this resolution but have stopped maintaining
+        #it - DiscoBoard1024x768.ui - so always use the default
+        config_path = os.path.join(script_dir, 'DiscoBoard.ui')
+        qtCreatorFile = config_path
     else:
-        qtCreatorFile = "/home/pi/Desktop/LEDBoard-2/DiscoBoard.ui"
+        # Construct path to config.ini in the same directory
+        config_path = os.path.join(script_dir, 'DiscoBoard.ui')
+        qtCreatorFile = config_path
 else:
     qtCreatorFile = "DiscoBoard.ui"
 
@@ -94,7 +111,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if (m[0].width == 1024) & (m[0].height == 768):
                 moveTab = QtCore.QPoint(0, 0);
             else:
-                moveTab = QtCore.QPoint((m[0].width - 1141)/2, ((m[0].height - 871)/2)+50);
+                moveTab = QtCore.QPoint(int((m[0].width - 1141)/2), int(((m[0].height - 871)/2)+50));
         else:
             moveTab = QtCore.QPoint(0, 0);
         moveWallLogo = moveTab + QtCore.QPoint(800, -80);
@@ -331,7 +348,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 button = QtWidgets.QPushButton("",self)
                 button.resize(16,16)
                 button.setParent(self.frmDispProb)
-                button.move(int(hold[1])/scaleWidth,int(hold[2])/scaleHeight)
+                button.move(int(float(hold[1])/scaleWidth),int(float(hold[2])/scaleHeight))
                 button.setObjectName("pbi{}".format(hold[0]))
                 button.show()
                 button.setStyleSheet("background-color: rgba(240, 240, 240, 10%); border: none;")
@@ -415,12 +432,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def saveBoardAs(self):
         if self.leSaveAsName.text() != "":
-            saveAsPath = "/home/pi/Desktop/LEDBoard-2/" + self.leSaveAsName.text() + ".brd"
+            # Get the directory of the current script
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            saveAsPath = script_dir + '/' + self.leSaveAsName.text() + ".brd"
             boardMaker.saveBoardAs(self.lblBoardPath.text(), saveAsPath)
             self.leBoardName.setText(self.leSaveAsName.text())
             self.finalise()
             self.resetBoardMaker()
-            self.lblBoardMakerInfo.setText("Board saved with new name - press Apply to load board")        
+            self.pbReset.setEnabled(True)
+            self.lblBoardMakerInfo.setText("Board saved with new name - press Reset to load board")
         else:
             self.lblBoardMakerInfo.setText("Enter a Board Name to Save As")
 
@@ -527,7 +547,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.leBoardName.text() == "":
             QtWidgets.QMessageBox.warning(self, "No Board Name", "Please write in a Board Name before creating Mirrors")
         else:
-            boardPath = "/home/pi/Desktop/LEDBoard-2/" + self.leBoardName.text() + ".brd"
+            # Get the directory of the current script
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            boardPath = script_dir + '/' + self.leBoardName.text() + ".brd"
             #get mirror table
             try:
                 mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
@@ -619,17 +641,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
         filename = self.leBoardName.text()
         if (filename != ""):
-            filename = '/home/pi/Desktop/LEDBoard-2/' + filename + '.brd'
+            # Get the directory of the current script
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            filename = script_dir + '/' + filename + '.brd'
             const.setIMAGEPATH(self.lblImagePath.text())
             const.setBOARDNAME(filename)
             
             #find every hold button and append their position to a list (newBoard)
             newBoard = []
-            print(addButtonCount)
+            #print(addButtonCount)
             for num in range (1,addButtonCount):
-                print(num)
+                #print(num)
                 widget_name = self.frmBoard.findChild(DragButton, "pbx{}".format(num))
-                print(widget_name.text())
+                #print(widget_name.text())
                 if widget_name != None:
                     newHold = [str(num), str(widget_name.pos().x()), str(widget_name.pos().y()), str(widget_name.text())]
                     newBoard.append(newHold)
@@ -840,8 +864,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def deleteRow(self):
         model = self.tblEdit.model()
-        indices = [self.tblEdit.selectedIndexes()[0]]
+        indices = self.tblEdit.selectedIndexes()
         #print("delete", indices)
+        if not indices:
+            return  # no selection, do nothing
         for index in sorted(indices):
             model.removeRow(index.row())
         
@@ -1408,7 +1434,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
     
-    def tag(self):
+    def populateProblemTable(self):
         global userFilter
         global tagsFilter
         #populate problem list
@@ -1821,13 +1847,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         formatGray = "<span style=\" font-size:12pt; font-weight:300; color:#333;\" >"
         formatInfo = "<span style=\" font-size:13pt; font-weight:300; color:#000;\" >"
         closeSpan = "</span>\n"
-		
-		tags = formatGray + "Tags:&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo
+        
+        tags = formatGray + "Tags:&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo
         for i in range(10):
             if problemsDB[rowProb][const.TAGSCOL+i] != "":
                 tags += problemsDB[rowProb][const.TAGSCOL+i]
                 tags += ", "
-        
+                
         infoText = formatName + probName + "&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatGrade + grade + "&nbsp;" + stars + closeSpan + formatGray + "<br>Date added:&nbsp;&nbsp;" + closeSpan + formatInfo + date + closeSpan + formatGray + "<br>Set by:&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + setter + closeSpan + formatGray + "<br>Footholds:&nbsp;&nbsp;&nbsp;&nbsp;" + closeSpan + formatInfo + footholdSet + closeSpan + formatGray + "<br>Comments:&nbsp;&nbsp;" + closeSpan + formatInfo + notes + closeSpan + "<br>" + tags + closeSpan
         
         #get and present star votes
@@ -2010,7 +2036,10 @@ if __name__ == "__main__":
     window.show()
     LEDState = 0
     if const.LINUX == 1:
-        strip = Adafruit_NeoPixel(const.TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
+        if _NEOPIXEL_NEW:
+            strip = PixelStrip(const.TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
+        else:
+            strip = Adafruit_NeoPixel(const.TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
         strip.begin()   #only call this once - each call creates new memory instance which
                         #eventually will crash program
         strip.setPixelColorRGB(const.TOTAL_LED_COUNT, 0, 0, 0)

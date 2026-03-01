@@ -7,6 +7,7 @@ Created on Tue Jul 24 12:25:25 2018
 import csv
 from const import const
 import ast
+import os
 
 class boardMaker:
     
