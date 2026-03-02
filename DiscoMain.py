@@ -469,7 +469,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 mirrorTable = boardMaker.getBoardMirrorTable(boardPath)
             
                 #create the holds from the file
-                for hold in boardHolds:                
+                for hold in boardHolds:
                     w = QtWidgets.QWidget()
                     button = DragButton(str(hold[0]), w)
                     button.resize(31,31)
@@ -483,7 +483,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                         button.setStyleSheet("background: rgba(240, 240, 240, 50%); border: none;")
                     button.clicked.connect(self.makeMirrorTable)
                     button.show()
-                    addButtonCount += 1
+                    if int(hold[0]) >= addButtonCount:
+                        addButtonCount = int(hold[0]) + 1
                 
                 self.lblImagePath.setText(imagePath)
                 self.lblBoardPath.setText(boardPath)
