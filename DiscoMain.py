@@ -95,6 +95,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global S2PProbName
         global probName
         global sliderFlag
+        global testLEDsOffset
+        global LEDState
         global adminFlag
         global userFilter
         global tagsFilter
@@ -223,6 +225,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         S2PProbName = ""
         probName = ""
         sliderFlag = 0
+        testLEDsOffset = 0 #current colour offset for the test LED rainbow animation
+        LEDState = 0 #tracks whether test LED mode is on (1) or off (0)
         adminFlag = 0#0-logged out, 1-logged in, 2-editUsers, 3-editlogs, 4-editproblems
         userFilter = ""  
         tagsFilter = [""]
@@ -1261,13 +1265,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global S2PProbMatches
         global S2PFinMatches        
         global sliderFlag
-        
-        #light the spare LEDs to use as shed lighting
-        if const.LINUX == 1:
-            for i in range(100,const.TOTAL_LED_COUNT,1):
-                strip.setPixelColorRGB(i, 255, 255, 255)
-            strip.show()
-        
+        global testLEDsOffset
+
         if (showSequenceFlag == 1):
             #print('here')
             #get index of selected problem in table
@@ -1315,7 +1314,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             end = min(self.slider.getRange()[1] - 1, len(const.GRADES) - 1)
             text = "Showing problems between grades - " + const.GRADES[start] + " and " + const.GRADES[end]
             self.lblInfo.setText(text)
-                    
+        #cycle all LEDs through a rainbow by advancing the colour offset each tick
+        if (LEDState == 1):
+            if const.LINUX == 1:
+                for i in range(const.TOTAL_LED_COUNT):
+                    strip.setPixelColor(i, MyApp.wheel((i + testLEDsOffset) & 255))
+                strip.show()
+            testLEDsOffset = (testLEDsOffset + 3) & 255  #wrap at 256 to stay within wheel range
+
     #called when user does something - to stop auto logout
     def resetUserTimeIn(self,user):
         global usersLoggedIn
@@ -1712,18 +1718,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def testLEDs(self):
         global LEDState
         global showTwoProbsFlag
+        global testLEDsOffset
         
         text = "Test LEDs button pressed\nAll LEDs lit"
         self.lblInfo.setText(text)
         self.stopShowSequence()
         if showTwoProbsFlag == 1:
             self.showTwoProbs()     
-        if (LEDState == 0):
+        if (LEDState == 0):  #toggle test LED mode on/off
             LEDState = 1
-            if const.LINUX == 1:
-                for i in range(const.TOTAL_LED_COUNT):
-                    strip.setPixelColor(i, MyApp.wheel((i) & 255))
-                strip.show()
+            testLEDsOffset = 0  #reset so animation always starts from the same colour
         else:
             LEDState = 0
             self.offLEDs()
@@ -2035,7 +2039,6 @@ if __name__ == "__main__":
     window = MyApp()
     
     window.show()
-    LEDState = 0
     if const.LINUX == 1:
         if _NEOPIXEL_NEW:
             strip = PixelStrip(const.TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
