@@ -1071,8 +1071,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global sliderFlag
         sliderFlag = 1
         
-        start = const.GRADES[self.slider.getRange()[0]]
-        end = const.GRADES[self.slider.getRange()[1] - 1]
+        start = const.GRADES[min(self.slider.getRange()[0], len(const.GRADES) - 1)]
+        end = const.GRADES[min(self.slider.getRange()[1] - 1, len(const.GRADES) - 1)]
         self.lblMax.setText(str(end))
         self.lblMin.setText(str(start))
 
@@ -1311,8 +1311,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if (sliderFlag == 1):
             sliderFlag = 0
             self.populateProblemTable()
-            start = self.slider.getRange()[0]
-            end = self.slider.getRange()[1] - 1
+            start = min(self.slider.getRange()[0], len(const.GRADES) - 1)
+            end = min(self.slider.getRange()[1] - 1, len(const.GRADES) - 1)
             text = "Showing problems between grades - " + const.GRADES[start] + " and " + const.GRADES[end]
             self.lblInfo.setText(text)
                     
