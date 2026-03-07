@@ -282,6 +282,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #make tables read only
         self.tblProblems.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tblAscents.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tblAscents.verticalHeader().setDefaultSectionSize(20)
         self.tblLogbook.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
     def setDefaultThemeColour(self):
@@ -1510,7 +1511,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.lblInfo.setText("Oh no!\nPlease select a user, you may need to login")
             except:
                 self.lblInfo.setText("Oh no!\nPlease select a user, you may need to login")
-        
+        self.populateProjectsList()
+
     def initProblemTable(self):
         problemList = problemClass.getGradeFilteredProblems(0, 0)
         self.tblProblems.setColumnCount(const.PROB_TBL_COL)

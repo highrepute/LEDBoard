@@ -2488,7 +2488,7 @@ QComboBox QAbstractItemView {
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>1011</width>
+        <width>681</width>
         <height>611</height>
        </rect>
       </property>
@@ -2535,6 +2535,53 @@ QComboBox QAbstractItemView {
       <column/>
       <column/>
       <column/>
+     </widget>
+     <widget class="QLabel" name="lblProjects">
+      <property name="geometry">
+       <rect>
+        <x>701</x>
+        <y>10</y>
+        <width>320</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>My Projects</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="tblProjects">
+      <property name="geometry">
+       <rect>
+        <x>701</x>
+        <y>35</y>
+        <width>320</width>
+        <height>586</height>
+       </rect>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="showGrid">
+       <bool>false</bool>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="rowCount">
+       <number>0</number>
+      </property>
+      <property name="columnCount">
+       <number>1</number>
+      </property>
+      <attribute name="horizontalHeaderVisible">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
      </widget>
     </widget>
    </widget>
