@@ -1216,6 +1216,19 @@ QComboBox QAbstractItemView {
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
+     <widget class="QLineEdit" name="leSearch">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>801</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>Search by name...</string>
+      </property>
+     </widget>
      <widget class="QTableWidget" name="tblProblems">
       <property name="enabled">
        <bool>true</bool>
@@ -1223,9 +1236,9 @@ QComboBox QAbstractItemView {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
+        <y>55</y>
         <width>801</width>
-        <height>371</height>
+        <height>336</height>
        </rect>
       </property>
       <property name="font">
@@ -1452,6 +1465,7 @@ QComboBox QAbstractItemView {
       <column/>
       <column/>
      </widget>
+     <zorder>leSearch</zorder>
      <zorder>tblProblems</zorder>
      <zorder>lblMax</zorder>
      <zorder>label_20</zorder>

@@ -103,6 +103,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global addButtonCount
         global firstMirrorHold
         global openExistingFlag
+        global nameFilter
         
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
@@ -143,7 +144,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbSequence.clicked.connect(self.showSequence)
         self.pbShowTwoProbs.clicked.connect(self.showTwoProbs)
         self.pbAddTag.clicked.connect(self.addTag)
-        
+        self.leSearch.textChanged.connect(self.searchByName)
+
         #Add user tab
         self.pbAddNewUsers.clicked.connect(self.addNewUser)
         
@@ -230,9 +232,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         adminFlag = 0#0-logged out, 1-logged in, 2-editUsers, 3-editlogs, 4-editproblems
         userFilter = ""  
         tagsFilter = [""]
-        addButtonCount = 1     
+        addButtonCount = 1
         firstMirrorHold = 0
         openExistingFlag = 0
+        nameFilter = ""
         
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
@@ -379,10 +382,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lblMax.setText(str(const.GRADES[-1]))
         
     def resetSoftware(self):
+        global nameFilter
         #disable so can't be pressed twice
         self.pbReset.setEnabled(False)
         self.pbReset_2.setEnabled(False)
-        self.tabWidget.setCurrentIndex(0)#set startup tab 
+        self.tabWidget.setCurrentIndex(0)#set startup tab
+        nameFilter = ""
+        self.leSearch.clear()
         #load that configuration variables from config.ini
         const.initConfigVariables()
         #default message
@@ -1444,17 +1450,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def populateProblemTable(self):
         global userFilter
         global tagsFilter
+        global nameFilter
         #populate problem list
         start = self.slider.getRange()[0]
         end = self.slider.getRange()[1] - 1
-        #print(start, ",", end)
         problemList = problemClass.getGradeFilteredProblems(start, end)
-        #print("GRADE FILTER", problemList)
         problemList = problemClass.getUserFilteredProblems(problemList, userFilter)
-        #print("USER FILTER", problemList)
-        #print(tagsFilter)
         problemList = problemClass.getTagsFilteredProblems(problemList, tagsFilter)
-        #print("TAG FILTER", problemList)
+        if nameFilter != "":
+            header = problemList[0]
+            problemList = [header] + [r for r in problemList[1:]
+                           if nameFilter.lower() in r[const.PROBNAMECOL].lower()]
         self.tblProblems.setSortingEnabled(False)
         self.tblProblems.setRowCount(len(problemList)-1)
         for i in range(1,len(problemList),1):
@@ -2030,6 +2036,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             if (self.getRowProb() != -1):
                 self.lightProblem()
             
+    def searchByName(self):
+        global nameFilter
+        nameFilter = self.leSearch.text()
+        self.populateProblemTable()
+
     def closeEvent(self, event):
         print("User has clicked the red x on the main window")
         event.accept()            
