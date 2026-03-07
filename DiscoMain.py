@@ -414,6 +414,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.leSearch.clear()
         heatmapFlag = 0
         self.pbHeatmap.setStyleSheet("background-color: #fff;")
+        self.pbTestLEDs.setStyleSheet("background-color: #fff;")
+        self.pbMirror.setStyleSheet("background-color: #fff;")
+        self.pbShowTwoProbs.setStyleSheet("background-color: #fff;")
+        self.pbShowSequence.setStyleSheet("background-color: #fff;")
         countdownFlag = 0
         countdownTicks = 0
         countdownFlashCount = 0
@@ -758,8 +762,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global showSequenceFlag
         if showSequenceFlag == 1:
             showSequenceFlag = 0
-            text = "Show sequence stopped"
-            self.lblInfo.setText(text)
+            self.pbShowSequence.setStyleSheet("background-color: #fff;")
+            MyApp.lightLEDs(startHolds, probHolds, finHolds)
+            self.lblInfo.setText("Problem displayed on board - " + probName)
         
     def filterUserChange(self):
         global userFilter 
@@ -1145,7 +1150,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             text = "Showing two problems\n" + probName + "\nand\n" + S2PProbName
             self.lblInfo.setText(text)
             #change button colour to show "two prob" mode is active
-            self.pbShowTwoProbs.setStyleSheet("background-color: rgba(0, 128, 0 100%)")#green
+            self.pbShowTwoProbs.setStyleSheet("background-color: #0f0;")
             #get holds for both problems
             self.lightTwoLEDs(startHolds, probHolds, finHolds, startHoldsS2P, probHoldsS2P, finHoldsS2P)
             #figure out any holds that are on both problems
@@ -1168,16 +1173,21 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global showSequenceCounter
         global startHolds
         global probHolds
-        global finHolds   
+        global finHolds
         global shownSequenceCount
         global S2PProbName
-        
+
         if showTwoProbsFlag == 1:
             self.showTwoProbs()
-            
-        showSequenceFlag = 1 
+
+        if showSequenceFlag == 1:
+            self.stopShowSequence()
+            return
+
+        showSequenceFlag = 1
         showSequenceCounter = 0
         shownSequenceCount = 0
+        self.pbShowSequence.setStyleSheet("background-color: #0f0;")
         #print('show2')
                    
     def logProblem(self):      
@@ -1354,7 +1364,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     shownSequenceCount = 0
                     showSequenceFlag = 0
                     showSequenceCounter = 0
-                    self.lblInfo.setText(const.DEFAULTMSG)  
+                    self.pbShowSequence.setStyleSheet("background-color: #fff;")
+                    self.lblInfo.setText(const.DEFAULTMSG)
         if (showTwoProbsFlag == 1):
             MyApp.toggleLEDs(S2PStartMatches, S2PProbMatches, S2PFinMatches, S2P2StartMatches, S2P2ProbMatches, S2P2FinMatches)
         if (sliderFlag == 1):
@@ -1810,18 +1821,24 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global LEDState
         global showTwoProbsFlag
         global testLEDsOffset
-        
-        text = "Test LEDs button pressed\nAll LEDs lit"
-        self.lblInfo.setText(text)
+        global mirrorFlag
+
         self.stopShowSequence()
         if showTwoProbsFlag == 1:
-            self.showTwoProbs()     
+            self.showTwoProbs()
+        if mirrorFlag == 1:
+            mirrorFlag = 0
+            self.pbMirror.setStyleSheet("background-color: #fff;")
         if (LEDState == 0):  #toggle test LED mode on/off
             LEDState = 1
             testLEDsOffset = 0  #reset so animation always starts from the same colour
+            self.pbTestLEDs.setStyleSheet("background-color: #0f0;")
+            self.lblInfo.setText("Test LEDs on\nAll LEDs lit")
         else:
             LEDState = 0
             self.offLEDs()
+            self.pbTestLEDs.setStyleSheet("background-color: #fff;")
+            self.lblInfo.setText("Test LEDs off")
     
     #turn all LEDs off        
     def offLEDs(self):
@@ -2060,11 +2077,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global showTwoProbsFlag
         global probName
         global heatmapFlag
+        global LEDState
 
         self.stopShowSequence()
         if heatmapFlag == 1:
             heatmapFlag = 0
             self.pbHeatmap.setStyleSheet("background-color: #fff;")
+        if LEDState == 1:
+            LEDState = 0
+            self.pbTestLEDs.setStyleSheet("background-color: #fff;")
+        if mirrorFlag == 1:
+            self.pbMirror.setStyleSheet("background-color: #fff;")
         mirrorFlag = 0
         
         #store the previous problem before loading the next
@@ -2110,14 +2133,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         probHoldsS2P = probHolds       
 
         if (mirrorFlag == 0):
-            mirrorFlag = 1    
+            mirrorFlag = 1
+            self.pbMirror.setStyleSheet("background-color: #0f0;")
             startHolds = mirror.getMirror(startHolds)
             probHolds = mirror.getMirror(probHolds)
             finHolds = mirror.getMirror(finHolds)
             #check we have a problem selected before lighting
             if (self.getRowProb() != -1):
                 MyApp.lightLEDs(startHolds, probHolds, finHolds)
-                text = "Mirror displayed on board - " + probName 
+                text = "Mirror displayed on board - " + probName
                 self.lblInfo.setText(text)
             else:
                 self.lblInfo.setText("Select a problem before Mirroring")
