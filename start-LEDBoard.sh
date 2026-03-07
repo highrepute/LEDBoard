@@ -14,9 +14,11 @@ LOGFILE="$SCRIPT_DIR/logfile.txt"
 # Redirect all output (stdout + stderr) to logfile
 exec &> "$LOGFILE"
 
-# Activate your virtual environment
+# Use virtualenv if present (Pi 4), otherwise fall back to system python3 (Pi 3)
 VENV_PATH="$HOME/my-venv"
-source "$VENV_PATH/bin/activate"
-
-# Run the main Python script with sudo for GPIO access
-sudo "$VENV_PATH/bin/python" "$SCRIPT_DIR/DiscoMain.py"
+if [ -d "$VENV_PATH" ]; then
+    source "$VENV_PATH/bin/activate"
+    sudo "$VENV_PATH/bin/python" "$SCRIPT_DIR/DiscoMain.py"
+else
+    sudo python3 "$SCRIPT_DIR/DiscoMain.py"
+fi
