@@ -1481,7 +1481,7 @@ QComboBox QAbstractItemView {
        <x>840</x>
        <y>430</y>
        <width>281</width>
-       <height>150</height>
+       <height>200</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -1617,6 +1617,24 @@ QComboBox QAbstractItemView {
       </property>
       <property name="text">
        <string>Random Problem</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pbHeatmap">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>155</y>
+        <width>261</width>
+        <height>35</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Hold Heatmap</string>
       </property>
      </widget>
     </widget>

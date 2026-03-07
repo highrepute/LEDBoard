@@ -104,7 +104,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global firstMirrorHold
         global openExistingFlag
         global nameFilter
-        
+        global heatmapFlag
+
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
@@ -146,6 +147,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbAddTag.clicked.connect(self.addTag)
         self.leSearch.textChanged.connect(self.searchByName)
         self.pbRandom.clicked.connect(self.randomProblem)
+        self.pbHeatmap.clicked.connect(self.showHeatmap)
 
         #Add user tab
         self.pbAddNewUsers.clicked.connect(self.addNewUser)
@@ -237,6 +239,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         firstMirrorHold = 0
         openExistingFlag = 0
         nameFilter = ""
+        heatmapFlag = 0
         
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
@@ -384,12 +387,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def resetSoftware(self):
         global nameFilter
+        global heatmapFlag
         #disable so can't be pressed twice
         self.pbReset.setEnabled(False)
         self.pbReset_2.setEnabled(False)
         self.tabWidget.setCurrentIndex(0)#set startup tab
         nameFilter = ""
         self.leSearch.clear()
+        heatmapFlag = 0
+        self.pbHeatmap.setStyleSheet("background-color: #fff;")
         #load that configuration variables from config.ini
         const.initConfigVariables()
         #default message
@@ -1975,8 +1981,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global finHolds
         global showTwoProbsFlag
         global probName
-        
-        self.stopShowSequence()              
+        global heatmapFlag
+
+        self.stopShowSequence()
+        if heatmapFlag == 1:
+            heatmapFlag = 0
+            self.pbHeatmap.setStyleSheet("background-color: #fff;")
         mirrorFlag = 0
         
         #store the previous problem before loading the next
@@ -2041,6 +2051,73 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global nameFilter
         nameFilter = self.leSearch.text()
         self.populateProblemTable()
+
+    def computeHeatmap(self):
+        problemsDB = problemClass.readProblemFile()
+        counts = [0] * (const.TOTAL_LED_COUNT + 1)  # 1-indexed
+        for row in problemsDB[1:]:
+            for col in range(const.STARTHOLDSINDEX, const.FINHOLDSINDEX):
+                try:
+                    h = int(row[col])
+                    if 1 <= h <= const.TOTAL_LED_COUNT:
+                        counts[h] += 1
+                except (ValueError, IndexError):
+                    pass
+            for col in range(const.FINHOLDSINDEX, const.NOHOLDSINDEX):
+                try:
+                    h = int(row[col])
+                    if 1 <= h <= const.TOTAL_LED_COUNT:
+                        counts[h] += 1
+                except (ValueError, IndexError):
+                    pass
+            for col in range(const.HOLDSINDEX, len(row)):
+                try:
+                    h = int(row[col])
+                    if 1 <= h <= const.TOTAL_LED_COUNT:
+                        counts[h] += 1
+                except (ValueError, IndexError):
+                    pass
+        return counts
+
+    def heatmapColor(self, count, maxCount):
+        if count == 0 or maxCount == 0:
+            return (0, 0, 0)
+        v = const.LED_VALUE
+        ratio = count / maxCount
+        if ratio < 0.33:
+            t = ratio / 0.33
+            return (0, int(v * t), int(v * (1 - t)))
+        elif ratio < 0.66:
+            t = (ratio - 0.33) / 0.33
+            return (int(v * t), v, 0)
+        else:
+            t = (ratio - 0.66) / 0.34
+            return (v, int(v * (1 - t)), 0)
+
+    def showHeatmap(self):
+        global heatmapFlag
+        global LEDState
+        global showSequenceFlag
+        if heatmapFlag == 0:
+            heatmapFlag = 1
+            self.pbHeatmap.setStyleSheet("background-color: #0f0;")
+            if LEDState == 1:
+                self.testLEDs()
+            if showSequenceFlag == 1:
+                self.stopShowSequence()
+            counts = self.computeHeatmap()
+            maxCount = max(counts)
+            if const.LINUX == 1:
+                for i in range(const.TOTAL_LED_COUNT):
+                    r, g, b = self.heatmapColor(counts[i + 1], maxCount)
+                    strip.setPixelColorRGB(i, r, g, b)
+                strip.show()
+            self.lblInfo.setText("Hold heatmap on")
+        else:
+            heatmapFlag = 0
+            self.pbHeatmap.setStyleSheet("background-color: #fff;")
+            MyApp.lightLEDs(startHolds, probHolds, finHolds)
+            self.lblInfo.setText("Hold heatmap off")
 
     def randomProblem(self):
         import random
