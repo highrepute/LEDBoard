@@ -145,6 +145,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbShowTwoProbs.clicked.connect(self.showTwoProbs)
         self.pbAddTag.clicked.connect(self.addTag)
         self.leSearch.textChanged.connect(self.searchByName)
+        self.pbRandom.clicked.connect(self.randomProblem)
 
         #Add user tab
         self.pbAddNewUsers.clicked.connect(self.addNewUser)
@@ -2040,6 +2041,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global nameFilter
         nameFilter = self.leSearch.text()
         self.populateProblemTable()
+
+    def randomProblem(self):
+        import random
+        rowCount = self.tblProblems.rowCount()
+        if rowCount > 1:
+            currentRow = self.tblProblems.currentRow()
+            choices = [r for r in range(rowCount) if r != currentRow]
+            self.tblProblems.selectRow(random.choice(choices))
+        elif rowCount == 1:
+            self.tblProblems.selectRow(0)
+        else:
+            self.lblInfo.setText("No problems in current filter")
 
     def closeEvent(self, event):
         print("User has clicked the red x on the main window")
