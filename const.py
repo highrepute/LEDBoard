@@ -35,6 +35,7 @@ class const:
     USERSPATH = None
     LOGPATH = None
     PROBPATH = None
+    PROJECTSPATH = None
     LOGOUTTIMEOUT = 1800
     
     def initConfigVariables():
@@ -55,6 +56,7 @@ class const:
         const.USERSPATH = str(const.getUSERSPATH())
         const.LOGPATH = str(const.getLOGPATH())
         const.PROBPATH = str(const.getPROBPATH())
+        const.PROJECTSPATH = str(const.getPROJECTSPATH())
         const.LOGOUTTIMEOUT = int(const.getLOGOUTTIMEOUT())
         const.TAGS = const.getTAGS()
     
@@ -110,8 +112,12 @@ class const:
 
     def getPROBPATH():
         config = const.loadConfig()
-        return config.get('PATHS', 'PROBPATH')        
-        
+        return config.get('PATHS', 'PROBPATH')
+
+    def getPROJECTSPATH():
+        config = const.loadConfig()
+        return config.get('PATHS', 'PROJECTSPATH')
+
     def getBOARDNAME():
         config = const.loadConfig()
         return str(config.get('BOARD', 'BOARDNAME'))

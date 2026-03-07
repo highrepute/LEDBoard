@@ -17,6 +17,7 @@ from problemFuncs import problemClass
 from mirror import mirror
 from usersFuncs import userClass
 from logFuncs import logClass
+from projectFuncs import projectClass
 from const import const
 from dragButton import DragButton
 from boardMaker import boardMaker
@@ -108,6 +109,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global countdownFlag
         global countdownTicks
         global countdownFlashCount
+        global projectFilter
 
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
@@ -152,6 +154,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbRandom.clicked.connect(self.randomProblem)
         self.pbHeatmap.clicked.connect(self.showHeatmap)
         self.pbTimer.clicked.connect(self.startStopTimer)
+        self.pbProject.clicked.connect(self.toggleProject)
+        self.pbFilterByProjects.clicked.connect(self.filterByProjects)
 
         #Add user tab
         self.pbAddNewUsers.clicked.connect(self.addNewUser)
@@ -247,10 +251,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         countdownFlag = 0
         countdownTicks = 0
         countdownFlashCount = 0
+        projectFilter = 0
 
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
-        
+        self.pbProject.setEnabled(False)
+
         #initialise various bits
         self.initProblemTable()
         self.populateProblemTable()
@@ -398,6 +404,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global countdownFlag
         global countdownTicks
         global countdownFlashCount
+        global projectFilter
         #disable so can't be pressed twice
         self.pbReset.setEnabled(False)
         self.pbReset_2.setEnabled(False)
@@ -412,6 +419,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbTimer.setText("Start Timer")
         self.pbTimer.setStyleSheet("background-color: #fff;")
         self.sbTimerMins.setEnabled(True)
+        projectFilter = 0
+        self.pbFilterByProjects.setStyleSheet("background-color: #fff;")
+        self.lblProjectsFilter.setText("Not filtering by projects")
         #load that configuration variables from config.ini
         const.initConfigVariables()
         #default message
@@ -1282,7 +1292,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.saveBoardMaker = self.tabWidget.widget( 6 )
                     self.tabWidget.removeTab( 6 )
                     self.tabWidget.removeTab( 5 )
-                    
+                if len(usersLoggedIn) == 0:
+                    global projectFilter
+                    projectFilter = 0
+                    self.pbFilterByProjects.setStyleSheet("background-color: #fff;")
+                    self.lblProjectsFilter.setText("Not filtering by projects")
+                    self.populateProblemTable()
+                self.updateProjectButton()
+
     def timerQuickISR(self):
         global showSequenceFlag
         global showSequenceCounter
@@ -1390,6 +1407,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     #logout user selected in lbUsers listbox
     def logout(self):
         global usersLoggedIn
+        global projectFilter
         if self.lbUsers.count() > 0:
             try:
                 rowN = self.lbUsers.selectedIndexes()[0].row()
@@ -1408,6 +1426,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.tabWidget.removeTab( 6 )
                     self.tabWidget.removeTab( 5 )
                 self.lblLogbook.setText("Login and select a user to view logbook")
+                if len(usersLoggedIn) == 0:
+                    projectFilter = 0
+                    self.pbFilterByProjects.setStyleSheet("background-color: #fff;")
+                    self.lblProjectsFilter.setText("Not filtering by projects")
+                    self.populateProblemTable()
+                self.updateProjectButton()
             except:
                 self.lblInfo.setText("Select a user to logout")
         else:
@@ -1445,6 +1469,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.tabWidget.insertTab( 5, self.saveAdmin, 'Admin' ) # restore
                     self.tabWidget.insertTab( 6, self.saveBoardMaker, 'Board Maker' ) # restore
                     #print("show tabs")
+                self.updateProjectButton()
             else:
                 self.lblInfo.setText("Oh no!\nYou're already logged in!!")
                 
@@ -1503,6 +1528,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global userFilter
         global tagsFilter
         global nameFilter
+        global projectFilter
         #populate problem list
         start = self.slider.getRange()[0]
         end = self.slider.getRange()[1] - 1
@@ -1513,6 +1539,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             header = problemList[0]
             problemList = [header] + [r for r in problemList[1:]
                            if nameFilter.lower() in r[const.PROBNAMECOL].lower()]
+        if projectFilter == 1 and len(usersLoggedIn) > 0:
+            userProjects = projectClass.getUserProjects(usersLoggedIn[0][0])
+            header = problemList[0]
+            problemList = [header] + [r for r in problemList[1:]
+                           if r[const.PROBNAMECOL] in userProjects]
         self.tblProblems.setSortingEnabled(False)
         self.tblProblems.setRowCount(len(problemList)-1)
         for i in range(1,len(problemList),1):
@@ -2052,8 +2083,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         MyApp.lightLEDs(startHolds, probHolds, finHolds)
         self.clearDisplayProblem(startHoldsS2P, probHoldsS2P, finHoldsS2P)
         self.setDisplayProblem(startHolds, probHolds, finHolds)
-        text = "Problem displayed on board - " + probName 
+        text = "Problem displayed on board - " + probName
         self.lblInfo.setText(text)
+        self.updateProjectButton()
         if showTwoProbsFlag == 1:
             self.showTwoProbs()
     
@@ -2196,6 +2228,81 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.tblProblems.selectRow(0)
         else:
             self.lblInfo.setText("No problems in current filter")
+
+    def toggleProject(self):
+        global usersLoggedIn
+        if len(usersLoggedIn) == 0:
+            self.lblInfo.setText("Login to add projects")
+            return
+        selectedRows = self.tblProblems.selectedItems()
+        if not selectedRows:
+            self.lblInfo.setText("Select a problem to add to projects")
+            return
+        username = usersLoggedIn[0][0]
+        probName = self.tblProblems.item(self.tblProblems.currentRow(), 0).text()
+        if projectClass.isProject(username, probName):
+            projectClass.removeProject(username, probName)
+        else:
+            projectClass.addProject(username, probName)
+        self.updateProjectButton()
+        self.populateProjectsList()
+
+    def updateProjectButton(self):
+        global usersLoggedIn
+        if len(usersLoggedIn) == 0:
+            self.pbProject.setEnabled(False)
+            self.pbProject.setText("Add to Projects")
+            return
+        selectedRows = self.tblProblems.selectedItems()
+        if not selectedRows:
+            self.pbProject.setEnabled(False)
+            self.pbProject.setText("Add to Projects")
+            return
+        self.pbProject.setEnabled(True)
+        username = usersLoggedIn[0][0]
+        probName = self.tblProblems.item(self.tblProblems.currentRow(), 0).text()
+        if projectClass.isProject(username, probName):
+            self.pbProject.setText("Remove from Projects")
+        else:
+            self.pbProject.setText("Add to Projects")
+
+    def filterByProjects(self):
+        global projectFilter
+        global usersLoggedIn
+        if projectFilter == 0:
+            if len(usersLoggedIn) == 0:
+                self.lblInfo.setText("Login to filter by projects")
+                return
+            projectFilter = 1
+            self.pbFilterByProjects.setStyleSheet("background-color: #0f0;")
+            self.lblProjectsFilter.setText("Filtering by projects")
+        else:
+            projectFilter = 0
+            self.pbFilterByProjects.setStyleSheet("background-color: #fff;")
+            self.lblProjectsFilter.setText("Not filtering by projects")
+        self.populateProblemTable()
+
+    def populateProjectsList(self):
+        global usersLoggedIn
+        if not hasattr(self, 'tblProjects'):
+            return
+        self.tblProjects.clear()
+        self.tblProjects.setRowCount(0)
+        if len(usersLoggedIn) > 0:
+            try:
+                rowN = self.lbUsers.selectedIndexes()[0].row()
+                user = self.lbUsers.item(rowN).text()
+            except:
+                user = usersLoggedIn[0][0]
+            projects = projectClass.getUserProjects(user)
+            self.tblProjects.setRowCount(len(projects))
+            self.tblProjects.setColumnCount(1)
+            self.tblProjects.horizontalHeader().setVisible(True)
+            self.tblProjects.setHorizontalHeaderLabels(["Problem Name"])
+            for i, name in enumerate(projects):
+                self.tblProjects.setItem(i, 0, QtWidgets.QTableWidgetItem(name))
+            header = self.tblProjects.horizontalHeader()
+            header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
 
     def closeEvent(self, event):
         print("User has clicked the red x on the main window")

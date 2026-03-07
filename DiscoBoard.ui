@@ -1413,7 +1413,7 @@ QComboBox QAbstractItemView {
         <x>10</x>
         <y>500</y>
         <width>801</width>
-        <height>91</height>
+        <height>55</height>
        </rect>
       </property>
       <property name="font">
@@ -1465,6 +1465,24 @@ QComboBox QAbstractItemView {
       <column/>
       <column/>
      </widget>
+     <widget class="QPushButton" name="pbProject">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>560</y>
+        <width>801</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Add to Projects</string>
+      </property>
+     </widget>
      <zorder>leSearch</zorder>
      <zorder>tblProblems</zorder>
      <zorder>lblMax</zorder>
@@ -1473,6 +1491,7 @@ QComboBox QAbstractItemView {
      <zorder>label_22</zorder>
      <zorder>frmSlider</zorder>
      <zorder>tblAscents</zorder>
+     <zorder>pbProject</zorder>
      <zorder>pbLogProblem</zorder>
     </widget>
     <widget class="QFrame" name="frmProbButtons">
@@ -1918,6 +1937,64 @@ QComboBox QAbstractItemView {
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frmProjectsFilter">
+     <property name="geometry">
+      <rect>
+       <x>950</x>
+       <y>40</y>
+       <width>171</width>
+       <height>571</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QLabel" name="lblProjectsFilter">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>151</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Not filtering by projects</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pbFilterByProjects">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>525</y>
+        <width>151</width>
+        <height>35</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>My Projects</string>
       </property>
      </widget>
     </widget>
