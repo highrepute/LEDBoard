@@ -1689,6 +1689,48 @@ QComboBox QAbstractItemView {
       <string>Add Tag</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="pbTimer">
+     <property name="geometry">
+      <rect>
+       <x>570</x>
+       <y>755</y>
+       <width>191</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Start Timer</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="sbTimerMins">
+     <property name="geometry">
+      <rect>
+       <x>770</x>
+       <y>755</y>
+       <width>61</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>10</number>
+     </property>
+     <property name="value">
+      <number>4</number>
+     </property>
+    </widget>
     <zorder>frmLogProb</zorder>
     <zorder>frmLogin</zorder>
     <zorder>tabWProbInfo</zorder>
@@ -1699,6 +1741,8 @@ QComboBox QAbstractItemView {
     <zorder>pbAddTag</zorder>
     <zorder>cbTags</zorder>
     <zorder>pbAddTag</zorder>
+    <zorder>pbTimer</zorder>
+    <zorder>sbTimerMins</zorder>
    </widget>
    <widget class="QWidget" name="tab_6">
     <attribute name="title">

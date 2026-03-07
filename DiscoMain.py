@@ -105,6 +105,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global openExistingFlag
         global nameFilter
         global heatmapFlag
+        global countdownFlag
+        global countdownTicks
+        global countdownFlashCount
 
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
@@ -148,6 +151,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.leSearch.textChanged.connect(self.searchByName)
         self.pbRandom.clicked.connect(self.randomProblem)
         self.pbHeatmap.clicked.connect(self.showHeatmap)
+        self.pbTimer.clicked.connect(self.startStopTimer)
 
         #Add user tab
         self.pbAddNewUsers.clicked.connect(self.addNewUser)
@@ -240,7 +244,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         openExistingFlag = 0
         nameFilter = ""
         heatmapFlag = 0
-        
+        countdownFlag = 0
+        countdownTicks = 0
+        countdownFlashCount = 0
+
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
         
@@ -388,6 +395,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def resetSoftware(self):
         global nameFilter
         global heatmapFlag
+        global countdownFlag
+        global countdownTicks
+        global countdownFlashCount
         #disable so can't be pressed twice
         self.pbReset.setEnabled(False)
         self.pbReset_2.setEnabled(False)
@@ -396,6 +406,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.leSearch.clear()
         heatmapFlag = 0
         self.pbHeatmap.setStyleSheet("background-color: #fff;")
+        countdownFlag = 0
+        countdownTicks = 0
+        countdownFlashCount = 0
+        self.pbTimer.setText("Start Timer")
+        self.pbTimer.setStyleSheet("background-color: #fff;")
+        self.sbTimerMins.setEnabled(True)
         #load that configuration variables from config.ini
         const.initConfigVariables()
         #default message
@@ -1279,6 +1295,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global S2PFinMatches        
         global sliderFlag
         global testLEDsOffset
+        global countdownFlag
+        global countdownTicks
+        global countdownFlashCount
 
         if (showSequenceFlag == 1):
             #print('here')
@@ -1334,6 +1353,32 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     strip.setPixelColor(i, MyApp.wheel((i + testLEDsOffset) & 255))
                 strip.show()
             testLEDsOffset = (testLEDsOffset + 3) & 255  #wrap at 256 to stay within wheel range
+        if countdownFlag == 1:
+            if countdownFlashCount > 0:
+                if const.LINUX == 1:
+                    if countdownFlashCount % 2 == 1:
+                        for i in range(const.TOTAL_LED_COUNT):
+                            strip.setPixelColorRGB(i, const.LED_VALUE, const.LED_VALUE, const.LED_VALUE)
+                    else:
+                        for i in range(const.TOTAL_LED_COUNT):
+                            strip.setPixelColorRGB(i, 0, 0, 0)
+                    strip.show()
+                countdownFlashCount -= 1
+                if countdownFlashCount == 0:
+                    countdownFlag = 0
+                    self.pbTimer.setText("Start Timer")
+                    self.pbTimer.setStyleSheet("background-color: #fff;")
+                    self.sbTimerMins.setEnabled(True)
+                    MyApp.lightLEDs(startHolds, probHolds, finHolds)
+            else:
+                countdownTicks -= 1
+                totalSecs = int(countdownTicks / (200 / 60))
+                mins = totalSecs // 60
+                secs = totalSecs % 60
+                self.lblInfo.setText("{:d}:{:02d}".format(mins, secs))
+                if countdownTicks <= 0:
+                    countdownFlashCount = 6
+                    self.lblInfo.setText("Time's up!")
 
     #called when user does something - to stop auto logout
     def resetUserTimeIn(self,user):
@@ -2051,6 +2096,27 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global nameFilter
         nameFilter = self.leSearch.text()
         self.populateProblemTable()
+
+    def startStopTimer(self):
+        global countdownFlag
+        global countdownTicks
+        global countdownFlashCount
+        if countdownFlag == 0:
+            mins = self.sbTimerMins.value()
+            countdownTicks = mins * 200
+            countdownFlashCount = 0
+            countdownFlag = 1
+            self.pbTimer.setText("Stop Timer")
+            self.pbTimer.setStyleSheet("background-color: #0f0;")
+            self.sbTimerMins.setEnabled(False)
+        else:
+            countdownFlag = 0
+            countdownTicks = 0
+            countdownFlashCount = 0
+            self.pbTimer.setText("Start Timer")
+            self.pbTimer.setStyleSheet("background-color: #fff;")
+            self.sbTimerMins.setEnabled(True)
+            self.lblInfo.setText(const.DEFAULTMSG)
 
     def computeHeatmap(self):
         problemsDB = problemClass.readProblemFile()
