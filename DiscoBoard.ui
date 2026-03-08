@@ -278,9 +278,9 @@ QComboBox QAbstractItemView {
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>40</y>
+        <y>37</y>
         <width>501</width>
-        <height>148</height>
+        <height>121</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_8">
@@ -297,6 +297,27 @@ QComboBox QAbstractItemView {
           <widget class="QTextEdit" name="tbLogComments">
            <property name="toolTip">
             <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QPushButton" name="pbLogProblem">
+           <property name="minimumSize">
+            <size>
+             <width>33</width>
+             <height>33</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>Add the selected problem to your logbook</string>
+           </property>
+           <property name="text">
+            <string>Log Problem</string>
            </property>
           </widget>
          </item>
@@ -417,27 +438,6 @@ QComboBox QAbstractItemView {
              <string>DNF</string>
             </property>
            </item>
-          </widget>
-         </item>
-         <item row="7" column="0" colspan="2">
-          <widget class="QPushButton" name="pbLogProblem">
-           <property name="minimumSize">
-            <size>
-             <width>33</width>
-             <height>33</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="toolTip">
-            <string>Add the selected problem to your logbook</string>
-           </property>
-           <property name="text">
-            <string>Log Problem</string>
-           </property>
           </widget>
          </item>
         </layout>
@@ -4042,7 +4042,6 @@ QComboBox QAbstractItemView {
   <tabstop>leUsername</tabstop>
   <tabstop>lePassword</tabstop>
   <tabstop>pbLogin</tabstop>
-  <tabstop>pbLogProblem</tabstop>
   <tabstop>pbOpenExisting</tabstop>
   <tabstop>pbLoadImage</tabstop>
   <tabstop>pbBuildBoard</tabstop>
