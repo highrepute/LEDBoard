@@ -8,8 +8,11 @@
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Create logfile.txt in the same folder
-LOGFILE="$SCRIPT_DIR/logfile.txt"
+# App lives one level down in the LEDBoard subfolder
+APP_DIR="$SCRIPT_DIR/LEDBoard"
+
+# Create logfile.txt in the LEDBoard folder
+LOGFILE="$APP_DIR/logfile.txt"
 
 # Redirect all output (stdout + stderr) to logfile
 exec &> "$LOGFILE"
@@ -18,7 +21,7 @@ exec &> "$LOGFILE"
 VENV_PATH="$HOME/my-venv"
 if [ -d "$VENV_PATH" ]; then
     source "$VENV_PATH/bin/activate"
-    sudo "$VENV_PATH/bin/python" "$SCRIPT_DIR/DiscoMain.py"
+    sudo "$VENV_PATH/bin/python" "$APP_DIR/DiscoMain.py"
 else
-    sudo python3 "$SCRIPT_DIR/DiscoMain.py"
+    sudo python3 "$APP_DIR/DiscoMain.py"
 fi
