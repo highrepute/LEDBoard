@@ -117,8 +117,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         if const.LINUX == 1:
     		#find monitor resolution and position everything in the centre of screen       
-            if (m[0].width == 1024) & (m[0].height == 768):
-                moveTab = QtCore.QPoint(0, 0);
+            if (m[0].height <= 890):
+                moveTab = QtCore.QPoint(int((m[0].width - 1141)/2), 0);
             else:
                 moveTab = QtCore.QPoint(int((m[0].width - 1141)/2), int(((m[0].height - 871)/2)+50));
         else:
@@ -300,7 +300,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.frmStarsGrades.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR,  const.THEMECOLOUR))
         self.frmProblems.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
         self.frmLogProb.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
-        self.frmProbButtons.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
+        #self.frmProbButtons.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
         self.frmLogin.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
         #Filter by user
         self.frmFilter.setStyleSheet(text % (const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR, const.THEMECOLOUR))
@@ -417,7 +417,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbTestLEDs.setStyleSheet("background-color: #fff;")
         self.pbMirror.setStyleSheet("background-color: #fff;")
         self.pbShowTwoProbs.setStyleSheet("background-color: #fff;")
-        self.pbShowSequence.setStyleSheet("background-color: #fff;")
+        self.pbSequence.setStyleSheet("background-color: #fff;")
         countdownFlag = 0
         countdownTicks = 0
         countdownFlashCount = 0
@@ -762,7 +762,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global showSequenceFlag
         if showSequenceFlag == 1:
             showSequenceFlag = 0
-            self.pbShowSequence.setStyleSheet("background-color: #fff;")
+            self.pbSequence.setStyleSheet("background-color: #fff;")
             MyApp.lightLEDs(startHolds, probHolds, finHolds)
             self.lblInfo.setText("Problem displayed on board - " + probName)
         
@@ -1142,8 +1142,23 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global S2PFinMatches
         global S2P2StartMatches        
         global S2P2ProbMatches
-        global S2P2FinMatches        
-        #print("show two probs")
+        global S2P2FinMatches    
+        global LEDState 
+        global mirrorFlag   
+        global showSequenceFlag
+        global heatmapFlag
+        
+        if heatmapFlag == 1:
+            heatmapFlag = 0
+        
+        if (LEDState == 1):
+            LEDState = 0
+            
+        if mirrorFlag == 1:
+            mirrorFlag = 0
+            
+        if showSequenceFlag == 1:
+            self.stopShowSequence()
         
         if showTwoProbsFlag == 0:
             showTwoProbsFlag = 1
@@ -1176,9 +1191,20 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global finHolds
         global shownSequenceCount
         global S2PProbName
+        global LEDState
+        global heatmapFlag
+        
+        if heatmapFlag == 1:
+            heatmapFlag = 0
+        
+        if (LEDState == 1):
+            LEDState = 0
 
         if showTwoProbsFlag == 1:
             self.showTwoProbs()
+            
+        if mirrorFlag == 1:
+            mirrorFlag = 0
 
         if showSequenceFlag == 1:
             self.stopShowSequence()
@@ -1187,7 +1213,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         showSequenceFlag = 1
         showSequenceCounter = 0
         shownSequenceCount = 0
-        self.pbShowSequence.setStyleSheet("background-color: #0f0;")
+        self.pbSequence.setStyleSheet("background-color: #0f0;")
         #print('show2')
                    
     def logProblem(self):      
@@ -1326,6 +1352,21 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global countdownFlag
         global countdownTicks
         global countdownFlashCount
+        global LEDState
+        global showTwoProbsFlag
+        global heatmapFlag
+        
+        if heatmapFlag == 0:
+            self.pbHeatmap.setStyleSheet("background-color: #fff;")
+        
+        if LEDState == 0:
+            self.pbTestLEDs.setStyleSheet("background-color: #fff;")
+
+        if showTwoProbsFlag == 0:
+            self.pbShowTwoProbs.setStyleSheet("background-color: #fff;")
+            
+        if mirrorFlag == 0:
+            self.pbMirror.setStyleSheet("background-color: #fff;")
 
         if (showSequenceFlag == 1):
             #print('here')
@@ -1364,7 +1405,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                     shownSequenceCount = 0
                     showSequenceFlag = 0
                     showSequenceCounter = 0
-                    self.pbShowSequence.setStyleSheet("background-color: #fff;")
+                    self.pbSequence.setStyleSheet("background-color: #fff;")
                     self.lblInfo.setText(const.DEFAULTMSG)
         if (showTwoProbsFlag == 1):
             MyApp.toggleLEDs(S2PStartMatches, S2PProbMatches, S2PFinMatches, S2P2StartMatches, S2P2ProbMatches, S2P2FinMatches)
@@ -1822,13 +1863,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global showTwoProbsFlag
         global testLEDsOffset
         global mirrorFlag
-
-        self.stopShowSequence()
+        global showSequenceFlag
+        global heatmapFlag
+        
+        if heatmapFlag == 1:
+            heatmapFlag = 0
+        if showSequenceFlag == 1:
+            self.stopShowSequence()
         if showTwoProbsFlag == 1:
             self.showTwoProbs()
         if mirrorFlag == 1:
             mirrorFlag = 0
-            self.pbMirror.setStyleSheet("background-color: #fff;")
+            
         if (LEDState == 0):  #toggle test LED mode on/off
             LEDState = 1
             testLEDsOffset = 0  #reset so animation always starts from the same colour
@@ -2123,9 +2169,22 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global finHoldsS2P        
         global mirrorFlag
         global probName
+        global LEDState
+        global showSequenceFlag
+        global heatmapFlag
+        
+        if heatmapFlag == 1:
+            heatmapFlag = 0
         
         if showTwoProbsFlag == 1:
             self.showTwoProbs()
+            
+        if showSequenceFlag ==1:
+            self.stopShowSequence()
+        
+        if (LEDState == 1):
+            LEDState = 0
+            self.pbTestLEDs.setStyleSheet("background-color: #fff;")
         
         #store the previous problem before loading the next
         startHoldsS2P = startHolds
@@ -2145,6 +2204,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.lblInfo.setText(text)
             else:
                 self.lblInfo.setText("Select a problem before Mirroring")
+                self.pbMirror.setStyleSheet("background-color: #fff;")
         else:
             #check we have a problem selected before lighting
             if (self.getRowProb() != -1):
@@ -2222,13 +2282,26 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global heatmapFlag
         global LEDState
         global showSequenceFlag
+        global showTwoProbsFlag
+        global mirrorFlag
+        
+        if (LEDState == 1):
+            LEDState = 0
+            self.pbTestLEDs.setStyleSheet("background-color: #fff;")
+
+        if showTwoProbsFlag == 1:
+            self.showTwoProbs()
+            
+        if mirrorFlag == 1:
+            mirrorFlag = 0
+            self.pbMirror.setStyleSheet("background-color: #fff;")
+
+        if showSequenceFlag == 1:
+            self.stopShowSequence()
+        
         if heatmapFlag == 0:
             heatmapFlag = 1
             self.pbHeatmap.setStyleSheet("background-color: #0f0;")
-            if LEDState == 1:
-                self.testLEDs()
-            if showSequenceFlag == 1:
-                self.stopShowSequence()
             counts = self.computeHeatmap()
             maxCount = max(counts)
             if const.LINUX == 1:
