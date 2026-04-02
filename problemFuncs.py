@@ -6,6 +6,8 @@ Created on Wed Feb 14 12:05:16 2018
 """
 
 import csv
+import shutil
+import datetime
 from operator import itemgetter
 from const import const
 import collections
@@ -13,11 +15,29 @@ import collections
 class problemClass:#funcs that access information in the problem file
     
     def readProblemFile():
-        #this gets the contents of the csv file into a list  
+        #this gets the contents of the csv file into a list
         with open(const.PROBPATH, newline='') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
             problems = list(filereader)
+
+        # Detect old format (no tag columns) and migrate the file
+        if problems and len(problems[0]) < 17:
+            problemClass._migrateToTagFormat(problems)
+
         return problems
+
+    def _migrateToTagFormat(problems):
+        # Back up the old file before modifying it
+        timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+        backup_path = const.PROBPATH.replace('.csv', f'_backup_{timestamp}.csv')
+        shutil.copy2(const.PROBPATH, backup_path)
+
+        # Pad every row with 10 empty tag columns at position 7
+        for row in problems:
+            row[7:7] = [''] * 10
+
+        # Save migrated file back to disk
+        problemClass.saveProblemFile(problems)
     
     def saveProblemFile(problems):
         #appends a new problem to the list of problems
