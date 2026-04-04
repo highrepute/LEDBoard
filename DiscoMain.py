@@ -2278,9 +2278,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         return counts
 
     def heatmapColor(self, count, maxCount):
-        if count == 0 or maxCount == 0:
-            return (0, 0, 0)
         v = const.LED_VALUE
+        if count == 0:
+            return (0, v, 0)
+        if maxCount == 0:
+            return (0, v, 0)
         ratio = count / maxCount
         if ratio < 0.33:
             t = ratio / 0.33
@@ -2364,20 +2366,20 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global usersLoggedIn
         if len(usersLoggedIn) == 0:
             self.pbProject.setEnabled(False)
-            self.pbProject.setText("Add to Projects")
+            self.pbProject.setText("Add Project")
             return
         selectedRows = self.tblProblems.selectedItems()
         if not selectedRows:
             self.pbProject.setEnabled(False)
-            self.pbProject.setText("Add to Projects")
+            self.pbProject.setText("Add Project")
             return
         self.pbProject.setEnabled(True)
         username = usersLoggedIn[0][0]
         probName = self.tblProblems.item(self.tblProblems.currentRow(), 0).text()
         if projectClass.isProject(username, probName):
-            self.pbProject.setText("Remove from Projects")
+            self.pbProject.setText("Remove Project")
         else:
-            self.pbProject.setText("Add to Projects")
+            self.pbProject.setText("Add Project")
 
     def filterByProjects(self):
         global projectFilter
@@ -2435,5 +2437,10 @@ if __name__ == "__main__":
                         #eventually will crash program
         strip.setPixelColorRGB(const.TOTAL_LED_COUNT, 0, 0, 0)
         strip.show()
+        # Hold the LED lock for the lifetime of the Qt app so Flask knows
+        # not to initialise its own strip (avoids DMA double-init / heap corruption).
+        import fcntl as _fcntl
+        _led_lock_fh = open('/tmp/ledboard_led.lock', 'w')
+        _fcntl.flock(_led_lock_fh, _fcntl.LOCK_EX | _fcntl.LOCK_NB)
     sys.exit(app.exec_())
     
