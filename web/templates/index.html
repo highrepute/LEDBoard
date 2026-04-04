@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>LEDBoard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header id="app-header">
+    <span id="app-title">LEDBoard</span>
+    <div id="auth-bar">
+      <span id="auth-username" class="hidden"></span>
+      <button id="btn-logout" class="hidden btn-small">Logout</button>
+      <button id="btn-show-login" class="btn-small">Login</button>
+    </div>
+  </header>
+
+  <!-- ── Login overlay ── -->
+  <div id="login-overlay" class="overlay hidden">
+    <div class="overlay-card">
+      <h2>Login</h2>
+      <select id="login-username">
+        <option value="">Select user…</option>
+      </select>
+      <input type="password" id="login-password" placeholder="Password">
+      <div id="login-error" class="error-msg hidden"></div>
+      <div class="form-actions">
+        <button id="btn-login-submit" class="btn-primary">Login</button>
+        <button id="btn-login-cancel" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Main layout ── -->
+  <main id="app-main">
+
+    <!-- Panel 1: Filters + Problem list -->
+    <section id="list-panel">
+      <div id="filters">
+        <input type="text" id="filter-name" placeholder="Search by name…" autocomplete="off">
+
+        <div id="grade-filter-row">
+          <label>Grade:</label>
+          <span id="grade-min-label" class="grade-label"></span>
+          <input type="range" id="grade-min" min="0" value="0">
+          <span>–</span>
+          <input type="range" id="grade-max" min="0" value="0">
+          <span id="grade-max-label" class="grade-label"></span>
+        </div>
+
+        <div id="filter-second-row">
+          <select id="filter-user">
+            <option value="">All setters</option>
+          </select>
+          <button id="btn-filter-tags" class="btn-secondary btn-small">Tags ▾</button>
+        </div>
+
+        <div id="tag-filter-panel" class="hidden">
+          <div id="tag-checkboxes"></div>
+          <button id="btn-clear-tags" class="btn-small">Clear</button>
+        </div>
+      </div>
+
+      <div id="problem-count"></div>
+      <ul id="problem-list"></ul>
+    </section>
+
+    <!-- Panel 2: Problem detail -->
+    <section id="detail-panel" class="hidden">
+      <button id="btn-back" class="btn-secondary btn-small">← Back</button>
+
+      <div id="problem-info">
+        <h2 id="prob-name"></h2>
+        <div id="prob-meta">
+          <span id="prob-grade" class="grade-badge"></span>
+          <span id="prob-stars"></span>
+          <span id="prob-user"></span>
+          <span id="prob-date"></span>
+          <span id="prob-ascents"></span>
+        </div>
+        <div id="prob-notes"></div>
+        <div id="prob-tags"></div>
+      </div>
+
+      <div id="board-container">
+        <img id="board-img" src="/board-image" alt="Climbing board" draggable="false">
+        <!-- Hold markers injected here by JS -->
+      </div>
+
+      <div id="led-status-bar" class="hidden">
+        <span id="led-status-msg"></span>
+      </div>
+
+      <div id="detail-actions">
+        <button id="btn-light" class="btn-primary">💡 Light LEDs</button>
+        <button id="btn-off" class="btn-secondary">Off</button>
+        <button id="btn-project" class="btn-secondary hidden">☆ Project</button>
+        <button id="btn-log" class="btn-secondary hidden">📝 Log climb</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Log climb overlay ── -->
+  <div id="log-overlay" class="overlay hidden">
+    <div class="overlay-card">
+      <h2>Log Climb</h2>
+      <p id="log-prob-name" class="log-prob-label"></p>
+
+      <label>Grade</label>
+      <select id="log-grade"></select>
+
+      <label>Stars</label>
+      <select id="log-stars"></select>
+
+      <label>Style</label>
+      <select id="log-style">
+        <option value="Flash">Flash</option>
+        <option value="2nd go">2nd go</option>
+        <option value="Many goes">Many goes</option>
+        <option value="Repeat">Repeat</option>
+        <option value="-">-</option>
+      </select>
+
+      <label>Comments</label>
+      <textarea id="log-comments" rows="3" placeholder="Optional…"></textarea>
+
+      <div id="log-error" class="error-msg hidden"></div>
+
+      <div class="form-actions">
+        <button id="btn-log-submit" class="btn-primary">Save</button>
+        <button id="btn-log-cancel" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

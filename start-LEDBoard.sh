@@ -21,7 +21,14 @@ exec &> "$LOGFILE"
 VENV_PATH="$HOME/my-venv"
 if [ -d "$VENV_PATH" ]; then
     source "$VENV_PATH/bin/activate"
+    sudo "$VENV_PATH/bin/python" "$APP_DIR/web/app.py" >> "$APP_DIR/web_logfile.txt" 2>&1 &
+    WEB_PID=$!
     sudo "$VENV_PATH/bin/python" "$APP_DIR/DiscoMain.py"
 else
+    sudo python3 "$APP_DIR/web/app.py" >> "$APP_DIR/web_logfile.txt" 2>&1 &
+    WEB_PID=$!
     sudo python3 "$APP_DIR/DiscoMain.py"
 fi
+
+# Kill web app when Qt app exits
+kill $WEB_PID 2>/dev/null

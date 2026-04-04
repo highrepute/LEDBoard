@@ -1,0 +1,178 @@
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m
+192.168.1.108 - - [02/Apr/2026 21:28:16] code 400, message Bad request version ('ºº\x13\x01\x13\x02\x13\x03À+À/À,À0Ì©Ì¨À\x13À\x14\x00\x9c\x00\x9d\x00/\x005\x01\x00\x063\x8a\x8a\x00\x00\x00+\x00\x07\x06jj\x03\x04\x03\x03\x00\x12\x00\x00\x00')
+192.168.1.108 - - [02/Apr/2026 21:28:16] "[31m[1m\x16\x03\x01\x06 \x01\x00\x06\x9c\x03\x03\x85³U'\x00]¹ýó2ÆTÎ\x84hòyî\x02ãî\x1f>Ç_aÑå\x19úfU \x8fôÐ\x85«Cód\x0f\x09\\i\x07.\x0e\x0dÀ\x11\x00Ò/\x02\x07\x8eËII(y\x89Íã\x00 ºº\x13\x01\x13\x02\x13\x03À+À/À,À0Ì©Ì¨À\x13À\x14\x00\x9c\x00\x9d\x00/\x005\x01\x00\x063\x8a\x8a\x00\x00\x00+\x00\x07\x06jj\x03\x04\x03\x03\x00\x12\x00\x00\x00[0m" 400 -
+192.168.1.108 - - [02/Apr/2026 21:28:16] code 400, message Bad request version ("ÞoµñT\x183ßáT\x9c4¡UÞ\x95F¾Ï\x13â\x82f·Ü³ú'Ù\x83£õ\x00")
+192.168.1.108 - - [02/Apr/2026 21:28:16] "[31m[1m\x16\x03\x01\x06 \x01\x00\x06\x9c\x03\x03ÈW9àlq>Æ e\x13\x01À9\x01ßî\x83\x9dJr\x8dª1À\x97'0ÂVê$ ÞoµñT\x183ßáT\x9c4¡UÞ\x95F¾Ï\x13â\x82f·Ü³ú'Ù\x83£õ\x00 [0m" 400 -
+192.168.1.108 - - [02/Apr/2026 21:28:16] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x06')
+192.168.1.108 - - [02/Apr/2026 21:28:16] "[31m[1m\x16\x03\x01\x06 \x01\x00\x06\x9c\x03\x03Á\x8a\x11W\x14Wè°\x12[0m" 400 -
+192.168.1.108 - - [02/Apr/2026 21:28:16] code 400, message Bad request version ("C'=\x98O")
+192.168.1.108 - - [02/Apr/2026 21:28:16] "[31m[1m\x16\x03\x01\x06À\x01\x00\x06¼\x03\x03\x87\x86\x83Ð_Ç\x95 \x9a^ ±ñV¹§à\x85\x86\x81JI[ïF³\x01Êt:y_ õ\x8aA\x93%0µZ9P.áÐ\x7fØS}¶\x09wÅæª¸Ô\x03Û¯Ùg\x879\x00 ÚÚ\x13\x01\x13\x02\x13\x03À+À/À,À0Ì©Ì¨À\x13À\x14\x00\x9c\x00\x9d\x00/\x005\x01\x00\x06Sêê\x00\x00\x00\x12\x00\x00\x00\x10\x00\x0e\x00\x0c\x02h2\x08http/1.1\x00#\x00\x00\x003\x04ï\x04íJJ\x00\x01\x00\x11ì\x04Àø¢n\x1dx7µÌ9î{Ï\x81\x15/rU²\x0dû¿´\x83Ë_LHl\x09>\x1b y\x9aÊ <ÇU\x91Ã\x11ÜÜ §\x11\x19®\x01QR\x97It\x18/J\x90Bj:Vf{\x0bÿ(¥)ÜxS\x17\x01\x81Ä®\x1c[Â\x15\x89#Üª\x8bU;8³\x1b1Ø+\\§\x83¥\x02ü¼ïö¶áÑ\x90,k¹²5@u\x97\x95\x9f\x83E·\x96/¾ÔTtÆ¤Ò\x87R\x0bðQ\x82ð\x0b±RcË\x11\x8f(D°Ý:oôûQµÆvì×\x9d\x9c4L\x882;\x0eç@Iû²j"¯\x05×eîs\x12\x1c÷\x103¬\x89wZm¬¦V¿<\x84\x91èq\x01\x8bp°é4cü¼\x11Ä\x1f8j\x9aOÃ¨ßwEoÜPÎ\x19[{5Ã\x12\x05=]´\x93¨±\x8c>7 t\x83\x83\x86`\x11ûç\x96\x11s0Ë<a)9 ­f\x0cÁI\x09å\x07\x96]¸\x8dh\x87\x97×Ë%|Úoõ\x91U[³\x81?WÄ}\x8946\x8b_Óá\x1fà\x87\x0ex\x91qÞ0\x98\x10@8\x02pÁÓ\x1c¤Õä\x19Ô#²ø\x05\x00¸\x06~\x10\x84D\x1f\x0c\x83«#HÈ\x09R\x17µÆñ0}JØÅV&\x1a±÷,\x1dI\x17\x8f°L\x92\x03@ôJGÖ§F \x09\x00þÊlF©\x88OAÃÊá\x054\x9b\x07 ª¢^V5¢[J»\x90\x03\x16ö=ÕS}B÷À\x01¼Ï\x14 §[p$\x1fäEsç\x0bB¥<®b\x18\x90p4\x073¶Ü\x18¼©p¦çà§ÖP \x9a§\x0f\x86ò¶åc\x86Öê\x87\x14 ©\x04PA«7TJ\x9b Ä\x16OrG¤òI\x0eP\x8axÔù\x11ÿuÊ\x9dÒ\x81³TKÝJ\x8a\x11Ç©\x9e*;\x19\x9c\x13[£\x1b\x19x\x1dºç\x09n«b\x11\x08&=c¯èÜÄ\x0f\x8a\x91£·µ¯\x98­"\x8c\x87$)\x85êæ\x9d\x05Ñµ¬9ÂâÌÉý¢\x17ó\x92Ã;ç=\x80W±\x96(\x90û<i2\x16\x8e\x1a|¹z:n´´\x85Ìæ\x1dîv³&X\x13ÓÖ.(\x92¹Ò{gë·[3\x95\x1a\x02²Ì\x1eÄ¢É\x07·pÃPZ\x09À\x99\x87x>I[a@y\x0f\x02\x00L\x00·ô´[>iÁ\x034b-\x89¤'õ:Ó\x1c1TH\x0e\x95\x13\x04då¬l\x11\x04¡*&T|Z\x8b\x90Cö\x80oÃgo«ù½#\x15'»\x15\x8f»\x8b~\x90\x80!æPb\x1eóÎ\x15Ò»4(k\x9e\x09Ìâ@\x95¢\x8a§\x1f\x9b ×ê4Ï·»!\x99A¥\x13ÆÀv­·Ø\x0eà\x87¾ÒlDÓô¡a\x8a\x7f»\x9b\x1d\x90\x12'\x90\x0c,\x16{UÐS\x1bæ\x03T\x17¥H\x18z\x12\x9e9½þR\x17\x9bK\x01\x86ø\x9dÕ h×EÏ3çÇ=õN\x8f\x89Áð¬\x14¡D2\x07\x091ã\x93kHy¾ÎS\x94\x8eGÉ"Ã\x18\x90("\x8c\x17\x86\x1ai\x9fnÄ´rl\x83{;ÄÅ\x84\x99Sw@Ú\x00\x13\x04Q\x1at\x12Â6\x1cG-vmsæ¢E×JÊØB\x15È\x812\x82\x17\x19¨dî\x1c®¼\x19E\x8f\x95ÄÉûV64\x11Öò?¼\x86M}\x10Êû¥\x10w\x07CÊ»§®\x8b:ÄöÉÿ\x0b{TôNñá\x05yUj¥k\\Æ\x86\x8cÊ±\x16»!¡«\x11\x92EX\x0dEóHs¼.\x09C'=\x98O[0m" 400 -
+192.168.1.108 - - [02/Apr/2026 21:28:48] "GET / HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:28:48] "GET /board-image HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:28:48] "GET /static/style.css HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:28:48] "GET /static/app.js HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:28:48] "GET /api/config HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:28:48] "[31m[1mGET /api/me HTTP/1.1[0m" 401 -
+192.168.1.108 - - [02/Apr/2026 21:28:49] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+192.168.1.108 - - [02/Apr/2026 21:28:49] "GET /api/board HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:28:49] "GET /api/users HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:28:49] "GET /api/problems?grade_min=0&grade_max=11 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:29:17] "GET /api/problems?grade_min=0&grade_max=0 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:29:18] "GET /api/problems?grade_min=0&grade_max=11 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:29:22] "GET /api/problems?grade_min=5&grade_max=11 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:29:23] "GET /api/problems?grade_min=0&grade_max=11 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:29:32] "POST /api/login HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:38:39] "GET /api/problems/1 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:38:52] "GET /api/problems/2 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:38:55] "GET /api/problems/3 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:44:06] "[31m[1mPOST /api/light/off HTTP/1.1[0m" 409 -
+192.168.1.108 - - [02/Apr/2026 21:44:10] "[31m[1mPOST /api/light/3 HTTP/1.1[0m" 409 -
+192.168.1.108 - - [02/Apr/2026 21:44:12] "[31m[1mPOST /api/light/off HTTP/1.1[0m" 409 -
+192.168.1.108 - - [02/Apr/2026 21:44:13] "[31m[1mPOST /api/light/3 HTTP/1.1[0m" 409 -
+192.168.1.108 - - [02/Apr/2026 21:44:14] "[31m[1mPOST /api/light/3 HTTP/1.1[0m" 409 -
+192.168.1.108 - - [02/Apr/2026 21:44:17] "POST /api/projects/Teset3 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:44:17] "POST /api/projects/Teset3 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:44:34] "POST /api/log HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:44:34] "GET /api/problems/3 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:44:36] "[31m[1mPOST /api/light/3 HTTP/1.1[0m" 409 -
+192.168.1.108 - - [02/Apr/2026 21:45:02] "GET /api/problems?grade_min=0&grade_max=11&tags=PE+circuit HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:45:03] "GET /api/problems?grade_min=0&grade_max=11 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:45:05] "GET /api/problems?grade_min=0&grade_max=11 HTTP/1.1" 200 -
+192.168.1.108 - - [02/Apr/2026 21:45:10] "GET /api/problems/2 HTTP/1.1" 200 -
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m
+192.168.1.108 - - [04/Apr/2026 01:37:51] "[31m[1mGET /api/me HTTP/1.1[0m" 401 -
+192.168.1.108 - - [04/Apr/2026 01:37:51] "GET /api/users HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 01:37:51] "GET /api/problems?grade_min=0&grade_max=11 HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 01:37:53] "GET /api/problems/2 HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 01:37:54] "[31m[1mPOST /api/light/2 HTTP/1.1[0m" 409 -
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m
+192.168.1.108 - - [04/Apr/2026 01:42:04] "GET / HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 01:42:04] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+192.168.1.108 - - [04/Apr/2026 01:42:04] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+192.168.1.108 - - [04/Apr/2026 01:42:04] "[36mGET /board-image HTTP/1.1[0m" 304 -
+192.168.1.108 - - [04/Apr/2026 01:42:05] "GET /api/config HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 01:42:05] "[31m[1mGET /api/me HTTP/1.1[0m" 401 -
+192.168.1.108 - - [04/Apr/2026 01:42:05] "GET /api/board HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 01:42:05] "GET /api/users HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 01:42:05] "GET /api/problems?grade_min=0&grade_max=11 HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 01:42:06] "GET /api/problems/1 HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 01:42:07] "[31m[1mPOST /api/light/1 HTTP/1.1[0m" 409 -
+192.168.1.108 - - [04/Apr/2026 01:42:10] "[31m[1mPOST /api/light/1 HTTP/1.1[0m" 409 -
+192.168.1.108 - - [04/Apr/2026 01:42:18] "[31m[1mPOST /api/light/1 HTTP/1.1[0m" 409 -
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m
+192.168.1.110 - - [04/Apr/2026 08:16:47] "GET / HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:16:48] "GET /board-image HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:16:48] "GET /static/style.css HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:16:48] "GET /static/app.js HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:16:48] "GET /api/config HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:16:48] "[31m[1mGET /api/me HTTP/1.1[0m" 401 -
+192.168.1.110 - - [04/Apr/2026 08:16:48] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+192.168.1.110 - - [04/Apr/2026 08:16:48] "GET /api/board HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:16:48] "GET /api/users HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:16:48] "GET /api/problems?grade_min=0&grade_max=11 HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:16:52] "GET /api/problems/1 HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:16:58] "POST /api/light/1 HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:17:00] "POST /api/light/off HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:17:34] "POST /api/login HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:17:48] "POST /api/light/1 HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:17:51] "GET /api/problems/1 HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:17:53] "GET /api/problems/2 HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:17:57] "GET /api/problems/3 HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:17:59] "GET /api/problems/2 HTTP/1.1" 200 -
+192.168.1.110 - - [04/Apr/2026 08:18:00] "GET /api/problems/1 HTTP/1.1" 200 -
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m
+192.168.1.108 - - [04/Apr/2026 08:19:00] "[31m[1mGET /api/me HTTP/1.1[0m" 401 -
+192.168.1.108 - - [04/Apr/2026 08:19:00] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+192.168.1.108 - - [04/Apr/2026 08:19:00] "GET /api/users HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 08:19:00] "GET /api/problems?grade_min=0&grade_max=11 HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 08:19:10] "POST /api/login HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 08:19:14] "GET /api/problems/3 HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 08:19:17] "POST /api/projects/Teset3 HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 08:19:34] "POST /api/log HTTP/1.1" 200 -
+192.168.1.108 - - [04/Apr/2026 08:19:34] "GET /api/problems/3 HTTP/1.1" 200 -
+ * Serving Flask app 'app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.110:5000
+[33mPress CTRL+C to quit[0m

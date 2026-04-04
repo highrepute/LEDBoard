@@ -187,7 +187,7 @@ QComboBox QAbstractItemView {
     </font>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tabProbInfo">
     <attribute name="title">
@@ -1295,7 +1295,7 @@ QComboBox QAbstractItemView {
       <property name="geometry">
        <rect>
         <x>656</x>
-        <y>360</y>
+        <y>350</y>
         <width>151</width>
         <height>16</height>
        </rect>
@@ -1316,7 +1316,7 @@ QComboBox QAbstractItemView {
       <property name="geometry">
        <rect>
         <x>290</x>
-        <y>360</y>
+        <y>350</y>
         <width>231</width>
         <height>21</height>
        </rect>
@@ -1339,7 +1339,7 @@ QComboBox QAbstractItemView {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>360</y>
+        <y>350</y>
         <width>171</width>
         <height>16</height>
        </rect>
@@ -1378,7 +1378,7 @@ QComboBox QAbstractItemView {
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>380</y>
+        <y>370</y>
         <width>801</width>
         <height>31</height>
        </rect>
@@ -1470,7 +1470,7 @@ QComboBox QAbstractItemView {
        <rect>
         <x>10</x>
         <y>520</y>
-        <width>121</width>
+        <width>131</width>
         <height>33</height>
        </rect>
       </property>
@@ -1486,9 +1486,9 @@ QComboBox QAbstractItemView {
      <widget class="QPushButton" name="pbRandom">
       <property name="geometry">
        <rect>
-        <x>270</x>
+        <x>250</x>
         <y>520</y>
-        <width>141</width>
+        <width>81</width>
         <height>33</height>
        </rect>
       </property>
@@ -1498,15 +1498,15 @@ QComboBox QAbstractItemView {
        </font>
       </property>
       <property name="text">
-       <string>Random Problem</string>
+       <string>Random</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pbSequence">
       <property name="geometry">
        <rect>
-        <x>420</x>
+        <x>430</x>
         <y>520</y>
-        <width>121</width>
+        <width>131</width>
         <height>33</height>
        </rect>
       </property>
@@ -1531,9 +1531,9 @@ QComboBox QAbstractItemView {
      <widget class="QPushButton" name="pbMirror">
       <property name="geometry">
        <rect>
-        <x>550</x>
+        <x>570</x>
         <y>520</y>
-        <width>81</width>
+        <width>61</width>
         <height>33</height>
        </rect>
       </property>
@@ -1558,9 +1558,9 @@ QComboBox QAbstractItemView {
      <widget class="QPushButton" name="pbShowTwoProbs">
       <property name="geometry">
        <rect>
-        <x>140</x>
+        <x>150</x>
         <y>520</y>
-        <width>121</width>
+        <width>91</width>
         <height>33</height>
        </rect>
       </property>
@@ -1579,7 +1579,7 @@ QComboBox QAbstractItemView {
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shows the last two selected problem (yellow, orange, red/teal, teal/blue, blue)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
-       <string>Show two probs</string>
+       <string>Show Two</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pbTimer">
@@ -1622,6 +1622,24 @@ QComboBox QAbstractItemView {
       </property>
       <property name="value">
        <number>4</number>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pbHeatmap">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>520</y>
+        <width>81</width>
+        <height>33</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Heatmap</string>
       </property>
      </widget>
     </widget>
@@ -1912,24 +1930,6 @@ QComboBox QAbstractItemView {
       </property>
      </widget>
     </widget>
-    <widget class="QPushButton" name="pbHeatmap">
-     <property name="geometry">
-      <rect>
-       <x>360</x>
-       <y>650</y>
-       <width>121</width>
-       <height>35</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Hold Heatmap</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="pbTestLEDs">
      <property name="geometry">
       <rect>
@@ -1955,6 +1955,30 @@ QComboBox QAbstractItemView {
      </property>
      <property name="text">
       <string>Test LEDs</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblWebAddr">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>700</y>
+       <width>540</width>
+       <height>40</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>Web: loading...</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </widget>
@@ -2668,7 +2692,7 @@ QComboBox QAbstractItemView {
        </rect>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="tabEditProblem">
        <attribute name="title">

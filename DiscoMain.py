@@ -3,6 +3,7 @@
 #                                                           #
 #############################################################
 import sys
+import socket
 from PyQt5 import QtWidgets, uic, QtCore#, QtGui
 from PyQt5.QtCore import QTimer
 #from PyQt5.QtWidgets import QSizePolicy
@@ -256,6 +257,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #default message
         self.lblInfo.setText(const.DEFAULTMSG)
         self.pbProject.setEnabled(False)
+
+        #show web app address
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(("8.8.8.8", 80))
+            ip = s.getsockname()[0]
+            s.close()
+        except Exception:
+            ip = "unknown"
+        self.lblWebAddr.setText("Web app:  http://{}:5000".format(ip))
 
         #initialise various bits
         self.initProblemTable()
@@ -2057,7 +2068,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 label = getattr(self, 'lblBarGrade{}'.format(num))
                 bar = getattr(self, 'barGrade{}'.format(num))
                 num += 1
-                label.setText(const.GRADES[int(grade)])
+                if grade in const.GRADES:
+                    label.setText(grade)
+                else:
+                    label.setText(const.GRADES[int(grade)])
                 bar.setValue(count)
                 
         #get problem ascents & display
@@ -2421,6 +2435,5 @@ if __name__ == "__main__":
                         #eventually will crash program
         strip.setPixelColorRGB(const.TOTAL_LED_COUNT, 0, 0, 0)
         strip.show()
-        
     sys.exit(app.exec_())
     
