@@ -20,7 +20,6 @@ import leds
 from led_lock import acquire as led_acquire, release as led_release
 
 const.initConfigVariables()
-leds.init_strip()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET', 'ledboard-dev-secret')

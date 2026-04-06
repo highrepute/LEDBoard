@@ -3369,134 +3369,24 @@ QComboBox QAbstractItemView {
        <attribute name="title">
         <string>Edit Configuration</string>
        </attribute>
-       <widget class="QPushButton" name="pbReset_6">
+       <widget class="QScrollArea" name="saConfigFields">
         <property name="geometry">
          <rect>
-          <x>535</x>
-          <y>300</y>
-          <width>151</width>
-          <height>33</height>
+          <x>0</x>
+          <y>0</y>
+          <width>1020</width>
+          <height>600</height>
          </rect>
         </property>
-        <property name="minimumSize">
-         <size>
-          <width>33</width>
-          <height>33</height>
-         </size>
+        <property name="widgetResizable">
+         <bool>true</bool>
         </property>
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="toolTip">
-         <string>Reset the board and show changes</string>
-        </property>
-        <property name="text">
-         <string>Apply</string>
-        </property>
-       </widget>
-       <widget class="QWidget" name="layoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>240</x>
-          <y>145</y>
-          <width>451</width>
-          <height>146</height>
-         </rect>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_10">
-         <item row="0" column="0">
-          <widget class="QLabel" name="lblAddProb_8">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>LED Brightness</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QSpinBox" name="sbLEDBrightness">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>31</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="maximum">
-            <number>255</number>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="lblAddProb_9">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Welcome message</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="lblAddProb_10">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>Admin user</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QComboBox" name="cbAdminUser">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>31</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="toolTip">
-            <string>Grade for your new problem</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QTextEdit" name="tbWelcomeMessage">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="toolTip">
-            <string>Any comments you have about your new problem</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
        </widget>
        <widget class="QPushButton" name="pbConfigurationSave">
         <property name="geometry">
          <rect>
           <x>370</x>
-          <y>300</y>
+          <y>615</y>
           <width>151</width>
           <height>33</height>
          </rect>
@@ -3517,6 +3407,33 @@ QComboBox QAbstractItemView {
         </property>
         <property name="text">
          <string>Save</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pbReset_6">
+        <property name="geometry">
+         <rect>
+          <x>535</x>
+          <y>615</y>
+          <width>151</width>
+          <height>33</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>33</width>
+          <height>33</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>Reset the board and show changes</string>
+        </property>
+        <property name="text">
+         <string>Apply</string>
         </property>
        </widget>
       </widget>

@@ -37,6 +37,7 @@ class const:
     PROBPATH = None
     PROJECTSPATH = None
     LOGOUTTIMEOUT = 1800
+    AUTOLOGIN = []
     
     def initConfigVariables():
         const.LINUX = int(const.getLINUX())
@@ -59,7 +60,8 @@ class const:
         const.PROJECTSPATH = str(const.getPROJECTSPATH())
         const.LOGOUTTIMEOUT = int(const.getLOGOUTTIMEOUT())
         const.TAGS = const.getTAGS()
-    
+        const.AUTOLOGIN = const.getAUTOLOGIN()
+
     def loadConfig():
         config = configparser.ConfigParser()
         config.optionxform = str
@@ -117,6 +119,40 @@ class const:
     def getPROJECTSPATH():
         config = const.loadConfig()
         return config.get('PATHS', 'PROJECTSPATH')
+
+    def setUSERSPATH(value):
+        config = const.loadConfig()
+        config.set('PATHS', 'USERSPATH', str(value))
+        const.writeConfig(config)
+        const.USERSPATH = value
+
+    def setLOGPATH(value):
+        config = const.loadConfig()
+        config.set('PATHS', 'LOGPATH', str(value))
+        const.writeConfig(config)
+        const.LOGPATH = value
+
+    def setPROBPATH(value):
+        config = const.loadConfig()
+        config.set('PATHS', 'PROBPATH', str(value))
+        const.writeConfig(config)
+        const.PROBPATH = value
+
+    def setPROJECTSPATH(value):
+        config = const.loadConfig()
+        config.set('PATHS', 'PROJECTSPATH', str(value))
+        const.writeConfig(config)
+        const.PROJECTSPATH = value
+
+    def getAUTOLOGIN():
+        config = const.loadConfig()
+        return ast.literal_eval(config.get('DEFAULT', 'AUTOLOGIN'))
+
+    def setAUTOLOGIN(value):
+        config = const.loadConfig()
+        config.set('DEFAULT', 'AUTOLOGIN', str(value))
+        const.writeConfig(config)
+        const.AUTOLOGIN = value
 
     def getBOARDNAME():
         config = const.loadConfig()
@@ -226,7 +262,7 @@ class const:
         config = const.loadConfig()
         config.set('DEFAULT', 'ADMIN', str(value))
         const.writeConfig(config)
-        const.LINUX = value        
+        const.ADMIN = value
 
     def getFOOTHOLDSETS():
         config = const.loadConfig()

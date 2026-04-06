@@ -25,7 +25,11 @@ def light_problem(start_holds, prob_holds, fin_holds):
     """Light up holds for a problem. Green=start, Blue=problem, Red=finish.
     Hold IDs are 1-indexed. -1 indicates an empty hold slot (filtered out).
     """
-    if const.LINUX != 1 or _strip is None:
+    if const.LINUX != 1:
+        return
+    if _strip is None:
+        init_strip()
+    if _strip is None:
         return
     v = const.LED_VALUE
     for i in range(const.TOTAL_LED_COUNT):
@@ -43,7 +47,11 @@ def light_problem(start_holds, prob_holds, fin_holds):
 
 
 def off():
-    if const.LINUX != 1 or _strip is None:
+    if const.LINUX != 1:
+        return
+    if _strip is None:
+        init_strip()
+    if _strip is None:
         return
     for i in range(const.TOTAL_LED_COUNT):
         _strip.setPixelColorRGB(i, 0, 0, 0)

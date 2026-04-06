@@ -268,6 +268,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             ip = "unknown"
         self.lblWebAddr.setText("Web app:  http://{}:5000".format(ip))
 
+        self.initConfigTab()
+
         #initialise various bits
         self.initProblemTable()
         self.populateProblemTable()
@@ -284,6 +286,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.saveBoardMaker = self.tabWidget.widget( 6 )
         self.tabWidget.removeTab( 6 )
         self.tabWidget.removeTab( 5 )
+        self.performAutoLogin()
         self.initProbInfo()
         self.setThemeColour()
         
@@ -1063,23 +1066,206 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.populateEditProblemList()
             #print('there')
             
+    def initConfigTab(self):
+        content = QtWidgets.QWidget()
+        layout = QtWidgets.QFormLayout(content)
+        layout.setFieldGrowthPolicy(QtWidgets.QFormLayout.ExpandingFieldsGrow)
+
+        # LINUX
+        self.cfg_linux = QtWidgets.QCheckBox()
+        layout.addRow('Platform (Linux/Pi)', self.cfg_linux)
+
+        # LEDBRIGHTNESS
+        self.cfg_ledbrightness = QtWidgets.QSpinBox()
+        self.cfg_ledbrightness.setRange(0, 255)
+        layout.addRow('LED Brightness', self.cfg_ledbrightness)
+
+        # LOGOUTTIMEOUT
+        self.cfg_logouttimeout = QtWidgets.QSpinBox()
+        self.cfg_logouttimeout.setRange(0, 86400)
+        layout.addRow('Logout Timeout (secs)', self.cfg_logouttimeout)
+
+        # TOTALLEDCOUNT
+        self.cfg_ledcount = QtWidgets.QSpinBox()
+        self.cfg_ledcount.setRange(0, 9999)
+        layout.addRow('Total LED Count', self.cfg_ledcount)
+
+        # DEFAULTMSG
+        self.cfg_defaultmsg = QtWidgets.QLineEdit()
+        layout.addRow('Welcome Message', self.cfg_defaultmsg)
+
+        # ADMIN
+        self.cfg_admin = QtWidgets.QComboBox()
+        layout.addRow('Admin User', self.cfg_admin)
+
+        # THEMECOLOUR
+        themeRow = QtWidgets.QWidget()
+        themeLayout = QtWidgets.QHBoxLayout(themeRow)
+        themeLayout.setContentsMargins(0, 0, 0, 0)
+        self.cfg_themecolour = QtWidgets.QLineEdit()
+        btnTheme = QtWidgets.QPushButton('Pick')
+        btnTheme.clicked.connect(self._pickThemeColour)
+        themeLayout.addWidget(self.cfg_themecolour)
+        themeLayout.addWidget(btnTheme)
+        layout.addRow('Theme Colour', themeRow)
+
+        # File path fields
+        def makeFileRow(attr, filt):
+            row = QtWidgets.QWidget()
+            hl = QtWidgets.QHBoxLayout(row)
+            hl.setContentsMargins(0, 0, 0, 0)
+            le = QtWidgets.QLineEdit()
+            setattr(self, attr, le)
+            btn = QtWidgets.QPushButton('Browse')
+            btn.clicked.connect(lambda checked, l=le, f=filt: self._browseFile(l, f))
+            hl.addWidget(le)
+            hl.addWidget(btn)
+            return row
+
+        layout.addRow('Image Path', makeFileRow('cfg_imagepath', 'Image files (*.jpg *.png *.gif)'))
+        layout.addRow('Board File', makeFileRow('cfg_boardname', 'Board files (*.brd)'))
+        layout.addRow('Wall Logo Path', makeFileRow('cfg_walllogopath', 'Image files (*.jpg *.png *.gif)'))
+        layout.addRow('Board Logo Path', makeFileRow('cfg_boardlogopath', 'Image files (*.jpg *.png *.gif)'))
+        layout.addRow('Users Path', makeFileRow('cfg_userspath', 'CSV files (*.csv)'))
+        layout.addRow('Log Path', makeFileRow('cfg_logpath', 'CSV files (*.csv)'))
+        layout.addRow('Problems Path', makeFileRow('cfg_probpath', 'CSV files (*.csv)'))
+        layout.addRow('Projects Path', makeFileRow('cfg_projectspath', 'CSV files (*.csv)'))
+
+        # List fields (one per line)
+        self.cfg_grades = QtWidgets.QTextEdit()
+        self.cfg_grades.setFixedHeight(80)
+        layout.addRow('Grades (one per line)', self.cfg_grades)
+
+        self.cfg_stars = QtWidgets.QTextEdit()
+        self.cfg_stars.setFixedHeight(60)
+        layout.addRow('Stars (one per line)', self.cfg_stars)
+
+        self.cfg_footholdsets = QtWidgets.QTextEdit()
+        self.cfg_footholdsets.setFixedHeight(60)
+        layout.addRow('Foothold Sets (one per line)', self.cfg_footholdsets)
+
+        self.cfg_tags = QtWidgets.QTextEdit()
+        self.cfg_tags.setFixedHeight(100)
+        layout.addRow('Tags (one per line)', self.cfg_tags)
+
+        # AUTOLOGIN
+        autoWidget = QtWidgets.QWidget()
+        autoLayout = QtWidgets.QVBoxLayout(autoWidget)
+        autoLayout.setContentsMargins(0, 0, 0, 0)
+        self.cfg_autologin_list = QtWidgets.QListWidget()
+        self.cfg_autologin_list.setFixedHeight(80)
+        autoLayout.addWidget(self.cfg_autologin_list)
+        ctrlRow = QtWidgets.QWidget()
+        ctrlLayout = QtWidgets.QHBoxLayout(ctrlRow)
+        ctrlLayout.setContentsMargins(0, 0, 0, 0)
+        self.cfg_autologin_cb = QtWidgets.QComboBox()
+        btnAdd = QtWidgets.QPushButton('Add')
+        btnRemove = QtWidgets.QPushButton('Remove')
+        btnAdd.clicked.connect(self._addAutoLoginUser)
+        btnRemove.clicked.connect(self._removeAutoLoginUser)
+        ctrlLayout.addWidget(self.cfg_autologin_cb)
+        ctrlLayout.addWidget(btnAdd)
+        ctrlLayout.addWidget(btnRemove)
+        autoLayout.addWidget(ctrlRow)
+        layout.addRow('Auto Login Users', autoWidget)
+
+        self.saConfigFields.setWidget(content)
+
+    def _pickThemeColour(self):
+        colour = QtWidgets.QColorDialog.getColor()
+        if colour.isValid():
+            self.cfg_themecolour.setText(colour.name())
+
+    def _browseFile(self, lineEdit, fileFilter):
+        path = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '', fileFilter)[0]
+        if path:
+            lineEdit.setText(path)
+
+    def _addAutoLoginUser(self):
+        user = self.cfg_autologin_cb.currentText()
+        existing = [self.cfg_autologin_list.item(i).text()
+                    for i in range(self.cfg_autologin_list.count())]
+        if user and user not in existing:
+            self.cfg_autologin_list.addItem(user)
+
+    def _removeAutoLoginUser(self):
+        row = self.cfg_autologin_list.currentRow()
+        if row >= 0:
+            self.cfg_autologin_list.takeItem(row)
+
     def populateEditConfig(self):
-        self.cbAdminUser.clear()
-        self.sbLEDBrightness.setValue(const.LED_VALUE)
-        self.tbWelcomeMessage.setText(const.DEFAULTMSG)
+        self.cfg_linux.setChecked(const.LINUX == 1)
+        self.cfg_ledbrightness.setValue(const.LED_VALUE)
+        self.cfg_logouttimeout.setValue(const.LOGOUTTIMEOUT)
+        self.cfg_ledcount.setValue(const.TOTAL_LED_COUNT)
+        self.cfg_defaultmsg.setText(const.DEFAULTMSG)
+        self.cfg_themecolour.setText(const.THEMECOLOUR)
+        self.cfg_imagepath.setText(const.IMAGEPATH)
+        self.cfg_boardname.setText(const.BOARDNAME)
+        self.cfg_walllogopath.setText(const.WALLLOGOPATH)
+        self.cfg_boardlogopath.setText(const.BOARDLOGOPATH)
+        self.cfg_userspath.setText(const.USERSPATH)
+        self.cfg_logpath.setText(const.LOGPATH)
+        self.cfg_probpath.setText(const.PROBPATH)
+        self.cfg_projectspath.setText(const.PROJECTSPATH)
+        self.cfg_grades.setPlainText('\n'.join(const.GRADES))
+        self.cfg_stars.setPlainText('\n'.join(const.STARS))
+        self.cfg_footholdsets.setPlainText('\n'.join(const.FOOTHOLDSETS))
+        self.cfg_tags.setPlainText('\n'.join(const.TAGS))
         users = userClass.getUserNames()
-        self.cbAdminUser.addItems(users)
-        #set the dropdown to the current admin user
-        index = MyApp.find(users, const.ADMIN)[0]
-        self.cbAdminUser.setCurrentIndex(index)
-        
+        self.cfg_admin.clear()
+        self.cfg_admin.addItems(users)
+        idx = MyApp.find(users, const.ADMIN)[0]
+        if idx >= 0:
+            self.cfg_admin.setCurrentIndex(idx)
+        self.cfg_autologin_cb.clear()
+        self.cfg_autologin_cb.addItems(users)
+        self.cfg_autologin_list.clear()
+        self.cfg_autologin_list.addItems(const.AUTOLOGIN)
+
     def saveEditConfig(self):
-        #print('set new config')
-        const.setLED_VALUE(self.sbLEDBrightness.value())
-        const.setDEFAULTMSG(self.tbWelcomeMessage.toPlainText())
-        const.setADMIN(self.cbAdminUser.currentText())
-        #const.setLOGOUTTIMEOUT(self.sbLogoutTimeout.value())
-        self.lblAdminState.setText('New config values saved - Press Appy to see changes')
+        const.setLINUX(1 if self.cfg_linux.isChecked() else 0)
+        const.setLED_VALUE(self.cfg_ledbrightness.value())
+        const.setLOGOUTTIMEOUT(self.cfg_logouttimeout.value())
+        const.setTOTAL_LED_COUNT(self.cfg_ledcount.value())
+        const.setDEFAULTMSG(self.cfg_defaultmsg.text())
+        const.setADMIN(self.cfg_admin.currentText())
+        const.setTHEMECOLOUR(self.cfg_themecolour.text())
+        const.setIMAGEPATH(self.cfg_imagepath.text())
+        const.setBOARDNAME(self.cfg_boardname.text())
+        const.setWALLLOGOPATH(self.cfg_walllogopath.text())
+        const.setBOARDLOGOPATH(self.cfg_boardlogopath.text())
+        const.setUSERSPATH(self.cfg_userspath.text())
+        const.setLOGPATH(self.cfg_logpath.text())
+        const.setPROBPATH(self.cfg_probpath.text())
+        const.setPROJECTSPATH(self.cfg_projectspath.text())
+        grades = [l.strip() for l in self.cfg_grades.toPlainText().splitlines() if l.strip()]
+        const.setGRADES(str(grades))
+        stars = [l.strip() for l in self.cfg_stars.toPlainText().splitlines() if l.strip()]
+        const.setSTARS(str(stars))
+        footholdsets = [l.strip() for l in self.cfg_footholdsets.toPlainText().splitlines() if l.strip()]
+        const.setFOOTHOLDSETS(str(footholdsets))
+        tags = [l.strip() for l in self.cfg_tags.toPlainText().splitlines() if l.strip()]
+        const.setTAGS(str(tags))
+        autologin = [self.cfg_autologin_list.item(i).text()
+                     for i in range(self.cfg_autologin_list.count())]
+        const.setAUTOLOGIN(autologin)
+        self.lblAdminState.setText('Config saved — press Apply to see changes')
+
+    def performAutoLogin(self):
+        global usersLoggedIn
+        if not const.AUTOLOGIN:
+            return
+        user_names = userClass.getUserNames()
+        for user in const.AUTOLOGIN:
+            if user in user_names and MyApp.find(usersLoggedIn, user)[0] == -1:
+                usersLoggedIn.append([user, time.time()])
+        if usersLoggedIn:
+            self.lbUsers.addItems(MyApp.column(usersLoggedIn, 0))
+            self.setThemeColour()
+        if const.ADMIN in [u[0] for u in usersLoggedIn]:
+            self.tabWidget.insertTab(5, self.saveAdmin, 'Admin')
+            self.tabWidget.insertTab(6, self.saveBoardMaker, 'Board Maker')
 
     def adminLogout(self):
         global adminFlag

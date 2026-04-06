@@ -1,0 +1,9 @@
+# Requirements for running the LEDBoard web app on a Raspberry Pi 3B+
+# Install with: sudo pip3 install -r requirements-pi3.txt
+#
+# Note: rpi_ws281x is NOT listed here — it doesn't build on Pi 3.
+# leds.py automatically falls back to neopixel (Adafruit) on ImportError.
+
+flask
+pillow
+adafruit-circuitpython-neopixel
