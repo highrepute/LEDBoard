@@ -44,6 +44,24 @@ if const.LINUX == 1:
         from neopixel import *                    # Pi 3 / Adafruit legacy install
         _NEOPIXEL_NEW = False
 
+strip = None  # lazy-initialised on first LED call
+
+if const.LINUX == 1:
+    def _init_strip():
+        global strip
+        if strip is not None:
+            return
+        try:
+            if _NEOPIXEL_NEW:
+                strip = PixelStrip(const.TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
+            else:
+                strip = Adafruit_NeoPixel(const.TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
+            strip.begin()
+            strip.show()
+        except Exception as e:
+            print(f"LED init error: {e}", flush=True)
+            strip = None
+
 if const.LINUX == 1:
     # Get the directory of the current script
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -1552,7 +1570,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         global LEDState
         global showTwoProbsFlag
         global heatmapFlag
-        
+
         if heatmapFlag == 0:
             self.pbHeatmap.setStyleSheet("background-color: #fff;")
         
@@ -1581,6 +1599,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 if (shownSequenceCount < 10):
                     showSequenceCounter = showSequenceCounter + 1
                     if const.LINUX == 1:
+                        _init_strip()
                         for i in range(0,const.TOTAL_LED_COUNT,1):#turn all LED off
                             strip.setPixelColorRGB(i, 0, 0, 0)
                         for i in range(0,showSequenceCounter,1):#figure out where in sequence we are and light next LED
@@ -1616,6 +1635,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #cycle all LEDs through a rainbow by advancing the colour offset each tick
         if (LEDState == 1):
             if const.LINUX == 1:
+                _init_strip()
                 for i in range(const.TOTAL_LED_COUNT):
                     strip.setPixelColor(i, MyApp.wheel((i + testLEDsOffset) & 255))
                 strip.show()
@@ -1623,6 +1643,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if countdownFlag == 1:
             if countdownFlashCount > 0:
                 if const.LINUX == 1:
+                    _init_strip()
                     if countdownFlashCount % 2 == 1:
                         for i in range(const.TOTAL_LED_COUNT):
                             strip.setPixelColorRGB(i, const.LED_VALUE, const.LED_VALUE, const.LED_VALUE)
@@ -2083,15 +2104,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.pbTestLEDs.setStyleSheet("background-color: #fff;")
             self.lblInfo.setText("Test LEDs off")
     
-    #turn all LEDs off        
+    #turn all LEDs off
     def offLEDs(self):
         if const.LINUX == 1:
+            _init_strip()
             for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
             strip.show()
             
     def lightSingleLED(self, hold):
-         if const.LINUX == 1:
+        if const.LINUX == 1:
+            _init_strip()
             for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
             strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, const.LED_VALUE)
@@ -2099,6 +2122,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             
     def lightLEDs(startHolds, probHolds, finHolds):
         if const.LINUX == 1:
+            _init_strip()
+            if strip is None:
+                return
             for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
             for hold in startHolds:
@@ -2111,8 +2137,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def lightTwoLEDs(self, startHolds, probHolds, finHolds, startHolds2, probHolds2, finHolds2):
         
-        self.stopShowSequence()        
+        self.stopShowSequence()
         if const.LINUX == 1:
+            _init_strip()
             for i in range(0,const.TOTAL_LED_COUNT,1):
                 strip.setPixelColorRGB(i, 0, 0, 0)
             for hold in startHolds:
@@ -2132,8 +2159,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     #used in show two prob mode to toggle colour of an LED that is on both problems
     def toggleLEDs(startHolds, probHolds, finHolds, startHolds2, probHolds2, finHolds2):
         global toggleLEDFlag
-        
+
         if const.LINUX == 1:
+            _init_strip()
             if toggleLEDFlag == 0:
                 toggleLEDFlag = 1
                 #print("toggle 0")
@@ -2507,6 +2535,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             counts = self.computeHeatmap()
             maxCount = max(counts)
             if const.LINUX == 1:
+                _init_strip()
                 for i in range(const.TOTAL_LED_COUNT):
                     r, g, b = self.heatmapColor(counts[i + 1], maxCount)
                     strip.setPixelColorRGB(i, r, g, b)
@@ -2615,18 +2644,14 @@ if __name__ == "__main__":
     
     window.show()
     if const.LINUX == 1:
-        if _NEOPIXEL_NEW:
-            strip = PixelStrip(const.TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
-        else:
-            strip = Adafruit_NeoPixel(const.TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
-        strip.begin()   #only call this once - each call creates new memory instance which
-                        #eventually will crash program
-        strip.setPixelColorRGB(const.TOTAL_LED_COUNT, 0, 0, 0)
-        strip.show()
         # Hold the LED lock for the lifetime of the Qt app so Flask knows
         # not to initialise its own strip (avoids DMA double-init / heap corruption).
+        # strip is lazy-initialised on first LED call via _init_strip().
         import fcntl as _fcntl
-        _led_lock_fh = open('/tmp/ledboard_led.lock', 'w')
-        _fcntl.flock(_led_lock_fh, _fcntl.LOCK_EX | _fcntl.LOCK_NB)
+        try:
+            _led_lock_fh = open('/tmp/ledboard_led.lock', 'w')
+            _fcntl.flock(_led_lock_fh, _fcntl.LOCK_EX | _fcntl.LOCK_NB)
+        except OSError as e:
+            print(f"LED lock warning: {e}", flush=True)
     sys.exit(app.exec_())
     
