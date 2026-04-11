@@ -39,7 +39,66 @@ class const:
     LOGOUTTIMEOUT = 1800
     AUTOLOGIN = []
     
+    def ensureDefaultFiles():
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        config_path = os.path.join(script_dir, 'config.ini')
+
+        if not os.path.exists(config_path):
+            config = configparser.ConfigParser()
+            config.optionxform = str
+            config['DEFAULT'] = {
+                'LINUX': '1',
+                'LEDBRIGHTNESS': '50',
+                'DEFAULTMSG': 'Welcome to the Board',
+                'BOARDLOGOPATH': '',
+                'GRADES': "['6a', '6a+', '6b', '6b+', '6c', '6c+', '7a']",
+                'STARS': "['-', '*', '**', '***']",
+                'ADMIN': 'James',
+                'THEMECOLOUR': '#fd4',
+                'LOGOUTTIMEOUT': '1800',
+                'AUTOLOGIN': "['James']",
+            }
+            config['BOARD'] = {
+                'TOTALLEDCOUNT': '0',
+                'IMAGEPATH': '',
+                'BOARDNAME': '',
+                'WALLLOGOPATH': '',
+                'FOOTHOLDSETS': "['Standard']",
+                'TAGS': "['Tags']",
+                'BOARDLOGOPATH': '',
+            }
+            config['PATHS'] = {
+                'USERSPATH': os.path.join(script_dir, 'users.csv'),
+                'LOGPATH': os.path.join(script_dir, 'logs.csv'),
+                'PROBPATH': os.path.join(script_dir, 'problems.csv'),
+                'PROJECTSPATH': os.path.join(script_dir, 'projects.csv'),
+            }
+            with open(config_path, 'w') as f:
+                config.write(f)
+
+        config = configparser.ConfigParser()
+        config.optionxform = str
+        config.read(config_path)
+
+        import datetime
+        today = datetime.date.today().strftime('%d/%m/%Y')
+        csv_defaults = {
+            config.get('PATHS', 'USERSPATH'):
+                f'Username,Password,Date Reg, Real name, Email\nJames,123,{today},,\n',
+            config.get('PATHS', 'LOGPATH'):
+                'Username,Problem,Grade,Stars,Ascent Date,Comments,Attempts\n',
+            config.get('PATHS', 'PROBPATH'):
+                'Name,Grade,Stars,Added,User,Comments,Foothold,tag0,tag1,tag2,tag3,tag4,tag5,tag6,tag7,tag8,tag9,Start1,Start2,Fin1,Fin2,HoldNo\n',
+            config.get('PATHS', 'PROJECTSPATH'):
+                'Username,ProblemName\n',
+        }
+        for path, header in csv_defaults.items():
+            if not os.path.exists(path):
+                with open(path, 'w', newline='') as f:
+                    f.write(header)
+
     def initConfigVariables():
+        const.ensureDefaultFiles()
         const.LINUX = int(const.getLINUX())
         const.BOARDNAME = str(const.getBOARDNAME())
         const.LED_VALUE = int(const.getLED_VALUE())
