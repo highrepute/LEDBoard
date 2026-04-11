@@ -37,30 +37,7 @@ if const.LINUX == 1:
         from screeninfo import get_monitors
 
 if const.LINUX == 1:
-    try:
-        from rpi_ws281x import PixelStrip, Color  # Pi 4 / modern install
-        _NEOPIXEL_NEW = True
-    except ImportError:
-        from neopixel import *                    # Pi 3 / Adafruit legacy install
-        _NEOPIXEL_NEW = False
-
-strip = None  # lazy-initialised on first LED call
-
-if const.LINUX == 1:
-    def _init_strip():
-        global strip
-        if strip is not None:
-            return
-        try:
-            if _NEOPIXEL_NEW:
-                strip = PixelStrip(const.TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
-            else:
-                strip = Adafruit_NeoPixel(const.TOTAL_LED_COUNT, 18, 800000, 5, False, 255)
-            strip.begin()
-            strip.show()
-        except Exception as e:
-            print(f"LED init error: {e}", flush=True)
-            strip = None
+    import led_client
 
 if const.LINUX == 1:
     # Get the directory of the current script
@@ -1599,21 +1576,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 if (shownSequenceCount < 10):
                     showSequenceCounter = showSequenceCounter + 1
                     if const.LINUX == 1:
-                        _init_strip()
-                        for i in range(0,const.TOTAL_LED_COUNT,1):#turn all LED off
-                            strip.setPixelColorRGB(i, 0, 0, 0)
-                        for i in range(0,showSequenceCounter,1):#figure out where in sequence we are and light next LED
-                            if (i < len(startHolds)):
-                                hold = startHolds[i]
-                                strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)#green
-                            elif (i < (len(startHolds)+len(probHolds))):
-                                hold = probHolds[i-len(startHolds)]
-                                strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#blue 
-                            elif (i < (len(startHolds)+len(probHolds)+len(finHolds))):
-                                hold = finHolds[i-len(startHolds)-len(probHolds)]
-                                strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)  #red                     
-                        strip.show()
-                        if (i == (len(startHolds)+len(probHolds)+len(finHolds))):
+                        v = const.LED_VALUE
+                        pixels = {}
+                        for i in range(0, showSequenceCounter):
+                            if i < len(startHolds):
+                                pixels[startHolds[i] - 1] = (0, v, 0)  # green
+                            elif i < len(startHolds) + len(probHolds):
+                                pixels[probHolds[i - len(startHolds)] - 1] = (0, 0, v)  # blue
+                            elif i < len(startHolds) + len(probHolds) + len(finHolds):
+                                pixels[finHolds[i - len(startHolds) - len(probHolds)] - 1] = (v, 0, 0)  # red
+                        led_client.raw(pixels, source='qt-timer')
+                        if (showSequenceCounter == (len(startHolds)+len(probHolds)+len(finHolds)+1)):
                             #print("reset")
                             showSequenceCounter = 0
                             shownSequenceCount = shownSequenceCount + 1   
@@ -1635,22 +1608,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #cycle all LEDs through a rainbow by advancing the colour offset each tick
         if (LEDState == 1):
             if const.LINUX == 1:
-                _init_strip()
-                for i in range(const.TOTAL_LED_COUNT):
-                    strip.setPixelColor(i, MyApp.wheel((i + testLEDsOffset) & 255))
-                strip.show()
+                pixels = [[i, *MyApp.wheel((i + testLEDsOffset) & 255)] for i in range(const.TOTAL_LED_COUNT)]
+                led_client.raw(pixels, source='qt-timer')
             testLEDsOffset = (testLEDsOffset + 3) & 255  #wrap at 256 to stay within wheel range
         if countdownFlag == 1:
             if countdownFlashCount > 0:
                 if const.LINUX == 1:
-                    _init_strip()
+                    v = const.LED_VALUE
                     if countdownFlashCount % 2 == 1:
-                        for i in range(const.TOTAL_LED_COUNT):
-                            strip.setPixelColorRGB(i, const.LED_VALUE, const.LED_VALUE, const.LED_VALUE)
+                        led_client.raw([[i, v, v, v] for i in range(const.TOTAL_LED_COUNT)], source='qt-timer')
                     else:
-                        for i in range(const.TOTAL_LED_COUNT):
-                            strip.setPixelColorRGB(i, 0, 0, 0)
-                    strip.show()
+                        led_client.off(source='qt-timer')
                 countdownFlashCount -= 1
                 if countdownFlashCount == 0:
                     countdownFlag = 0
@@ -1985,15 +1953,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         holdNumber = self.getHoldNumberFromButton(button)
         #print("hold Number -", holdNumber, "colour -", colour)
         if (const.LINUX == 1):
-            if (colour == "red"):
-                strip.setPixelColorRGB(holdNumber-1, const.LED_VALUE, 0, 0)#red
-            elif (colour == "green"):
-                strip.setPixelColorRGB(holdNumber-1, 0, const.LED_VALUE, 0)#green
-            elif (colour == "blue"):
-                strip.setPixelColorRGB(holdNumber-1, 0, 0, const.LED_VALUE)#blue
-            elif (colour == "off"):
-                strip.setPixelColorRGB(holdNumber-1, 0, 0, 0)#off
-            strip.show()
+            v = const.LED_VALUE
+            colour_map = {'red': (v, 0, 0), 'green': (0, v, 0), 'blue': (0, 0, v), 'off': (0, 0, 0)}
+            if colour in colour_map:
+                led_client.patch({holdNumber - 1: colour_map[colour]})
         
     def getHoldNumberFromButton(self,button):
         holdString = str(button.objectName())
@@ -2064,17 +2027,17 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             self.lblInfoAddProb.setText("Added a hold\nAdd another hold")
     
-    #this is for the rainbow effect for testLEDs    
+    #this is for the rainbow effect for testLEDs
     def wheel(pos):
-        """Generate rainbow colors across 0-255 positions."""
+        """Generate rainbow colors across 0-255 positions. Returns (r, g, b) tuple."""
         if pos < 85:
-            return Color(pos * 3, 255 - pos * 3, 0)
+            return (pos * 3, 255 - pos * 3, 0)
         elif pos < 170:
             pos -= 85
-            return Color(255 - pos * 3, 0, pos * 3)
+            return (255 - pos * 3, 0, pos * 3)
         else:
             pos -= 170
-            return Color(0, pos * 3, 255 - pos * 3)
+            return (0, pos * 3, 255 - pos * 3)
     
     def testLEDs(self):
         global LEDState
@@ -2107,93 +2070,48 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     #turn all LEDs off
     def offLEDs(self):
         if const.LINUX == 1:
-            _init_strip()
-            for i in range(0,const.TOTAL_LED_COUNT,1):
-                strip.setPixelColorRGB(i, 0, 0, 0)
-            strip.show()
+            led_client.off()
             
     def lightSingleLED(self, hold):
         if const.LINUX == 1:
-            _init_strip()
-            for i in range(0,const.TOTAL_LED_COUNT,1):
-                strip.setPixelColorRGB(i, 0, 0, 0)
-            strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, const.LED_VALUE)
-            strip.show()       
+            led_client.raw({hold - 1: (const.LED_VALUE, 0, const.LED_VALUE)})
             
     def lightLEDs(startHolds, probHolds, finHolds):
         if const.LINUX == 1:
-            _init_strip()
-            if strip is None:
-                return
-            for i in range(0,const.TOTAL_LED_COUNT,1):
-                strip.setPixelColorRGB(i, 0, 0, 0)
-            for hold in startHolds:
-                strip.setPixelColorRGB(hold-1, 0, const.LED_VALUE, 0)
-            for hold in probHolds:
-                strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)
-            for hold in finHolds:
-                strip.setPixelColorRGB(hold-1, const.LED_VALUE, 0, 0)
-            strip.show()
+            led_client.light_problem(startHolds, probHolds, finHolds)
         
     def lightTwoLEDs(self, startHolds, probHolds, finHolds, startHolds2, probHolds2, finHolds2):
-        
         self.stopShowSequence()
         if const.LINUX == 1:
-            _init_strip()
-            for i in range(0,const.TOTAL_LED_COUNT,1):
-                strip.setPixelColorRGB(i, 0, 0, 0)
-            for hold in startHolds:
-                strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#blue
-            for hold in probHolds:
-                strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#blue
-            for hold in finHolds:
-                strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#blue
-            for hold in startHolds2:
-                strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE, 0)#yellow
-            for hold in probHolds2:
-                strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE, 0)#yellow
-            for hold in finHolds2:
-                strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE, 0)#yellow
-            strip.show()
+            v = const.LED_VALUE
+            pixels = {}
+            for h in startHolds + probHolds + finHolds:
+                pixels[h - 1] = (0, 0, v)  # blue
+            for h in startHolds2 + probHolds2 + finHolds2:
+                pixels[h - 1] = (v, v, 0)  # yellow
+            led_client.raw(pixels)
     
     #used in show two prob mode to toggle colour of an LED that is on both problems
     def toggleLEDs(startHolds, probHolds, finHolds, startHolds2, probHolds2, finHolds2):
         global toggleLEDFlag
 
         if const.LINUX == 1:
-            _init_strip()
+            v = const.LED_VALUE
+            pixels = {}
             if toggleLEDFlag == 0:
                 toggleLEDFlag = 1
-                #print("toggle 0")
-                for hold in startHolds2:
-                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
-                for hold in probHolds2:
-                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
-                for hold in finHolds2:
-                    strip.setPixelColorRGB(hold-1, 0, 0, 0)                
-                for hold in startHolds:
-                    strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#blue
-                for hold in probHolds:
-                    strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#blue
-                for hold in finHolds:
-                    strip.setPixelColorRGB(hold-1, 0, 0, const.LED_VALUE)#blue
-            elif toggleLEDFlag == 1:
+                for h in startHolds2 + probHolds2 + finHolds2:
+                    pixels[h - 1] = (0, 0, 0)
+                for h in startHolds + probHolds + finHolds:
+                    pixels[h - 1] = (0, 0, v)  # blue
+            else:
                 toggleLEDFlag = 0
-                #print("toggle 1")
-                for hold in startHolds:
-                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
-                for hold in probHolds:
-                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
-                for hold in finHolds:
-                    strip.setPixelColorRGB(hold-1, 0, 0, 0)
-                for hold in startHolds2:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE, 0)#yellow
-                for hold in probHolds2:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE, 0)#yellow
-                for hold in finHolds2:
-                    strip.setPixelColorRGB(hold-1, const.LED_VALUE, const.LED_VALUE, 0)#yellow                     
-            strip.show()
-    
+                for h in startHolds + probHolds + finHolds:
+                    pixels[h - 1] = (0, 0, 0)
+                for h in startHolds2 + probHolds2 + finHolds2:
+                    pixels[h - 1] = (v, v, 0)  # yellow
+            led_client.patch(pixels, source='qt-timer')
+
     #find item elem in list l    
     def find(l, elem):
         for row, i in enumerate(l):
@@ -2535,11 +2453,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             counts = self.computeHeatmap()
             maxCount = max(counts)
             if const.LINUX == 1:
-                _init_strip()
-                for i in range(const.TOTAL_LED_COUNT):
-                    r, g, b = self.heatmapColor(counts[i + 1], maxCount)
-                    strip.setPixelColorRGB(i, r, g, b)
-                strip.show()
+                pixels = [[i, *self.heatmapColor(counts[i + 1], maxCount)] for i in range(const.TOTAL_LED_COUNT)]
+                led_client.raw(pixels)
             self.lblInfo.setText("Hold heatmap on")
         else:
             heatmapFlag = 0
@@ -2643,15 +2558,5 @@ if __name__ == "__main__":
     window = MyApp()
     
     window.show()
-    if const.LINUX == 1:
-        # Hold the LED lock for the lifetime of the Qt app so Flask knows
-        # not to initialise its own strip (avoids DMA double-init / heap corruption).
-        # strip is lazy-initialised on first LED call via _init_strip().
-        import fcntl as _fcntl
-        try:
-            _led_lock_fh = open('/tmp/ledboard_led.lock', 'w')
-            _fcntl.flock(_led_lock_fh, _fcntl.LOCK_EX | _fcntl.LOCK_NB)
-        except OSError as e:
-            print(f"LED lock warning: {e}", flush=True)
     sys.exit(app.exec_())
     

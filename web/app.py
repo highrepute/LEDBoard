@@ -2,7 +2,7 @@ import sys
 import os
 import datetime
 
-# Ensure both repo root (data layer) and web/ (led_lock) are importable
+# Ensure repo root (data layer) is importable
 _REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _WEB_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _REPO_ROOT)
@@ -17,7 +17,6 @@ from logFuncs import logClass
 from projectFuncs import projectClass
 from boardMaker import boardMaker
 import leds
-from led_lock import acquire as led_acquire, release as led_release
 
 const.initConfigVariables()
 
@@ -294,25 +293,13 @@ def light_problem(row):
         return jsonify({'error': 'Problem not found'}), 404
 
     start_holds, prob_holds, fin_holds = _get_holds(prob)
-
-    if not led_acquire():
-        return jsonify({'error': 'LEDs are currently in use by the desktop app'}), 409
-    try:
-        leds.light_problem(start_holds, prob_holds, fin_holds)
-    finally:
-        led_release()
-
+    leds.light_problem(start_holds, prob_holds, fin_holds)
     return jsonify({'ok': True})
 
 
 @app.route('/api/light/off', methods=['POST'])
 def light_off():
-    if not led_acquire():
-        return jsonify({'error': 'LEDs are currently in use by the desktop app'}), 409
-    try:
-        leds.off()
-    finally:
-        led_release()
+    leds.off()
     return jsonify({'ok': True})
 
 
