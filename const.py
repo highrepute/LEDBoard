@@ -84,7 +84,7 @@ class const:
         today = datetime.date.today().strftime('%d/%m/%Y')
         csv_defaults = {
             config.get('PATHS', 'USERSPATH'):
-                f'Username,Password,Date Reg, Real name, Email\nJames,123,{today},,\n',
+                'Username,Password,Date Reg, Real name, Email\nJames,123,%s,,\n' % today,
             config.get('PATHS', 'LOGPATH'):
                 'Username,Problem,Grade,Stars,Ascent Date,Comments,Attempts\n',
             config.get('PATHS', 'PROBPATH'):

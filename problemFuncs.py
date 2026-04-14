@@ -29,7 +29,7 @@ class problemClass:#funcs that access information in the problem file
     def _migrateToTagFormat(problems):
         # Back up the old file before modifying it
         timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-        backup_path = const.PROBPATH.replace('.csv', f'_backup_{timestamp}.csv')
+        backup_path = const.PROBPATH.replace('.csv', '_backup_%s.csv' % timestamp)
         shutil.copy2(const.PROBPATH, backup_path)
 
         # Pad every row with 10 empty tag columns at position 7

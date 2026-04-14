@@ -95,7 +95,7 @@ if __name__ == '__main__':
     os.chmod(SOCK_PATH, 0o666)
     srv.listen(5)
     signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))
-    print(f"LED daemon listening on {SOCK_PATH}", flush=True)
+    print("LED daemon listening on %s" % SOCK_PATH, flush=True)
     while True:
         conn, _ = srv.accept()
         threading.Thread(target=_client_thread, args=(conn,), daemon=True).start()
