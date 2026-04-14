@@ -15,6 +15,7 @@
   --hold-finish: #ef4444;
   --hold-problem: #3b82f6;
   --header-height: 52px;
+  --nav-height: 42px;
 }
 
 html { font-size: 16px; }
@@ -59,6 +60,41 @@ body {
   opacity: 0.9;
 }
 
+/* ── Nav ── */
+#app-nav {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 90;
+  display: flex;
+  background: var(--card-bg);
+  border-bottom: 2px solid var(--primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.nav-tab {
+  flex: 1;
+  min-height: var(--nav-height);
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0 12px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.nav-tab:active { opacity: 1; }
+.nav-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 700;
+}
+.nav-tab:hover:not(.active) { color: var(--text); background: var(--bg); }
+
 /* ── Buttons ── */
 button {
   cursor: pointer;
@@ -94,7 +130,42 @@ button:disabled { opacity: 0.45; cursor: default; }
   border-radius: 6px;
 }
 
-/* ── Main layout ── */
+.btn-danger {
+  background: var(--danger);
+  color: white;
+  border: none;
+}
+.btn-danger:hover { background: #c53030; }
+
+.btn-register {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.5);
+}
+.btn-register:hover { background: rgba(255,255,255,0.3); }
+
+.active-filter {
+  background: var(--primary) !important;
+  color: white !important;
+  border-color: var(--primary) !important;
+}
+
+/* LED mode buttons */
+#led-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.btn-mode { flex: 1; min-width: 80px; }
+.mode-active {
+  background: #e6f0ff !important;
+  color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  font-weight: 700;
+}
+
+/* ── Main layout (Problems section) ── */
 #app-main {
   padding: 12px;
   max-width: 1200px;
@@ -158,6 +229,12 @@ input[type="range"] {
 #filter-second-row {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
+}
+
+#filter-third-row {
+  display: flex;
+  gap: 8px;
 }
 
 select {
@@ -197,9 +274,7 @@ select {
   min-height: 34px;
 }
 
-.tag-chip input[type="checkbox"] {
-  accent-color: var(--primary);
-}
+.tag-chip input[type="checkbox"] { accent-color: var(--primary); }
 
 .tag-chip.active {
   background: var(--primary);
@@ -243,6 +318,12 @@ select {
   font-size: 0.95rem;
 }
 
+.prob-logged-tick {
+  color: #44aa44;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
 .prob-list-meta {
   font-size: 0.8rem;
   color: var(--text-muted);
@@ -274,9 +355,7 @@ select {
   gap: 12px;
 }
 
-#btn-back {
-  align-self: flex-start;
-}
+#btn-back { align-self: flex-start; }
 
 #problem-info {
   background: var(--card-bg);
@@ -300,6 +379,15 @@ select {
   color: var(--text-muted);
 }
 
+.prob-footholdset {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 0.75rem;
+  color: var(--success);
+}
+
 #prob-notes {
   margin-top: 8px;
   font-size: 0.9rem;
@@ -321,6 +409,66 @@ select {
   padding: 2px 10px;
   font-size: 0.75rem;
   color: var(--primary);
+}
+
+/* ── Vote histograms ── */
+#vote-histograms {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.histogram-wrap {
+  flex: 1;
+  min-width: 140px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.histogram-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+  font-size: 0.8rem;
+}
+
+.bar-label {
+  min-width: 28px;
+  text-align: right;
+  color: var(--text-muted);
+}
+
+.bar-track {
+  flex: 1;
+  height: 10px;
+  background: #eef0f3;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 5px;
+  transition: width 0.3s;
+}
+
+.bar-count {
+  min-width: 20px;
+  font-weight: 600;
+  color: var(--text);
 }
 
 /* ── Board overlay ── */
@@ -378,6 +526,49 @@ select {
   min-width: 100px;
 }
 
+/* ── Compare panel ── */
+#compare-panel {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#compare-select { flex: 1; }
+
+/* ── Timer panel ── */
+#timer-panel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  flex-wrap: wrap;
+}
+
+.timer-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+#timer-minutes {
+  width: 60px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+#timer-display {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+  min-width: 48px;
+}
+
 /* ── Overlays ── */
 .overlay {
   position: fixed;
@@ -415,6 +606,8 @@ select {
 }
 
 .overlay-card input[type="password"],
+.overlay-card input[type="text"],
+.overlay-card input[type="email"],
 .overlay-card select,
 .overlay-card textarea {
   width: 100%;
@@ -426,23 +619,14 @@ select {
   font-family: inherit;
 }
 
-.overlay-card textarea {
-  min-height: 80px;
-  resize: vertical;
-}
+.overlay-card textarea { min-height: 80px; resize: vertical; }
 
-.log-prob-label {
-  font-weight: 600;
-  font-size: 1.05rem;
-}
+.log-prob-label { font-weight: 600; font-size: 1.05rem; }
 
-.form-actions {
-  display: flex;
-  gap: 8px;
-}
-
+.form-actions { display: flex; gap: 8px; }
 .form-actions button { flex: 1; }
 
+/* ── Error / OK messages ── */
 .error-msg {
   background: #fff5f5;
   border: 1px solid #fed7d7;
@@ -450,6 +634,185 @@ select {
   padding: 8px 12px;
   font-size: 0.85rem;
   color: var(--danger);
+}
+
+.ok-msg {
+  background: #f0fff4;
+  border: 1px solid #9ae6b4;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: var(--success);
+}
+
+.error-inline {
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+
+/* ── Logbook & Admin sections ── */
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+#logbook-container,
+#admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.muted-msg {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  padding: 16px 0;
+}
+
+/* ── Data tables ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.data-table th {
+  background: var(--bg);
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--bg); }
+
+/* Scrollable table wrapper for small screens */
+#admin-users-content,
+#admin-logs-content,
+#logbook-content {
+  overflow-x: auto;
+}
+
+/* ── Admin tabs ── */
+#admin-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.admin-tab {
+  min-height: 38px;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 0 14px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+
+.admin-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 700;
+}
+
+.admin-tab:hover:not(.active) { background: var(--bg); color: var(--text); }
+
+.admin-panel {
+  padding-top: 8px;
+}
+
+/* Admin problems form */
+#admin-problems-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 500px;
+}
+
+#admin-prob-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#admin-prob-fields label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+#admin-prob-fields input,
+#admin-prob-fields select,
+#admin-prob-fields textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  min-height: 44px;
+}
+
+#admin-prob-fields textarea { resize: vertical; min-height: 70px; }
+
+/* Admin config form */
+#admin-config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 700px;
+}
+
+.config-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.config-group label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.config-group input,
+.config-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  min-height: 44px;
+}
+
+.config-group textarea {
+  resize: vertical;
+  font-family: monospace;
+  font-size: 0.9rem;
 }
 
 /* ── Utilities ── */

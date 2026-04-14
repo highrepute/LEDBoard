@@ -15,3 +15,9 @@ def off():
     if const.LINUX != 1:
         return
     led_client.off(source='flask')
+
+
+def raw(pixels):
+    if const.LINUX != 1:
+        return
+    led_client.raw(pixels, source='flask')

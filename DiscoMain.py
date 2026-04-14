@@ -4,7 +4,7 @@
 #############################################################
 import sys
 import socket
-from PyQt5 import QtWidgets, uic, QtCore#, QtGui
+from PyQt5 import QtWidgets, uic, QtCore, QtGui
 from PyQt5.QtCore import QTimer
 #from PyQt5.QtWidgets import QSizePolicy
 import re
@@ -831,7 +831,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def addTag(self):
         if (self.tblProblems.selectedIndexes() != [])&(self.lbUsers.selectedIndexes() != []):
             rowN = self.tblProblems.selectedIndexes()[0].row()
-            problem = self.tblProblems.item(rowN,0).text()
+            problem = self.tblProblems.item(rowN,0).data(QtCore.Qt.UserRole)
             row = problemClass.getRowFromProblemName(problem)
             tag = self.cbTags.currentText()
             error = problemClass.addNewTag(row, tag)
@@ -1416,7 +1416,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #as user is active, reset login time-in
             self.resetUserTimeIn(user)
             rowN = self.tblProblems.selectedIndexes()[0].row()
-            problem = self.tblProblems.item(rowN,0).text()
+            problem = self.tblProblems.item(rowN,0).data(QtCore.Qt.UserRole)
             row = problemClass.getRowFromProblemName(problem)
             date = datetime.datetime.now().strftime("%Y-%m-%d")
             comments = self.tbLogComments.toPlainText().replace('\n', ' ')
@@ -1437,17 +1437,43 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             text = problem + " logged to " + user + "'s logbook"
             self.lblInfo.setText(text)
             self.updateProbInfo(row)
+            self.refreshLoggedTicks()
         elif (self.tblProblems.selectedIndexes() == []):
             self.lblInfo.setText("Oh no!\nPlease select a problem")
         else:
             self.lblInfo.setText("Oh no!\nPlease select a user, you may need to login")
         
-    def updateLogLabel(self):        
+    def _getSelectedUser(self):
+        selected = self.lbUsers.selectedIndexes()
+        if selected:
+            return self.lbUsers.item(selected[0].row()).text()
+        return ''
+
+    def refreshLoggedTicks(self):
+        loggedNames = set()
+        user = self._getSelectedUser()
+        if user:
+            loggedNames = logClass.getUserLoggedProblemNames(user)
+        for row in range(self.tblProblems.rowCount()):
+            nameItem = self.tblProblems.item(row, 0)
+            if nameItem is None:
+                continue
+            cleanName = nameItem.data(QtCore.Qt.UserRole)
+            if cleanName is None:
+                continue
+            if cleanName in loggedNames:
+                nameItem.setText("✓ " + cleanName)
+                nameItem.setForeground(QtGui.QBrush(QtGui.QColor('#44aa44')))
+            else:
+                nameItem.setText(cleanName)
+                nameItem.setForeground(QtGui.QBrush(QtGui.QColor('#000000')))
+
+    def updateLogLabel(self):
         rowN = self.tblProblems.selectedIndexes()
         #print(rowN)
         if (rowN != []):#if a problem selected
             rowN = rowN[0].row()
-            problem = self.tblProblems.item(rowN,0).text()
+            problem = self.tblProblems.item(rowN,0).data(QtCore.Qt.UserRole)
             self.lblLogProb1.setText("Log")
             self.lblLogProb2.setText(problem)
         if (len(usersLoggedIn) > 0): #if a user logged in
@@ -1465,8 +1491,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lblLogProb3.setText("Select a - ")
             self.lblLogProb4.setText("user")
             self.lblAddProbUser.setText("Select a user")
-        self.populateLogbook()    
-        
+        self.populateLogbook()
+        self.refreshLoggedTicks()
+
     def addNewUser(self):
         date = datetime.datetime.now().strftime("%Y-%m-%d")
         username = self.leAddUsername.text()
@@ -1570,7 +1597,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #print(items)
             if items != -9999:
                 #get name of problem
-                probName = self.tblProblems.item((items.row()),0).text()
+                probName = self.tblProblems.item((items.row()),0).data(QtCore.Qt.UserRole)
                 text = "Showing sequence of " + probName + "\n" + str(10 - shownSequenceCount)
                 self.lblInfo.setText(text)
                 if (shownSequenceCount < 10):
@@ -1784,6 +1811,10 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             header = problemList[0]
             problemList = [header] + [r for r in problemList[1:]
                            if r[const.PROBNAMECOL] in userProjects]
+        loggedNames = set()
+        user = self._getSelectedUser()
+        if user:
+            loggedNames = logClass.getUserLoggedProblemNames(user)
         self.tblProblems.setSortingEnabled(False)
         self.tblProblems.setRowCount(len(problemList)-1)
         for i in range(1,len(problemList),1):
@@ -1791,15 +1822,20 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 if j == 1:#convert grade for display
                     grade = const.GRADES[int(problemList[i][j])]
                     #print(grade)
-                    self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(grade))    
+                    self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(grade))
                 elif j == 2:#convert stars for display
                     star = const.STARS[int(problemList[i][j])]
                     #print(star)
-                    self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(star))                    
+                    self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(star))
                 else:
                     item = problemList[i][j]
-                    #print(item)
-                    self.tblProblems.setItem(i-1,j, QtWidgets.QTableWidgetItem(item))   
+                    cell = QtWidgets.QTableWidgetItem(item)
+                    if j == 0:
+                        cell.setData(QtCore.Qt.UserRole, item)
+                        if item in loggedNames:
+                            cell.setText("✓ " + item)
+                            cell.setForeground(QtGui.QBrush(QtGui.QColor('#44aa44')))
+                    self.tblProblems.setItem(i-1, j, cell)
         self.tblProblems.setSortingEnabled(True)
         
     def resetAddProblemTab(self):
@@ -2251,7 +2287,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             #get index of selected problem in table
             items = self.tblProblems.selectedIndexes()[0]
             #get name of problem
-            probName = self.tblProblems.item((items.row()),const.PROBNAMECOL).text()        
+            probName = self.tblProblems.item((items.row()),const.PROBNAMECOL).data(QtCore.Qt.UserRole)
             #find problem in problemDB using problem name from selected row
             rowProb = MyApp.find(problemsDB,probName)[0]
         except:
@@ -2484,7 +2520,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lblInfo.setText("Select a problem to add to projects")
             return
         username = usersLoggedIn[0][0]
-        probName = self.tblProblems.item(self.tblProblems.currentRow(), 0).text()
+        probName = self.tblProblems.item(self.tblProblems.currentRow(), 0).data(QtCore.Qt.UserRole)
         if projectClass.isProject(username, probName):
             projectClass.removeProject(username, probName)
         else:
@@ -2505,7 +2541,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             return
         self.pbProject.setEnabled(True)
         username = usersLoggedIn[0][0]
-        probName = self.tblProblems.item(self.tblProblems.currentRow(), 0).text()
+        probName = self.tblProblems.item(self.tblProblems.currentRow(), 0).data(QtCore.Qt.UserRole)
         if projectClass.isProject(username, probName):
             self.pbProject.setText("Remove Project")
         else:

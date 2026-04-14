@@ -17,8 +17,16 @@
       <span id="auth-username" class="hidden"></span>
       <button id="btn-logout" class="hidden btn-small">Logout</button>
       <button id="btn-show-login" class="btn-small">Login</button>
+      <button id="btn-show-register" class="btn-small btn-register">Register</button>
     </div>
   </header>
+
+  <!-- ── Nav ── -->
+  <nav id="app-nav">
+    <button id="nav-problems" class="nav-tab active">Problems</button>
+    <button id="nav-logbook" class="nav-tab">Logbook</button>
+    <button id="nav-admin" class="nav-tab hidden">Admin</button>
+  </nav>
 
   <!-- ── Login overlay ── -->
   <div id="login-overlay" class="overlay hidden">
@@ -36,88 +44,31 @@
     </div>
   </div>
 
-  <!-- ── Main layout ── -->
-  <main id="app-main">
-
-    <!-- Panel 1: Filters + Problem list -->
-    <section id="list-panel">
-      <div id="filters">
-        <input type="text" id="filter-name" placeholder="Search by name…" autocomplete="off">
-
-        <div id="grade-filter-row">
-          <label>Grade:</label>
-          <span id="grade-min-label" class="grade-label"></span>
-          <input type="range" id="grade-min" min="0" value="0">
-          <span>–</span>
-          <input type="range" id="grade-max" min="0" value="0">
-          <span id="grade-max-label" class="grade-label"></span>
-        </div>
-
-        <div id="filter-second-row">
-          <select id="filter-user">
-            <option value="">All setters</option>
-          </select>
-          <button id="btn-filter-tags" class="btn-secondary btn-small">Tags ▾</button>
-        </div>
-
-        <div id="tag-filter-panel" class="hidden">
-          <div id="tag-checkboxes"></div>
-          <button id="btn-clear-tags" class="btn-small">Clear</button>
-        </div>
+  <!-- ── Register overlay ── -->
+  <div id="register-overlay" class="overlay hidden">
+    <div class="overlay-card">
+      <h2>Register</h2>
+      <input type="text" id="reg-username" placeholder="Username *" autocomplete="off">
+      <input type="password" id="reg-password" placeholder="Password *">
+      <input type="text" id="reg-name" placeholder="Full name (optional)" autocomplete="off">
+      <input type="email" id="reg-email" placeholder="Email (optional)" autocomplete="off">
+      <div id="register-error" class="error-msg hidden"></div>
+      <div class="form-actions">
+        <button id="btn-register-submit" class="btn-primary">Register</button>
+        <button id="btn-register-cancel" class="btn-secondary">Cancel</button>
       </div>
-
-      <div id="problem-count"></div>
-      <ul id="problem-list"></ul>
-    </section>
-
-    <!-- Panel 2: Problem detail -->
-    <section id="detail-panel" class="hidden">
-      <button id="btn-back" class="btn-secondary btn-small">← Back</button>
-
-      <div id="problem-info">
-        <h2 id="prob-name"></h2>
-        <div id="prob-meta">
-          <span id="prob-grade" class="grade-badge"></span>
-          <span id="prob-stars"></span>
-          <span id="prob-user"></span>
-          <span id="prob-date"></span>
-          <span id="prob-ascents"></span>
-        </div>
-        <div id="prob-notes"></div>
-        <div id="prob-tags"></div>
-      </div>
-
-      <div id="board-container">
-        <img id="board-img" src="/board-image" alt="Climbing board" draggable="false">
-        <!-- Hold markers injected here by JS -->
-      </div>
-
-      <div id="led-status-bar" class="hidden">
-        <span id="led-status-msg"></span>
-      </div>
-
-      <div id="detail-actions">
-        <button id="btn-light" class="btn-primary">💡 Light LEDs</button>
-        <button id="btn-off" class="btn-secondary">Off</button>
-        <button id="btn-project" class="btn-secondary hidden">☆ Project</button>
-        <button id="btn-log" class="btn-secondary hidden">📝 Log climb</button>
-      </div>
-    </section>
-
-  </main>
+    </div>
+  </div>
 
   <!-- ── Log climb overlay ── -->
   <div id="log-overlay" class="overlay hidden">
     <div class="overlay-card">
       <h2>Log Climb</h2>
       <p id="log-prob-name" class="log-prob-label"></p>
-
       <label>Grade</label>
       <select id="log-grade"></select>
-
       <label>Stars</label>
       <select id="log-stars"></select>
-
       <label>Style</label>
       <select id="log-style">
         <option value="Flash">Flash</option>
@@ -126,18 +77,243 @@
         <option value="Repeat">Repeat</option>
         <option value="-">-</option>
       </select>
-
       <label>Comments</label>
       <textarea id="log-comments" rows="3" placeholder="Optional…"></textarea>
-
       <div id="log-error" class="error-msg hidden"></div>
-
       <div class="form-actions">
         <button id="btn-log-submit" class="btn-primary">Save</button>
         <button id="btn-log-cancel" class="btn-secondary">Cancel</button>
       </div>
     </div>
   </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ── Section: Problems ── -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <section id="section-problems">
+    <div id="app-main">
+
+      <!-- Panel 1: Filters + Problem list -->
+      <div id="list-panel">
+        <div id="filters">
+          <input type="text" id="filter-name" placeholder="Search by name…" autocomplete="off">
+
+          <div id="grade-filter-row">
+            <label>Grade:</label>
+            <span id="grade-min-label" class="grade-label"></span>
+            <input type="range" id="grade-min" min="0" value="0">
+            <span>–</span>
+            <input type="range" id="grade-max" min="0" value="0">
+            <span id="grade-max-label" class="grade-label"></span>
+          </div>
+
+          <div id="filter-second-row">
+            <select id="filter-user">
+              <option value="">All setters</option>
+            </select>
+            <button id="btn-filter-tags" class="btn-secondary btn-small">Tags ▾</button>
+            <button id="btn-random" class="btn-secondary btn-small">🎲 Random</button>
+          </div>
+
+          <div id="filter-third-row">
+            <button id="btn-projects-filter" class="btn-secondary btn-small hidden">☆ My Projects</button>
+          </div>
+
+          <div id="tag-filter-panel" class="hidden">
+            <div id="tag-checkboxes"></div>
+            <button id="btn-clear-tags" class="btn-small">Clear</button>
+          </div>
+        </div>
+
+        <div id="problem-count"></div>
+        <ul id="problem-list"></ul>
+      </div>
+
+      <!-- Panel 2: Problem detail -->
+      <div id="detail-panel" class="hidden">
+        <button id="btn-back" class="btn-secondary btn-small">← Back</button>
+
+        <div id="problem-info">
+          <h2 id="prob-name"></h2>
+          <div id="prob-meta">
+            <span id="prob-grade" class="grade-badge"></span>
+            <span id="prob-stars"></span>
+            <span id="prob-footholdset" class="prob-footholdset"></span>
+            <span id="prob-user"></span>
+            <span id="prob-date"></span>
+            <span id="prob-ascents"></span>
+          </div>
+          <div id="prob-notes"></div>
+          <div id="prob-tags"></div>
+        </div>
+
+        <!-- Vote histograms (loaded lazily) -->
+        <div id="vote-histograms" class="hidden">
+          <div class="histogram-wrap">
+            <div class="histogram-title">Star ratings</div>
+            <div id="star-bars"></div>
+          </div>
+          <div class="histogram-wrap">
+            <div class="histogram-title">Grade votes</div>
+            <div id="grade-bars"></div>
+          </div>
+        </div>
+
+        <div id="board-container">
+          <img id="board-img" src="/board-image" alt="Climbing board" draggable="false">
+          <!-- Hold markers injected here by JS -->
+        </div>
+
+        <div id="led-status-bar" class="hidden">
+          <span id="led-status-msg"></span>
+        </div>
+
+        <div id="detail-actions">
+          <button id="btn-light" class="btn-primary">💡 Light LEDs</button>
+          <button id="btn-off" class="btn-secondary">Off</button>
+          <button id="btn-project" class="btn-secondary hidden">☆ Project</button>
+          <button id="btn-log" class="btn-secondary hidden">📝 Log climb</button>
+        </div>
+
+        <!-- LED mode toggles -->
+        <div id="led-modes">
+          <button id="btn-mirror" class="btn-mode btn-secondary btn-small">⟺ Mirror</button>
+          <button id="btn-heatmap" class="btn-mode btn-secondary btn-small">🌡 Heatmap</button>
+          <button id="btn-sequence" class="btn-mode btn-secondary btn-small">▶ Sequence</button>
+          <button id="btn-compare" class="btn-mode btn-secondary btn-small">⇌ Compare</button>
+        </div>
+
+        <!-- Compare problem selector (hidden until Compare active) -->
+        <div id="compare-panel" class="hidden">
+          <select id="compare-select">
+            <option value="">Select problem to compare…</option>
+          </select>
+        </div>
+
+        <!-- Countdown timer -->
+        <div id="timer-panel">
+          <span class="timer-label">Timer:</span>
+          <input type="number" id="timer-minutes" min="1" max="60" value="3">
+          <span class="timer-label">min</span>
+          <button id="btn-timer-start" class="btn-secondary btn-small">Start</button>
+          <button id="btn-timer-stop" class="btn-secondary btn-small hidden">Stop</button>
+          <span id="timer-display"></span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ── Section: Logbook ── -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <section id="section-logbook" class="hidden">
+    <div id="logbook-container">
+      <h2 class="section-title">My Logbook</h2>
+      <div id="logbook-content">
+        <p class="muted-msg">Log in to view your logbook.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ── Section: Admin ── -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <section id="section-admin" class="hidden">
+    <div id="admin-container">
+      <h2 class="section-title">Admin</h2>
+
+      <div id="admin-tabs">
+        <button id="admin-tab-users" class="admin-tab active">Users</button>
+        <button id="admin-tab-logs" class="admin-tab">Logs</button>
+        <button id="admin-tab-problems" class="admin-tab">Problems</button>
+        <button id="admin-tab-config" class="admin-tab">Config</button>
+      </div>
+
+      <!-- Users sub-tab -->
+      <div id="admin-panel-users" class="admin-panel">
+        <div id="admin-users-content"><p class="muted-msg">Loading…</p></div>
+      </div>
+
+      <!-- Logs sub-tab -->
+      <div id="admin-panel-logs" class="admin-panel hidden">
+        <div id="admin-logs-content"><p class="muted-msg">Loading…</p></div>
+      </div>
+
+      <!-- Problems sub-tab -->
+      <div id="admin-panel-problems" class="admin-panel hidden">
+        <div id="admin-problems-form">
+          <select id="admin-prob-select">
+            <option value="">Select problem to edit…</option>
+          </select>
+          <div id="admin-prob-fields" class="hidden">
+            <label>Name</label>
+            <input type="text" id="admin-prob-name">
+            <label>Grade</label>
+            <select id="admin-prob-grade"></select>
+            <label>Stars</label>
+            <select id="admin-prob-stars"></select>
+            <label>Foothold set</label>
+            <select id="admin-prob-footholdset"></select>
+            <label>Notes</label>
+            <textarea id="admin-prob-notes" rows="3"></textarea>
+            <div id="admin-prob-error" class="error-msg hidden"></div>
+            <button id="btn-admin-prob-save" class="btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Config sub-tab -->
+      <div id="admin-panel-config" class="admin-panel hidden">
+        <div id="admin-config-form">
+          <div class="config-group">
+            <label>Admin username</label>
+            <input type="text" id="cfg-ADMIN">
+            <label>Theme colour</label>
+            <input type="text" id="cfg-THEMECOLOUR" placeholder="#fd4">
+            <label>Default message</label>
+            <input type="text" id="cfg-DEFAULTMSG">
+            <label>LED brightness (0-255)</label>
+            <input type="number" id="cfg-LEDBRIGHTNESS" min="0" max="255">
+            <label>Total LED count</label>
+            <input type="number" id="cfg-TOTALLEDCOUNT" min="0">
+            <label>Logout timeout (seconds)</label>
+            <input type="number" id="cfg-LOGOUTTIMEOUT" min="60">
+            <label>LINUX mode (1=Pi, 0=dev)</label>
+            <input type="number" id="cfg-LINUX" min="0" max="1">
+          </div>
+          <div class="config-group">
+            <label>Grades (one per line)</label>
+            <textarea id="cfg-GRADES" rows="8"></textarea>
+            <label>Stars (one per line)</label>
+            <textarea id="cfg-STARS" rows="4"></textarea>
+            <label>Tags (one per line)</label>
+            <textarea id="cfg-TAGS" rows="6"></textarea>
+            <label>Foothold sets (one per line)</label>
+            <textarea id="cfg-FOOTHOLDSETS" rows="4"></textarea>
+          </div>
+          <div class="config-group">
+            <label>Users CSV path</label>
+            <input type="text" id="cfg-USERSPATH">
+            <label>Logs CSV path</label>
+            <input type="text" id="cfg-LOGPATH">
+            <label>Problems CSV path</label>
+            <input type="text" id="cfg-PROBPATH">
+            <label>Projects CSV path</label>
+            <input type="text" id="cfg-PROJECTSPATH">
+            <label>Board file (.brd) path</label>
+            <input type="text" id="cfg-BOARDNAME">
+            <label>Board image path</label>
+            <input type="text" id="cfg-IMAGEPATH">
+          </div>
+          <div id="admin-config-error" class="error-msg hidden"></div>
+          <div id="admin-config-ok" class="ok-msg hidden">Saved.</div>
+          <button id="btn-admin-config-save" class="btn-primary">Save config</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
 
   <script src="/static/app.js"></script>
 </body>

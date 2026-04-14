@@ -82,6 +82,12 @@ class logClass:
         userLogbook.append(log[0][1:7])
         return list(reversed(userLogbook))
     
+    #returns set of problem names logged by user (fast single-pass)
+    def getUserLoggedProblemNames(user):
+        log = logClass.readLogFile()
+        matches = logClass.find(user, log)
+        return set(log[row][1] for row, _ in matches)
+
     #returns list of all ascents logged of a problem
     #ordered by date, most recent first
     def getProblemAscents(problem):
