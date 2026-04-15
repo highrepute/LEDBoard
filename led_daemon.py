@@ -98,4 +98,4 @@ if __name__ == '__main__':
     print("LED daemon listening on %s" % SOCK_PATH, flush=True)
     while True:
         conn, _ = srv.accept()
-        threading.Thread(target=_client_thread, args=(conn,), daemon=True).start()
+        _client_thread(conn)
