@@ -17,6 +17,9 @@ LOGFILE="$APP_DIR/logfile.txt"
 # Redirect all output (stdout + stderr) to logfile
 exec &> "$LOGFILE"
 
+# Pre-create log files so >> redirection works even without prior runs
+touch "$APP_DIR/daemon_logfile.txt" "$APP_DIR/web_logfile.txt"
+
 # Use virtualenv if present (Pi 4), otherwise fall back to system python3 (Pi 3)
 VENV_PATH="$HOME/my-venv"
 if [ -d "$VENV_PATH" ]; then
