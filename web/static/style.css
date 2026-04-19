@@ -150,11 +150,24 @@ button:disabled { opacity: 0.45; cursor: default; }
   border-color: var(--primary) !important;
 }
 
-/* LED mode buttons */
-#led-modes {
+/* LED action buttons box */
+#led-action-btns {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+#led-action-btns button {
+  flex: 1;
+  min-width: 80px;
+  min-height: 36px;
+  font-size: 0.85rem;
+  padding: 0 12px;
+  border-radius: 6px;
 }
 
 .btn-mode { flex: 1; min-width: 80px; }
@@ -355,6 +368,12 @@ select {
   gap: 12px;
 }
 
+#led-top-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 #btn-back { align-self: flex-start; }
 
 #problem-info {
@@ -512,18 +531,6 @@ select {
   padding: 8px 14px;
   font-size: 0.85rem;
   color: #744210;
-}
-
-/* ── Detail actions ── */
-#detail-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-#detail-actions button {
-  flex: 1;
-  min-width: 100px;
 }
 
 /* ── Compare panel ── */

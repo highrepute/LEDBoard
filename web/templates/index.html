@@ -95,6 +95,9 @@
 
       <!-- Panel 1: Filters + Problem list -->
       <div id="list-panel">
+        <div id="heatmap-bar">
+          <button id="btn-heatmap" class="btn-secondary btn-small">🌡 Heatmap</button>
+        </div>
         <div id="filters">
           <input type="text" id="filter-name" placeholder="Search by name…" autocomplete="off">
 
@@ -133,6 +136,25 @@
       <div id="detail-panel" class="hidden">
         <button id="btn-back" class="btn-secondary btn-small">← Back</button>
 
+        <div id="led-top-controls">
+          <div id="led-action-btns">
+            <button id="btn-light" class="btn-secondary">💡 Light LEDs</button>
+            <button id="btn-off" class="btn-secondary">Off</button>
+            <button id="btn-mirror" class="btn-mode btn-secondary btn-small">⟺ Mirror</button>
+            <button id="btn-sequence" class="btn-mode btn-secondary btn-small">▶ Sequence</button>
+            <button id="btn-project" class="btn-secondary hidden">☆ Project</button>
+            <button id="btn-log" class="btn-secondary hidden">📝 Log climb</button>
+          </div>
+          <div id="timer-panel">
+            <span class="timer-label">Timer:</span>
+            <input type="number" id="timer-minutes" min="1" max="60" value="3">
+            <span class="timer-label">min</span>
+            <button id="btn-timer-start" class="btn-secondary btn-small">Start</button>
+            <button id="btn-timer-stop" class="btn-secondary btn-small hidden">Stop</button>
+            <span id="timer-display"></span>
+          </div>
+        </div>
+
         <div id="problem-info">
           <h2 id="prob-name"></h2>
           <div id="prob-meta">
@@ -168,37 +190,6 @@
           <span id="led-status-msg"></span>
         </div>
 
-        <div id="detail-actions">
-          <button id="btn-light" class="btn-primary">💡 Light LEDs</button>
-          <button id="btn-off" class="btn-secondary">Off</button>
-          <button id="btn-project" class="btn-secondary hidden">☆ Project</button>
-          <button id="btn-log" class="btn-secondary hidden">📝 Log climb</button>
-        </div>
-
-        <!-- LED mode toggles -->
-        <div id="led-modes">
-          <button id="btn-mirror" class="btn-mode btn-secondary btn-small">⟺ Mirror</button>
-          <button id="btn-heatmap" class="btn-mode btn-secondary btn-small">🌡 Heatmap</button>
-          <button id="btn-sequence" class="btn-mode btn-secondary btn-small">▶ Sequence</button>
-          <button id="btn-compare" class="btn-mode btn-secondary btn-small">⇌ Compare</button>
-        </div>
-
-        <!-- Compare problem selector (hidden until Compare active) -->
-        <div id="compare-panel" class="hidden">
-          <select id="compare-select">
-            <option value="">Select problem to compare…</option>
-          </select>
-        </div>
-
-        <!-- Countdown timer -->
-        <div id="timer-panel">
-          <span class="timer-label">Timer:</span>
-          <input type="number" id="timer-minutes" min="1" max="60" value="3">
-          <span class="timer-label">min</span>
-          <button id="btn-timer-start" class="btn-secondary btn-small">Start</button>
-          <button id="btn-timer-stop" class="btn-secondary btn-small hidden">Stop</button>
-          <span id="timer-display"></span>
-        </div>
       </div>
 
     </div>

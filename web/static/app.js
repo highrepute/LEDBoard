@@ -11,12 +11,9 @@ let projectsFilterActive = false;
 let currentSection = 'problems';
 
 // LED mode state
-let ledMode = null;          // 'mirror' | 'heatmap' | 'sequence' | 'compare' | null
+let ledMode = null;          // 'mirror' | 'heatmap' | 'sequence' | null
 let sequenceTimer = null;
 let sequenceStep = 0;
-let compareTimer = null;
-let compareProbRow = null;
-let compareProb2 = null;
 let timerInterval = null;
 let timerSecondsLeft = 0;
 
@@ -416,7 +413,6 @@ async function openProblem(row) {
     renderDetail(prob);
     showDetailPanel();
     loadVotes(prob);
-    populateCompareSelect();
   } catch (e) {
     console.error('Failed to load problem', e);
   }
@@ -609,20 +605,17 @@ function hideLedStatus() {
 
 function stopAllModes() {
   if (sequenceTimer) { clearInterval(sequenceTimer); sequenceTimer = null; }
-  if (compareTimer) { clearInterval(compareTimer); compareTimer = null; }
   ledMode = null;
   updateModeButtons();
-  document.getElementById('compare-panel').classList.add('hidden');
 }
 
 function updateModeButtons() {
-  ['btn-mirror', 'btn-heatmap', 'btn-sequence', 'btn-compare'].forEach(id => {
+  ['btn-mirror', 'btn-heatmap', 'btn-sequence'].forEach(id => {
     document.getElementById(id).classList.remove('mode-active');
   });
   if (ledMode === 'mirror')   document.getElementById('btn-mirror').classList.add('mode-active');
   if (ledMode === 'heatmap')  document.getElementById('btn-heatmap').classList.add('mode-active');
   if (ledMode === 'sequence') document.getElementById('btn-sequence').classList.add('mode-active');
-  if (ledMode === 'compare')  document.getElementById('btn-compare').classList.add('mode-active');
 }
 
 // Mirror
@@ -679,62 +672,6 @@ document.getElementById('btn-sequence').addEventListener('click', () => {
   }, 250);
 });
 
-// Compare
-document.getElementById('btn-compare').addEventListener('click', () => {
-  if (!currentProblem) return;
-  if (ledMode === 'compare') {
-    stopAllModes();
-    api('/api/light/off', { method: 'POST' }).catch(() => {});
-    document.getElementById('compare-panel').classList.add('hidden');
-    return;
-  }
-  stopAllModes();
-  document.getElementById('compare-panel').classList.remove('hidden');
-  document.getElementById('compare-select').value = '';
-  compareProbRow = null;
-  compareProb2 = null;
-  updateModeButtons();  // Not yet 'compare' until problem selected and started
-});
-
-document.getElementById('compare-select').addEventListener('change', async function () {
-  const row = parseInt(this.value);
-  if (isNaN(row)) { compareProbRow = null; compareProb2 = null; return; }
-  compareProbRow = row;
-  try {
-    compareProb2 = await api(`/api/problems/${row}`);
-  } catch (e) {
-    compareProb2 = null;
-    return;
-  }
-  // Start alternating
-  if (compareTimer) clearInterval(compareTimer);
-  ledMode = 'compare';
-  updateModeButtons();
-  let step = 0;
-  compareTimer = setInterval(() => {
-    const p = step % 2 === 0 ? currentProblem : compareProb2;
-    if (!p) return;
-    api('/api/light/custom', {
-      method: 'POST',
-      body: JSON.stringify({
-        start: p.startHolds || [],
-        prob: p.probHolds || [],
-        fin: p.finHolds || [],
-      }),
-    }).catch(() => {});
-    step++;
-  }, 500);
-});
-
-function populateCompareSelect() {
-  const sel = document.getElementById('compare-select');
-  // Keep first option, rebuild the rest
-  while (sel.options.length > 1) sel.remove(1);
-  problems.forEach(p => {
-    if (currentProblem && p.row === currentProblem.row) return;
-    sel.appendChild(new Option(`${p.name} (${p.grade_label})`, p.row));
-  });
-}
 
 // ── Countdown timer ────────────────────────────────────────────────────────
 document.getElementById('btn-timer-start').addEventListener('click', startTimer);
