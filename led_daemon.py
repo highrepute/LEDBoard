@@ -70,10 +70,12 @@ def _client_thread(conn):
             if not chunk:
                 break
             data += chunk
+        print("[led_daemon] received: %s" % data.strip(), flush=True)
         cmd = json.loads(data.strip())
         _handle(cmd)
         conn.sendall(b'{"ok":true}\n')
     except Exception as e:
+        print("[led_daemon] exception in _client_thread: %s" % e, flush=True)
         try:
             conn.sendall(json.dumps({'ok': False, 'error': str(e)}).encode() + b'\n')
         except Exception:

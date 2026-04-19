@@ -5,14 +5,16 @@ SOCK_PATH = '/tmp/ledboard_led.sock'
 
 def _send(cmd):
     """Send a command to the LED daemon. Fails silently if daemon not running."""
+    print("[led_client] sending: %s" % cmd, flush=True)
     try:
         s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         s.connect(SOCK_PATH)
         s.sendall(json.dumps(cmd).encode() + b'\n')
-        s.recv(64)
+        reply = s.recv(64)
         s.close()
-    except OSError:
-        pass
+        print("[led_client] reply: %s" % reply, flush=True)
+    except OSError as e:
+        print("[led_client] OSError: %s" % e, flush=True)
 
 
 def light_problem(start, prob, fin, source='qt'):
