@@ -71,7 +71,7 @@ def _client_thread(conn):
                 break
             data += chunk
         print("[led_daemon] received: %s" % data.strip(), flush=True)
-        cmd = json.loads(data.strip())
+        cmd = json.loads(data.strip().decode('utf-8'))
         _handle(cmd)
         conn.sendall(b'{"ok":true}\n')
     except Exception as e:
