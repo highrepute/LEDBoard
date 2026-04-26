@@ -2443,15 +2443,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                         counts[h] += 1
                 except (ValueError, IndexError):
                     pass
+        print(counts)
         return counts
 
-    def heatmapColor(self, count, maxCount):
+    def heatmapColor(self, count, minCount, maxCount):
         v = const.LED_VALUE
         if count == 0:
             return (0, v, 0)
-        if maxCount == 0:
-            return (0, v, 0)
-        ratio = count / maxCount
+        if maxCount == minCount:
+            return (v, v, 0)  # all used holds equal → yellow
+        ratio = (count - minCount) / (maxCount - minCount)
         if ratio < 0.33:
             t = ratio / 0.33
             return (0, int(v * t), int(v * (1 - t)))
@@ -2487,9 +2488,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             heatmapFlag = 1
             self.pbHeatmap.setStyleSheet("background-color: #0f0;")
             counts = self.computeHeatmap()
-            maxCount = max(counts)
+            used = [c for c in counts[1:] if c > 0]
+            minCount = min(used) if used else 0
+            maxCount = max(used) if used else 0
             if const.LINUX == 1:
-                pixels = [[i, *self.heatmapColor(counts[i + 1], maxCount)] for i in range(const.TOTAL_LED_COUNT)]
+                pixels = [[i, *self.heatmapColor(counts[i + 1], minCount, maxCount)] for i in range(const.TOTAL_LED_COUNT)]
                 led_client.raw(pixels)
             self.lblInfo.setText("Hold heatmap on")
         else:
