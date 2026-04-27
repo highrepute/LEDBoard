@@ -2453,14 +2453,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if maxCount == minCount:
             return (v, v, 0)  # all used holds equal → yellow
         ratio = (count - minCount) / (maxCount - minCount)
-        if ratio < 0.33:
-            t = ratio / 0.33
-            return (0, int(v * t), int(v * (1 - t)))
-        elif ratio < 0.66:
-            t = (ratio - 0.33) / 0.33
+        if ratio < 0.5:
+            t = ratio / 0.5
             return (int(v * t), v, 0)
         else:
-            t = (ratio - 0.66) / 0.34
+            t = (ratio - 0.5) / 0.5
             return (v, int(v * (1 - t)), 0)
 
     def showHeatmap(self):

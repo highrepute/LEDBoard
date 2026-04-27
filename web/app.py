@@ -96,19 +96,18 @@ def _get_holds(prob):
     return start_holds, prob_holds, fin_holds
 
 
-def _heatmap_color(count, max_count):
+def _heatmap_color(count, min_count, max_count):
     v = const.LED_VALUE
-    if count == 0 or max_count == 0:
+    if count == 0:
         return (0, v, 0)
-    ratio = count / max_count
-    if ratio < 0.33:
-        t = ratio / 0.33
-        return (0, int(v * t), int(v * (1 - t)))
-    elif ratio < 0.66:
-        t = (ratio - 0.33) / 0.33
+    if max_count == min_count:
+        return (v, v, 0)  # all used holds equal → yellow
+    ratio = (count - min_count) / (max_count - min_count)
+    if ratio < 0.5:
+        t = ratio / 0.5
         return (int(v * t), v, 0)
     else:
-        t = (ratio - 0.66) / 0.34
+        t = (ratio - 0.5) / 0.5
         return (v, int(v * (1 - t)), 0)
 
 
@@ -465,8 +464,10 @@ def light_off():
 @app.route('/api/light/heatmap', methods=['POST'])
 def light_heatmap():
     counts = _compute_heatmap()
-    max_count = max(counts) if counts else 0
-    pixels = [[i, *_heatmap_color(counts[i + 1], max_count)]
+    used = [c for c in counts[1:] if c > 0]
+    min_count = min(used) if used else 0
+    max_count = max(used) if used else 0
+    pixels = [[i, *_heatmap_color(counts[i + 1], min_count, max_count)]
               for i in range(const.TOTAL_LED_COUNT)]
     leds.raw(pixels)
     return jsonify({'ok': True})
