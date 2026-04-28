@@ -374,7 +374,12 @@ select {
   gap: 12px;
 }
 
-#btn-back { align-self: flex-start; }
+#detail-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-self: flex-start;
+}
 
 #problem-info {
   background: var(--card-bg);

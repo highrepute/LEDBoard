@@ -411,11 +411,25 @@ async function openProblem(row) {
     const prob = await api(`/api/problems/${row}`);
     currentProblem = prob;
     renderDetail(prob);
+    updatePrevNextButtons();
     showDetailPanel();
     loadVotes(prob);
   } catch (e) {
     console.error('Failed to load problem', e);
   }
+}
+
+function updatePrevNextButtons() {
+  const prevBtn = document.getElementById('btn-prev');
+  const nextBtn = document.getElementById('btn-next');
+  if (!currentProblem) {
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
+    return;
+  }
+  const idx = problems.findIndex(p => p.row === currentProblem.row);
+  prevBtn.disabled = idx <= 0;
+  nextBtn.disabled = idx === -1 || idx >= problems.length - 1;
 }
 
 function renderDetail(prob) {
@@ -540,9 +554,6 @@ function renderOverlay(prob) {
     if (hold.x_pct != null && hold.y_pct != null) {
       marker.style.left = hold.x_pct + '%';
       marker.style.top  = hold.y_pct + '%';
-    } else if (hold.x_px != null && boardData.img_width) {
-      marker.style.left = (hold.x_px / boardData.img_width * 100) + '%';
-      marker.style.top  = (hold.y_px / boardData.img_height * 100) + '%';
     }
 
     container.appendChild(marker);
@@ -809,6 +820,18 @@ document.getElementById('btn-back').addEventListener('click', () => {
   stopAllModes();
   stopTimer();
   currentProblem = null;
+});
+
+document.getElementById('btn-prev').addEventListener('click', () => {
+  if (!currentProblem) return;
+  const idx = problems.findIndex(p => p.row === currentProblem.row);
+  if (idx > 0) openProblem(problems[idx - 1].row);
+});
+
+document.getElementById('btn-next').addEventListener('click', () => {
+  if (!currentProblem) return;
+  const idx = problems.findIndex(p => p.row === currentProblem.row);
+  if (idx !== -1 && idx < problems.length - 1) openProblem(problems[idx + 1].row);
 });
 
 // ── Logbook ────────────────────────────────────────────────────────────────
