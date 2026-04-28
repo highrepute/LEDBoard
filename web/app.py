@@ -393,15 +393,9 @@ def board_image():
 @app.route('/api/board')
 def get_board():
     holds_raw = boardMaker.loadBoard(const.BOARDNAME)
-    image_path = boardMaker.getBoardImagePath(const.BOARDNAME)
 
-    img_width, img_height = None, None
-    try:
-        from PIL import Image
-        with Image.open(image_path) as img:
-            img_width, img_height = img.size
-    except Exception:
-        pass
+    half = const.HOLDBUTTONSIZE / 2.0
+    fw, fh = const.BOARDFRAMEWIDTH, const.BOARDFRAMEHEIGHT
 
     holds = []
     for row in holds_raw:
@@ -415,14 +409,12 @@ def get_board():
         except (ValueError, IndexError):
             continue
 
-        entry = {'id': hold_id, 'label': label}
-        if img_width and img_height:
-            entry['x_pct'] = round(x / img_width * 100, 3)
-            entry['y_pct'] = round(y / img_height * 100, 3)
-        else:
-            entry['x_px'] = x
-            entry['y_px'] = y
-        holds.append(entry)
+        holds.append({
+            'id': hold_id,
+            'label': label,
+            'x_pct': round((x + half) / fw * 100, 3),
+            'y_pct': round((y + half) / fh * 100, 3),
+        })
 
     mirror_table = []
     try:
@@ -433,8 +425,6 @@ def get_board():
     return jsonify({
         'holds': holds,
         'image_url': '/board-image',
-        'img_width': img_width,
-        'img_height': img_height,
         'mirror_table': mirror_table,
     })
 

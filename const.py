@@ -38,6 +38,9 @@ class const:
     PROJECTSPATH = None
     LOGOUTTIMEOUT = 1800
     AUTOLOGIN = []
+    BOARDFRAMEWIDTH = 781   # frmBoard / frame_6 width in DiscoBoard.ui
+    BOARDFRAMEHEIGHT = 761  # frmBoard / frame_6 height in DiscoBoard.ui
+    HOLDBUTTONSIZE = 31     # DragButton size in DiscoMain.py
     
     def ensureDefaultFiles():
         script_dir = os.path.dirname(os.path.abspath(__file__))
