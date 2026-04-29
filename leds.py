@@ -21,3 +21,9 @@ def raw(pixels):
     if const.LINUX != 1:
         return
     led_client.raw(pixels, source='flask')
+
+
+def patch(pixels):
+    if const.LINUX != 1:
+        return
+    led_client.patch(pixels, source='flask')

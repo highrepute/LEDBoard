@@ -355,6 +355,86 @@ def get_problem_votes(row):
     })
 
 
+@app.route('/api/problems', methods=['POST'])
+def create_problem():
+    user = _require_login()
+    data = request.get_json() or {}
+
+    name = (data.get('name') or '').strip()
+    if not name:
+        return jsonify({'error': 'You must give a problem name'}), 400
+
+    existing_names = {row[const.PROBNAMECOL]
+                      for row in problemClass.readProblemFile()[1:]
+                      if row and row[const.PROBNAMECOL]}
+    if name in existing_names:
+        return jsonify({'error': 'A problem with this name already exists'}), 400
+
+    def _coerce_holds(raw):
+        out = []
+        for h in raw or []:
+            try:
+                v = int(h)
+            except (ValueError, TypeError):
+                return None
+            if v < 1 or v > const.TOTAL_LED_COUNT:
+                return None
+            out.append(v)
+        return out
+
+    start_holds = _coerce_holds(data.get('start_holds'))
+    prob_holds = _coerce_holds(data.get('prob_holds'))
+    fin_holds = _coerce_holds(data.get('fin_holds'))
+    if start_holds is None or prob_holds is None or fin_holds is None:
+        return jsonify({'error': 'Invalid hold IDs'}), 400
+
+    if not (1 <= len(start_holds) <= 2):
+        return jsonify({'error': 'You must pick 1 or 2 start holds'}), 400
+    if not (1 <= len(fin_holds) <= 2):
+        return jsonify({'error': 'You must pick 1 or 2 finish holds'}), 400
+    if len(start_holds) + len(prob_holds) + len(fin_holds) < 2:
+        return jsonify({'error': 'You must pick at least 2 holds'}), 400
+
+    try:
+        grade = int(data.get('grade', 0))
+        stars = int(data.get('stars', 0))
+    except (ValueError, TypeError):
+        return jsonify({'error': 'Invalid grade or stars'}), 400
+    if not (0 <= grade < len(const.GRADES)):
+        return jsonify({'error': 'Invalid grade'}), 400
+    if not (0 <= stars < len(const.STARS)):
+        return jsonify({'error': 'Invalid stars'}), 400
+
+    foothold_set = (data.get('foothold_set') or '').strip()
+    if foothold_set and foothold_set not in const.FOOTHOLDSETS:
+        return jsonify({'error': 'Invalid foothold set'}), 400
+    if not foothold_set and const.FOOTHOLDSETS:
+        foothold_set = const.FOOTHOLDSETS[0]
+
+    notes = (data.get('comments') or '').replace('\n', ' ').replace(',', '-')
+
+    row = [''] * (const.HOLDSINDEX + len(prob_holds))
+    row[const.PROBNAMECOL] = name
+    row[const.GRADECOL] = str(grade)
+    row[const.STARSCOL] = str(stars)
+    row[const.DATECOL] = datetime.date.today().isoformat()
+    row[const.USERCOL] = user
+    row[const.NOTESCOL] = notes
+    row[const.FOOTHOLDSETCOL] = foothold_set
+    # cols 7-16 already empty (10 tag slots)
+    row[const.STARTHOLDSINDEX] = str(start_holds[0])
+    row[const.STARTHOLDSINDEX + 1] = str(start_holds[1]) if len(start_holds) == 2 else ''
+    row[const.FINHOLDSINDEX] = str(fin_holds[0])
+    row[const.FINHOLDSINDEX + 1] = str(fin_holds[1]) if len(fin_holds) == 2 else ''
+    row[const.NOHOLDSINDEX] = str(len(prob_holds))
+    for i, h in enumerate(prob_holds):
+        row[const.HOLDSINDEX + i] = str(h)
+
+    problemClass.addNewProb(row)
+    new_row_idx = len(problemClass.readProblemFile()) - 1
+    return jsonify({'row': new_row_idx, 'name': name})
+
+
 @app.route('/api/problems/<int:row>')
 def get_problem(row):
     try:
@@ -460,6 +540,32 @@ def light_heatmap():
     pixels = [[i, *_heatmap_color(counts[i + 1], min_count, max_count)]
               for i in range(const.TOTAL_LED_COUNT)]
     leds.raw(pixels)
+    return jsonify({'ok': True})
+
+
+_HOLD_ROLE_RGB = {
+    'start':   (0, 128, 0),
+    'problem': (0, 0, 255),
+    'finish':  (255, 0, 0),
+    'pending': (255, 0, 0),
+    'off':     (0, 0, 0),
+}
+
+
+@app.route('/api/light/hold', methods=['POST'])
+def light_hold():
+    _require_login()
+    data = request.get_json() or {}
+    try:
+        hold_id = int(data.get('hold_id'))
+    except (ValueError, TypeError):
+        return jsonify({'error': 'Invalid hold_id'}), 400
+    if hold_id < 1 or hold_id > const.TOTAL_LED_COUNT:
+        return jsonify({'error': 'hold_id out of range'}), 400
+    role = data.get('role')
+    if role not in _HOLD_ROLE_RGB:
+        return jsonify({'error': 'Invalid role'}), 400
+    leds.patch({hold_id - 1: _HOLD_ROLE_RGB[role]})
     return jsonify({'ok': True})
 
 

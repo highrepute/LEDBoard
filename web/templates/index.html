@@ -25,6 +25,7 @@
   <nav id="app-nav">
     <button id="nav-problems" class="nav-tab active">Problems</button>
     <button id="nav-logbook" class="nav-tab">Logbook</button>
+    <button id="nav-add" class="nav-tab hidden">Add</button>
     <button id="nav-admin" class="nav-tab hidden">Admin</button>
   </nav>
 
@@ -207,6 +208,65 @@
       <h2 class="section-title">My Logbook</h2>
       <div id="logbook-content">
         <p class="muted-msg">Log in to view your logbook.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ── Section: Add Problem ── -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <section id="section-add" class="hidden">
+    <div id="add-container">
+      <h2 class="section-title">Add Problem</h2>
+
+      <div id="add-form">
+        <div id="add-fields">
+          <label>Name *</label>
+          <input type="text" id="add-name" placeholder="Problem name" autocomplete="off">
+          <div class="add-row">
+            <div class="add-col">
+              <label>Grade</label>
+              <select id="add-grade"></select>
+            </div>
+            <div class="add-col">
+              <label>Stars</label>
+              <select id="add-stars"></select>
+            </div>
+            <div class="add-col">
+              <label>Foothold set</label>
+              <select id="add-footholdset"></select>
+            </div>
+          </div>
+          <label>Comments</label>
+          <textarea id="add-comments" rows="2" placeholder="Optional…"></textarea>
+        </div>
+
+        <div id="add-mode-bar">
+          <button id="add-mode-start" class="add-mode-btn active" data-mode="start">
+            <span class="mode-dot mode-dot-start"></span>
+            Start <span class="mode-count" id="add-count-start">0/2</span>
+          </button>
+          <button id="add-mode-problem" class="add-mode-btn" data-mode="problem">
+            <span class="mode-dot mode-dot-problem"></span>
+            Problem <span class="mode-count" id="add-count-problem">0</span>
+          </button>
+          <button id="add-mode-finish" class="add-mode-btn" data-mode="finish">
+            <span class="mode-dot mode-dot-finish"></span>
+            Finish <span class="mode-count" id="add-count-finish">0/2</span>
+          </button>
+        </div>
+
+        <div id="add-board-container">
+          <img id="add-board-img" src="/board-image" alt="Climbing board" draggable="false">
+          <!-- .add-hold dots injected here by JS -->
+        </div>
+
+        <div id="add-error" class="error-msg hidden"></div>
+        <div id="add-actions">
+          <button id="btn-add-undo" class="btn-secondary btn-small">↶ Undo</button>
+          <button id="btn-add-reset" class="btn-secondary btn-small">Reset</button>
+          <button id="btn-add-save" class="btn-primary">Save problem</button>
+        </div>
       </div>
     </div>
   </section>

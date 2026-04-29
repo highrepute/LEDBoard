@@ -827,6 +827,158 @@ select {
   font-size: 0.9rem;
 }
 
+/* ── Add Problem section ── */
+#add-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+#add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#add-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+#add-fields label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+#add-fields input[type="text"],
+#add-fields select,
+#add-fields textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  min-height: 44px;
+}
+
+#add-fields textarea { resize: vertical; min-height: 60px; }
+
+.add-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.add-col {
+  flex: 1;
+  min-width: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#add-mode-bar {
+  display: flex;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.add-mode-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  padding: 0 10px;
+}
+
+.add-mode-btn.active {
+  background: #e6f0ff;
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.mode-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.mode-dot-start   { background: var(--hold-start); }
+.mode-dot-problem { background: var(--hold-problem); }
+.mode-dot-finish  { background: var(--hold-finish); }
+
+.mode-count {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.add-mode-btn.active .mode-count { color: var(--primary); }
+
+#add-board-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #111;
+}
+
+#add-board-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.add-hold {
+  position: absolute;
+  width: 5%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.add-hold:hover { border-color: rgba(255, 255, 255, 0.9); }
+.add-hold.start   { background: var(--hold-start); border-color: rgba(255,255,255,0.8); }
+.add-hold.problem { background: var(--hold-problem); border-color: rgba(255,255,255,0.8); }
+.add-hold.finish  { background: var(--hold-finish); border-color: rgba(255,255,255,0.8); }
+
+#add-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+#btn-add-save { flex: 1; min-width: 140px; }
+
 /* ── Utilities ── */
 .hidden { display: none !important; }
 

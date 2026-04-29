@@ -22,6 +22,16 @@ let adminProblems = [];      // full list for admin problem edit dropdown
 let currentAdminTab = 'users';
 let loggedProblems = new Set();
 
+// Add-Problem state
+let addState = {
+  mode: 'start',
+  startHolds: [],
+  probHolds: [],
+  finHolds: [],
+  clickOrder: [],            // ordered list of {id, role} for Undo
+  initialised: false,
+};
+
 // ── Init ───────────────────────────────────────────────────────────────────
 async function init() {
   await Promise.all([loadConfig(), loadBoard(), checkLogin()]);
@@ -98,6 +108,8 @@ function updateAuthBar() {
   const projectsBtn = document.getElementById('btn-projects-filter');
   const adminTab = document.getElementById('nav-admin');
 
+  const addTab = document.getElementById('nav-add');
+
   if (currentUser) {
     usernameEl.textContent = currentUser;
     usernameEl.classList.remove('hidden');
@@ -105,6 +117,7 @@ function updateAuthBar() {
     loginBtn.classList.add('hidden');
     registerBtn.classList.add('hidden');
     projectsBtn.classList.remove('hidden');
+    addTab.classList.remove('hidden');
     if (config.admin_user && currentUser === config.admin_user) {
       adminTab.classList.remove('hidden');
     } else {
@@ -117,8 +130,9 @@ function updateAuthBar() {
     registerBtn.classList.remove('hidden');
     projectsBtn.classList.add('hidden');
     adminTab.classList.add('hidden');
-    // If currently on admin or logbook, go back to problems
-    if (currentSection === 'admin') showSection('problems');
+    addTab.classList.add('hidden');
+    // If currently on admin/add, go back to problems
+    if (currentSection === 'admin' || currentSection === 'add') showSection('problems');
   }
 
   if (currentProblem) updateDetailAuthButtons();
@@ -231,18 +245,24 @@ async function loadUsers() {
 
 // ── Navigation ─────────────────────────────────────────────────────────────
 function showSection(name) {
+  if (currentSection === 'add' && name !== 'add' && hasUnsavedAddState()) {
+    if (!confirm('Discard the in-progress problem?')) return;
+    resetAddState({ silent: false });
+  }
   currentSection = name;
-  ['problems', 'logbook', 'admin'].forEach(s => {
+  ['problems', 'logbook', 'add', 'admin'].forEach(s => {
     document.getElementById(`section-${s}`).classList.toggle('hidden', s !== name);
     document.getElementById(`nav-${s}`).classList.toggle('active', s === name);
   });
 
   if (name === 'logbook') loadLogbook();
   if (name === 'admin') loadAdminTab(currentAdminTab);
+  if (name === 'add') initAddTab();
 }
 
 document.getElementById('nav-problems').addEventListener('click', () => showSection('problems'));
 document.getElementById('nav-logbook').addEventListener('click', () => showSection('logbook'));
+document.getElementById('nav-add').addEventListener('click', () => showSection('add'));
 document.getElementById('nav-admin').addEventListener('click', () => showSection('admin'));
 
 // ── Grade sliders ──────────────────────────────────────────────────────────
@@ -1112,6 +1132,229 @@ document.getElementById('btn-admin-config-save').addEventListener('click', async
     showError(errorEl, e.message || 'Save failed');
   }
 });
+
+// ── Add Problem ────────────────────────────────────────────────────────────
+function initAddTab() {
+  if (!addState.initialised) {
+    const gradeSel = document.getElementById('add-grade');
+    gradeSel.innerHTML = '';
+    (config.grades || []).forEach((g, i) => gradeSel.appendChild(new Option(g, i)));
+
+    const starSel = document.getElementById('add-stars');
+    starSel.innerHTML = '';
+    (config.stars || []).forEach((s, i) => starSel.appendChild(new Option(s, i)));
+
+    const fsSel = document.getElementById('add-footholdset');
+    fsSel.innerHTML = '';
+    (config.footholdsets || ['Standard']).forEach(f => fsSel.appendChild(new Option(f, f)));
+
+    document.querySelectorAll('.add-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => setAddMode(btn.dataset.mode));
+    });
+    document.getElementById('btn-add-undo').addEventListener('click', addUndo);
+    document.getElementById('btn-add-reset').addEventListener('click', () => {
+      if (hasUnsavedAddState() && !confirm('Reset the in-progress problem?')) return;
+      resetAddState({ clearForm: true });
+    });
+    document.getElementById('btn-add-save').addEventListener('click', submitAddProblem);
+
+    addState.initialised = true;
+  }
+  renderAddBoard();
+  refreshAddCounts();
+}
+
+function renderAddBoard() {
+  const container = document.getElementById('add-board-container');
+  container.querySelectorAll('.add-hold').forEach(el => el.remove());
+  if (!boardData || !boardData.holds) return;
+
+  boardData.holds.forEach(hold => {
+    const el = document.createElement('div');
+    el.className = 'add-hold';
+    el.dataset.holdId = hold.id;
+    if (hold.x_pct != null && hold.y_pct != null) {
+      el.style.left = hold.x_pct + '%';
+      el.style.top  = hold.y_pct + '%';
+    }
+    el.addEventListener('click', () => onAddHoldClick(hold.id, el));
+    paintAddHold(el, roleOfHold(hold.id));
+    container.appendChild(el);
+  });
+}
+
+function roleOfHold(id) {
+  if (addState.startHolds.includes(id)) return 'start';
+  if (addState.probHolds.includes(id))  return 'problem';
+  if (addState.finHolds.includes(id))   return 'finish';
+  return null;
+}
+
+function listForRole(role) {
+  if (role === 'start')   return addState.startHolds;
+  if (role === 'problem') return addState.probHolds;
+  if (role === 'finish')  return addState.finHolds;
+  return null;
+}
+
+function paintAddHold(el, role) {
+  el.classList.remove('start', 'problem', 'finish');
+  if (role) el.classList.add(role);
+}
+
+function setAddMode(mode) {
+  if (!['start', 'problem', 'finish'].includes(mode)) return;
+  addState.mode = mode;
+  document.querySelectorAll('.add-mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+}
+
+async function onAddHoldClick(id, el) {
+  hideAddError();
+  const existing = roleOfHold(id);
+
+  if (existing === addState.mode) {
+    listForRole(existing).splice(listForRole(existing).indexOf(id), 1);
+    addState.clickOrder = addState.clickOrder.filter(c => c.id !== id);
+    paintAddHold(el, null);
+    refreshAddCounts();
+    sendHoldLed(id, 'off');
+    return;
+  }
+
+  if (existing) {
+    listForRole(existing).splice(listForRole(existing).indexOf(id), 1);
+    addState.clickOrder = addState.clickOrder.filter(c => c.id !== id);
+  }
+
+  const target = listForRole(addState.mode);
+  if ((addState.mode === 'start' || addState.mode === 'finish') && target.length >= 2) {
+    showAddError(`You can only pick up to 2 ${addState.mode} holds.`);
+    if (existing) {
+      listForRole(existing).push(id);
+      addState.clickOrder.push({ id, role: existing });
+      paintAddHold(el, existing);
+    }
+    refreshAddCounts();
+    return;
+  }
+
+  target.push(id);
+  addState.clickOrder.push({ id, role: addState.mode });
+  paintAddHold(el, addState.mode);
+  refreshAddCounts();
+  sendHoldLed(id, addState.mode);
+}
+
+function addUndo() {
+  hideAddError();
+  if (!addState.clickOrder.length) return;
+  const last = addState.clickOrder.pop();
+  const list = listForRole(last.role);
+  const i = list.indexOf(last.id);
+  if (i !== -1) list.splice(i, 1);
+  const el = document.querySelector(`.add-hold[data-hold-id="${last.id}"]`);
+  if (el) paintAddHold(el, null);
+  refreshAddCounts();
+  sendHoldLed(last.id, 'off');
+}
+
+function refreshAddCounts() {
+  document.getElementById('add-count-start').textContent =
+    `${addState.startHolds.length}/2`;
+  document.getElementById('add-count-problem').textContent =
+    `${addState.probHolds.length}`;
+  document.getElementById('add-count-finish').textContent =
+    `${addState.finHolds.length}/2`;
+}
+
+function hasUnsavedAddState() {
+  if (!addState.initialised) return false;
+  if (addState.startHolds.length || addState.probHolds.length || addState.finHolds.length) return true;
+  if ((document.getElementById('add-name')?.value || '').trim()) return true;
+  if ((document.getElementById('add-comments')?.value || '').trim()) return true;
+  return false;
+}
+
+function resetAddState({ clearForm = true, silent = true } = {}) {
+  addState.startHolds = [];
+  addState.probHolds = [];
+  addState.finHolds = [];
+  addState.clickOrder = [];
+  addState.mode = 'start';
+  if (addState.initialised) {
+    document.querySelectorAll('.add-hold').forEach(el => paintAddHold(el, null));
+    document.querySelectorAll('.add-mode-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.mode === 'start');
+    });
+    refreshAddCounts();
+    if (clearForm) {
+      document.getElementById('add-name').value = '';
+      document.getElementById('add-comments').value = '';
+    }
+    hideAddError();
+  }
+  if (!silent) {
+    api('/api/light/off', { method: 'POST' }).catch(() => {});
+  }
+}
+
+function sendHoldLed(holdId, role) {
+  api('/api/light/hold', {
+    method: 'POST',
+    body: JSON.stringify({ hold_id: holdId, role }),
+  }).catch(() => {});
+}
+
+function showAddError(msg) {
+  const el = document.getElementById('add-error');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
+
+function hideAddError() {
+  document.getElementById('add-error').classList.add('hidden');
+}
+
+async function submitAddProblem() {
+  hideAddError();
+  const name = document.getElementById('add-name').value.trim();
+  if (!name) { showAddError('You must give a problem name.'); return; }
+  if (!addState.startHolds.length) { showAddError('Pick at least one start hold.'); return; }
+  if (!addState.finHolds.length) { showAddError('Pick at least one finish hold.'); return; }
+  if (addState.startHolds.length + addState.probHolds.length + addState.finHolds.length < 2) {
+    showAddError('You must pick at least 2 holds.');
+    return;
+  }
+
+  const body = {
+    name,
+    grade: parseInt(document.getElementById('add-grade').value),
+    stars: parseInt(document.getElementById('add-stars').value),
+    foothold_set: document.getElementById('add-footholdset').value,
+    comments: document.getElementById('add-comments').value,
+    start_holds: addState.startHolds,
+    prob_holds: addState.probHolds,
+    fin_holds: addState.finHolds,
+  };
+
+  const saveBtn = document.getElementById('btn-add-save');
+  saveBtn.disabled = true;
+  try {
+    const result = await api('/api/problems', { method: 'POST', body: JSON.stringify(body) });
+    api('/api/light/off', { method: 'POST' }).catch(() => {});
+    resetAddState({ clearForm: true });
+    currentSection = 'problems';   // skip the unsaved-state guard in showSection
+    showSection('problems');
+    await loadProblems();
+    if (result.row != null) openProblem(result.row);
+  } catch (e) {
+    showAddError(e.message || 'Save failed');
+  } finally {
+    saveBtn.disabled = false;
+  }
+}
 
 // ── Utilities ──────────────────────────────────────────────────────────────
 function escHtml(str) {
