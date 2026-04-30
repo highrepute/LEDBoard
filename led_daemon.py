@@ -53,7 +53,7 @@ def _handle(cmd):
                 _strip.setPixelColorRGB(i, 0, 0, 0)
             for pix in cmd.get('pixels', []):
                 i, r, g, b = pix
-                print(f"[daemon raw] setPixelColorRGB({i}, r={r}, g={g}, b={b})", flush=True)
+                print("[daemon raw] setPixelColorRGB(%s, r=%s, g=%s, b=%s)" % (i, r, g, b), flush=True)
                 _strip.setPixelColorRGB(i, r, g, b)
             _strip.show()
         elif cmd['cmd'] == 'patch':
