@@ -100,15 +100,11 @@ def _heatmap_color(count, min_count, max_count):
     v = const.LED_VALUE
     if count == 0:
         return (0, v, 0)
-    if max_count == min_count:
-        return (v, v, 0)  # all used holds equal → yellow
-    ratio = (count - min_count) / (max_count - min_count)
-    if ratio < 0.5:
-        t = ratio / 0.5
-        return (int(v * t), v, 0)
-    else:
-        t = (ratio - 0.5) / 0.5
-        return (v, int(v * (1 - t)), 0)
+    if count == 1:
+        return (v // 2, v, 0)
+    if count == 2:
+        return (v, v, 0)
+    return (v, 0, 0)
 
 
 def _compute_heatmap():

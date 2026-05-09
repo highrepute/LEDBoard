@@ -2450,15 +2450,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         v = const.LED_VALUE
         if count == 0:
             return (0, v, 0)
-        if maxCount == minCount:
-            return (v, v, 0)  # all used holds equal → yellow
-        ratio = (count - minCount) / (maxCount - minCount)
-        if ratio < 0.5:
-            t = ratio / 0.5
-            return (int(v * t), v, 0)
-        else:
-            t = (ratio - 0.5) / 0.5
-            return (v, int(v * (1 - t)), 0)
+        if count == 1:
+            return (v // 2, v, 0)
+        if count == 2:
+            return (v, v, 0)
+        return (v, 0, 0)
 
     def showHeatmap(self):
         global heatmapFlag
