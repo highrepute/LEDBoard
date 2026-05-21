@@ -17,7 +17,7 @@ class problemClass:#funcs that access information in the problem file
     def readProblemFile():
         #this gets the contents of the csv file into a list
         with open(const.PROBPATH, newline='') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
+            filereader = csv.reader(csvfile, dialect='excel')
             problems = list(filereader)
 
         # Detect old format (no tag columns) and migrate the file
