@@ -29,7 +29,7 @@ from qrangeslider import QRangeSlider
 #load that configuration variables from config.ini
 const.initConfigVariables()
 #check/repair the csv data files before anything reads them
-dataCheckMessages = checkDataFiles()
+dataCheckMessages = const.CONFIGMESSAGES + checkDataFiles()
 
 if const.LINUX == 1:
     try:
@@ -442,7 +442,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #load that configuration variables from config.ini
         const.initConfigVariables()
         #paths may have changed, so re-check the data files
-        self.showDataCheckMessages(checkDataFiles())
+        self.showDataCheckMessages(const.CONFIGMESSAGES + checkDataFiles())
         #self.lblInfoAddProb.setText("Create new problems here - click a hold to begin")
         #initialise variout bits
         self.initProblemTable()
@@ -1414,7 +1414,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def showDataCheckMessages(self, messages):
         #show what the startup data check fixed, otherwise the default message
         if messages:
-            self.lblInfo.setText("Data files repaired - see logfile.txt:  " + ";  ".join(messages))
+            self.lblInfo.setText("Config/data files repaired - see logfile.txt:  " + ";  ".join(messages))
         else:
             self.lblInfo.setText(const.DEFAULTMSG)
 

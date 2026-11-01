@@ -2,6 +2,88 @@
 import configparser
 import ast
 import os
+import shutil
+import datetime
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(SCRIPT_DIR, 'config.ini')
+
+
+# --- config value parsers: return the parsed value or raise ValueError
+def _intRange(lo, hi=None):
+    def parse(text):
+        value = int(text)
+        if value < lo or (hi is not None and value > hi):
+            raise ValueError('out of range')
+        return value
+    return parse
+
+
+def _strList(allowEmpty):
+    def parse(text):
+        value = ast.literal_eval(text)
+        if not isinstance(value, list) or not all(isinstance(v, str) for v in value):
+            raise ValueError('not a list of text')
+        if not value and not allowEmpty:
+            raise ValueError('empty list')
+        return value
+    return parse
+
+
+def _text(text):
+    return str(text)
+
+
+def _path(text):
+    if not text.strip():
+        raise ValueError('empty path')
+    return text
+
+
+# every config key: (section, key, default text, parser)
+CONFIG_SPEC = [
+    ('DEFAULT', 'LINUX', '1', _intRange(0, 1)),
+    ('DEFAULT', 'LEDBRIGHTNESS', '50', _intRange(0, 255)),
+    ('DEFAULT', 'DEFAULTMSG', 'Welcome to the Board', _text),
+    ('DEFAULT', 'GRADES', "['6a', '6a+', '6b', '6b+', '6c', '6c+', '7a']", _strList(False)),
+    ('DEFAULT', 'STARS', "['-', '*', '**', '***']", _strList(False)),
+    ('DEFAULT', 'ADMIN', 'James', _text),
+    ('DEFAULT', 'THEMECOLOUR', '#fd4', _text),
+    ('DEFAULT', 'LOGOUTTIMEOUT', '1800', _intRange(0)),
+    ('DEFAULT', 'AUTOLOGIN', "['James']", _strList(True)),
+    ('BOARD', 'TOTALLEDCOUNT', '0', _intRange(0)),
+    ('BOARD', 'IMAGEPATH', '', _text),
+    ('BOARD', 'BOARDNAME', '', _text),
+    ('BOARD', 'WALLLOGOPATH', '', _text),
+    ('BOARD', 'BOARDLOGOPATH', '', _text),
+    ('BOARD', 'FOOTHOLDSETS', "['Standard']", _strList(False)),
+    ('BOARD', 'TAGS', "['Tags']", _strList(False)),
+    ('PATHS', 'USERSPATH', os.path.join(SCRIPT_DIR, 'users.csv'), _path),
+    ('PATHS', 'LOGPATH', os.path.join(SCRIPT_DIR, 'logs.csv'), _path),
+    ('PATHS', 'PROBPATH', os.path.join(SCRIPT_DIR, 'problems.csv'), _path),
+    ('PATHS', 'PROJECTSPATH', os.path.join(SCRIPT_DIR, 'projects.csv'), _path),
+]
+CONFIG_SPEC_BY_KEY = dict(((sec, key), (default, parse)) for sec, key, default, parse in CONFIG_SPEC)
+
+
+def _newConfig():
+    config = configparser.ConfigParser(strict=False, interpolation=None)
+    config.optionxform = str
+    return config
+
+
+def _defaultConfig():
+    config = _newConfig()
+    for sec, key, default, parse in CONFIG_SPEC:
+        if sec != 'DEFAULT' and not config.has_section(sec):
+            config.add_section(sec)
+        config.set(sec, key, default)
+    return config
+
+
+def _timestamp():
+    return datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+
 
 class const:
     PROBNAMECOL = 0
@@ -42,56 +124,68 @@ class const:
     BOARDFRAMEHEIGHT = 761  # frmBoard / frame_6 height in DiscoBoard.ui
     HOLDBUTTONSIZE = 31     # DragButton size in DiscoMain.py
     
-    def ensureDefaultFiles():
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        config_path = os.path.join(script_dir, 'config.ini')
+    CONFIGMESSAGES = []  # what the last config check fixed, for the UI
 
-        if not os.path.exists(config_path):
-            config = configparser.ConfigParser()
-            config.optionxform = str
-            config['DEFAULT'] = {
-                'LINUX': '1',
-                'LEDBRIGHTNESS': '50',
-                'DEFAULTMSG': 'Welcome to the Board',
-                'BOARDLOGOPATH': '',
-                'GRADES': "['6a', '6a+', '6b', '6b+', '6c', '6c+', '7a']",
-                'STARS': "['-', '*', '**', '***']",
-                'ADMIN': 'James',
-                'THEMECOLOUR': '#fd4',
-                'LOGOUTTIMEOUT': '1800',
-                'AUTOLOGIN': "['James']",
-            }
-            config['BOARD'] = {
-                'TOTALLEDCOUNT': '0',
-                'IMAGEPATH': '',
-                'BOARDNAME': '',
-                'WALLLOGOPATH': '',
-                'FOOTHOLDSETS': "['Standard']",
-                'TAGS': "['Tags']",
-                'BOARDLOGOPATH': '',
-            }
-            config['PATHS'] = {
-                'USERSPATH': os.path.join(script_dir, 'users.csv'),
-                'LOGPATH': os.path.join(script_dir, 'logs.csv'),
-                'PROBPATH': os.path.join(script_dir, 'problems.csv'),
-                'PROJECTSPATH': os.path.join(script_dir, 'projects.csv'),
-            }
-            with open(config_path, 'w') as f:
+    def ensureConfig():
+        """Make sure config.ini exists, parses, and has a valid value for
+        every key. Bad or missing values are reset to their defaults, with
+        the original file backed up first. Never raises."""
+        msgs = []
+        if not os.path.exists(CONFIG_PATH):
+            _defaultConfig().write(open(CONFIG_PATH, 'w'))
+            const.CONFIGMESSAGES = ['config.ini: not found, created with defaults']
+            return
+
+        config = _newConfig()
+        try:
+            config.read(CONFIG_PATH)
+        except (configparser.Error, UnicodeDecodeError) as e:
+            backup = CONFIG_PATH.replace('.ini', '_unrecognised_%s.ini' % _timestamp())
+            shutil.copy2(CONFIG_PATH, backup)
+            with open(CONFIG_PATH, 'w') as f:
+                _defaultConfig().write(f)
+            const.CONFIGMESSAGES = ['config.ini: could not be read (%s) - moved to %s, using defaults'
+                                    % (type(e).__name__, os.path.basename(backup))]
+            return
+
+        for sec, key, default, parse in CONFIG_SPEC:
+            if sec != 'DEFAULT' and not config.has_section(sec):
+                config.add_section(sec)
+            if not config.has_option(sec, key):
+                config.set(sec, key, default)
+                msgs.append('%s missing' % key)
+                continue
+            value = config.get(sec, key)
+            try:
+                parse(value)
+            except (ValueError, SyntaxError, TypeError):
+                config.set(sec, key, default)
+                msgs.append('%s "%s" invalid' % (key, value))
+
+        if msgs:
+            backup = CONFIG_PATH.replace('.ini', '_backup_%s.ini' % _timestamp())
+            shutil.copy2(CONFIG_PATH, backup)
+            with open(CONFIG_PATH, 'w') as f:
                 config.write(f)
+            msgs = ['config.ini: ' + ', '.join(msgs) + ' - reset to defaults']
+        for m in msgs:
+            print('Config check - ' + m)
+        const.CONFIGMESSAGES = msgs
 
-        config = configparser.ConfigParser()
-        config.optionxform = str
-        config.read(config_path)
-
+    def ensureDefaultFiles():
+        #create any missing data files (dataCheck.py does the full check)
         for key, kind in (('USERSPATH', 'USERS'), ('LOGPATH', 'LOGS'),
                           ('PROBPATH', 'PROBLEMS'), ('PROJECTSPATH', 'PROJECTS')):
-            path = config.get('PATHS', key)
-            folder = os.path.dirname(path)
-            if folder and not os.path.isdir(folder):
-                os.makedirs(folder)
-            if not os.path.exists(path):
-                with open(path, 'w', newline='') as f:
-                    f.write(const.defaultCsvText(kind))
+            try:
+                path = const._value('PATHS', key)
+                folder = os.path.dirname(path)
+                if folder and not os.path.isdir(folder):
+                    os.makedirs(folder)
+                if not os.path.exists(path):
+                    with open(path, 'w', newline='') as f:
+                        f.write(const.defaultCsvText(kind))
+            except OSError as e:
+                print('Could not create %s: %s' % (key, e))
 
     def defaultCsvText(kind):
         #default contents for a new data file of the given kind
@@ -105,6 +199,7 @@ class const:
         }[kind]
 
     def initConfigVariables():
+        const.ensureConfig()
         const.ensureDefaultFiles()
         const.LINUX = int(const.getLINUX())
         const.BOARDNAME = str(const.getBOARDNAME())
@@ -129,16 +224,24 @@ class const:
         const.AUTOLOGIN = const.getAUTOLOGIN()
 
     def loadConfig():
-        config = configparser.ConfigParser()
-        config.optionxform = str
-        # Get the directory of the current script
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-
-        # Construct path to config.ini in the same directory
-        config_path = os.path.join(script_dir, 'config.ini')
-        config.read(config_path) #RasPi
-        #config.read('config.ini') #Windows
+        config = _newConfig()
+        try:
+            config.read(CONFIG_PATH)
+        except (configparser.Error, UnicodeDecodeError):
+            config = _defaultConfig()
+        for sec in ('BOARD', 'PATHS'):
+            if not config.has_section(sec):
+                config.add_section(sec)
         return config
+
+    def _value(section, key):
+        #read one config value, falling back to its default if missing/invalid
+        default, parse = CONFIG_SPEC_BY_KEY[(section, key)]
+        raw = const.loadConfig().get(section, key, fallback=default)
+        try:
+            return parse(raw)
+        except (ValueError, SyntaxError, TypeError):
+            return parse(default)
     
     def writeConfig(config):
         #with open('config.ini', 'w') as configfile: #Windows
@@ -151,8 +254,7 @@ class const:
             config.write(configfile)
 
     def getLINUX():
-        config = const.loadConfig()
-        return int(config.get('DEFAULT', 'LINUX'))
+        return const._value('DEFAULT', 'LINUX')
     
     def setLINUX(value):
         config = const.loadConfig()
@@ -161,8 +263,7 @@ class const:
         const.LINUX = value
         
     def getLOGOUTTIMEOUT():
-        config = const.loadConfig()
-        return int(config.get('DEFAULT', 'LOGOUTTIMEOUT'))
+        return const._value('DEFAULT', 'LOGOUTTIMEOUT')
     
     def setLOGOUTTIMEOUT(value):
         config = const.loadConfig()
@@ -171,20 +272,16 @@ class const:
         const.LOGOUTTIMEOUT = value
         
     def getUSERSPATH():
-        config = const.loadConfig()
-        return config.get('PATHS', 'USERSPATH')
+        return const._value('PATHS', 'USERSPATH')
 
     def getLOGPATH():
-        config = const.loadConfig()
-        return config.get('PATHS', 'LOGPATH')
+        return const._value('PATHS', 'LOGPATH')
 
     def getPROBPATH():
-        config = const.loadConfig()
-        return config.get('PATHS', 'PROBPATH')
+        return const._value('PATHS', 'PROBPATH')
 
     def getPROJECTSPATH():
-        config = const.loadConfig()
-        return config.get('PATHS', 'PROJECTSPATH')
+        return const._value('PATHS', 'PROJECTSPATH')
 
     def setUSERSPATH(value):
         config = const.loadConfig()
@@ -211,8 +308,7 @@ class const:
         const.PROJECTSPATH = value
 
     def getAUTOLOGIN():
-        config = const.loadConfig()
-        return ast.literal_eval(config.get('DEFAULT', 'AUTOLOGIN'))
+        return const._value('DEFAULT', 'AUTOLOGIN')
 
     def setAUTOLOGIN(value):
         config = const.loadConfig()
@@ -221,8 +317,7 @@ class const:
         const.AUTOLOGIN = value
 
     def getBOARDNAME():
-        config = const.loadConfig()
-        return str(config.get('BOARD', 'BOARDNAME'))
+        return const._value('BOARD', 'BOARDNAME')
     
     def setBOARDNAME(value):
         config = const.loadConfig()
@@ -231,8 +326,7 @@ class const:
         const.BOARDNAME = value   
 
     def getTOTAL_LED_COUNT():
-        config = const.loadConfig()
-        return int(config.get('BOARD', 'TOTALLEDCOUNT'))
+        return const._value('BOARD', 'TOTALLEDCOUNT')
     
     def setTOTAL_LED_COUNT(value):
         config = const.loadConfig()
@@ -241,8 +335,7 @@ class const:
         const.TOTAL_LED_COUNT = value
     
     def getLED_VALUE():
-        config = const.loadConfig()
-        return int(config.get('DEFAULT', 'LEDBRIGHTNESS'))   
+        return const._value('DEFAULT', 'LEDBRIGHTNESS')
     
     def setLED_VALUE(value):
         config = const.loadConfig()
@@ -251,8 +344,7 @@ class const:
         const.LED_VALUE = value
         
     def getDEFAULTMSG():
-        config = const.loadConfig()
-        return str(config.get('DEFAULT', 'DEFAULTMSG')) 
+        return const._value('DEFAULT', 'DEFAULTMSG')
     
     def setDEFAULTMSG(value):
         config = const.loadConfig()
@@ -261,8 +353,7 @@ class const:
         const.DEFAULTMSG = value
 
     def getGRADES():
-        config = const.loadConfig()
-        return ast.literal_eval(config.get('DEFAULT', 'GRADES'))
+        return const._value('DEFAULT', 'GRADES')
     
     def setGRADES(value):
         config = const.loadConfig()
@@ -271,8 +362,7 @@ class const:
         const.GRADES = value
 
     def getSTARS():
-        config = const.loadConfig()
-        return ast.literal_eval(config.get('DEFAULT', 'STARS'))
+        return const._value('DEFAULT', 'STARS')
     
     def setSTARS(value):
         config = const.loadConfig()
@@ -281,8 +371,7 @@ class const:
         const.STARS = value
     
     def getIMAGEPATH():
-        config = const.loadConfig()
-        return config.get('BOARD', 'IMAGEPATH')
+        return const._value('BOARD', 'IMAGEPATH')
     
     def setIMAGEPATH(value):
         config = const.loadConfig()
@@ -291,8 +380,7 @@ class const:
         const.IMAGEPATH = value
         
     def getWALLLOGOPATH():
-        config = const.loadConfig()
-        return config.get('BOARD', 'WALLLOGOPATH')
+        return const._value('BOARD', 'WALLLOGOPATH')
     
     def setWALLLOGOPATH(value):
         config = const.loadConfig()
@@ -301,8 +389,7 @@ class const:
         const.WALLLOGOPATH = value
         
     def getBOARDLOGOPATH():
-        config = const.loadConfig()
-        return config.get('BOARD', 'BOARDLOGOPATH')
+        return const._value('BOARD', 'BOARDLOGOPATH')
     
     def setBOARDLOGOPATH(value):
         config = const.loadConfig()
@@ -311,8 +398,7 @@ class const:
         const.BOARDLOGOPATH = value
 
     def getTHEMECOLOUR():
-        config = const.loadConfig()
-        return config.get('DEFAULT', 'THEMECOLOUR')
+        return const._value('DEFAULT', 'THEMECOLOUR')
     
     def setTHEMECOLOUR(value):
         config = const.loadConfig()
@@ -321,8 +407,7 @@ class const:
         const.THEMECOLOUR = value         
 
     def getADMIN():
-        config = const.loadConfig()
-        return str(config.get('DEFAULT', 'ADMIN'))
+        return const._value('DEFAULT', 'ADMIN')
     
     def setADMIN(value):
         config = const.loadConfig()
@@ -331,8 +416,7 @@ class const:
         const.ADMIN = value
 
     def getFOOTHOLDSETS():
-        config = const.loadConfig()
-        return ast.literal_eval(config.get('BOARD', 'FOOTHOLDSETS'))
+        return const._value('BOARD', 'FOOTHOLDSETS')
     
     def setFOOTHOLDSETS(value):
         config = const.loadConfig()
@@ -341,8 +425,7 @@ class const:
         const.FOOTHOLDSETS = value        
         
     def getTAGS():
-        config = const.loadConfig()
-        return ast.literal_eval(config.get('BOARD', 'TAGS'))
+        return const._value('BOARD', 'TAGS')
     
     def setTAGS(value):
         config = const.loadConfig()
