@@ -12,7 +12,7 @@ class userClass:#funcs that access information in the users file
     def readUsersFile():
         #this gets the contents of the csv file into a list
         with open(const.USERSPATH, newline='') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
+            filereader = csv.reader(csvfile, dialect='excel')
             users = list(filereader)
         return users
     

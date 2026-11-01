@@ -13,7 +13,7 @@ class logClass:
     def readLogFile():
         #this gets the contents of the csv file into a list
         with open(const.LOGPATH, newline='') as csvfile:
-            filereader = csv.reader(csvfile, delimiter=',', quotechar='|')
+            filereader = csv.reader(csvfile, dialect='excel')
             log = list(filereader)
         return log
     

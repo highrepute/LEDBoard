@@ -22,11 +22,14 @@ from projectFuncs import projectClass
 from const import const
 from dragButton import DragButton
 from boardMaker import boardMaker
+from dataCheck import checkDataFiles
 
 from qrangeslider import QRangeSlider
 
 #load that configuration variables from config.ini
 const.initConfigVariables()
+#check/repair the csv data files before anything reads them
+dataCheckMessages = checkDataFiles()
 
 if const.LINUX == 1:
     try:
@@ -249,8 +252,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         countdownFlashCount = 0
         projectFilter = 0
 
-        #default message
-        self.lblInfo.setText(const.DEFAULTMSG)
+        #default message, or a summary of any data file repairs
+        self.showDataCheckMessages(dataCheckMessages)
         self.pbProject.setEnabled(False)
 
         #show web app address
@@ -438,8 +441,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lblProjectsFilter.setText("Not filtering by projects")
         #load that configuration variables from config.ini
         const.initConfigVariables()
-        #default message
-        self.lblInfo.setText(const.DEFAULTMSG)
+        #paths may have changed, so re-check the data files
+        self.showDataCheckMessages(checkDataFiles())
         #self.lblInfoAddProb.setText("Create new problems here - click a hold to begin")
         #initialise variout bits
         self.initProblemTable()
@@ -1408,6 +1411,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pbSequence.setStyleSheet("background-color: #0f0;")
         #print('show2')
                    
+    def showDataCheckMessages(self, messages):
+        #show what the startup data check fixed, otherwise the default message
+        if messages:
+            self.lblInfo.setText("Data files repaired - see logfile.txt:  " + ";  ".join(messages))
+        else:
+            self.lblInfo.setText(const.DEFAULTMSG)
+
     def logProblem(self):      
         if (self.tblProblems.selectedIndexes() != [])&(self.lbUsers.selectedIndexes() != []):
             #gather data for new log entry

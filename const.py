@@ -83,22 +83,26 @@ class const:
         config.optionxform = str
         config.read(config_path)
 
-        import datetime
-        today = datetime.date.today().strftime('%d/%m/%Y')
-        csv_defaults = {
-            config.get('PATHS', 'USERSPATH'):
-                'Username,Password,Date Reg, Real name, Email\nJames,123,%s,,\n' % today,
-            config.get('PATHS', 'LOGPATH'):
-                'Username,Problem,Grade,Stars,Ascent Date,Comments,Attempts\n',
-            config.get('PATHS', 'PROBPATH'):
-                'Name,Grade,Stars,Added,User,Comments,Foothold,tag0,tag1,tag2,tag3,tag4,tag5,tag6,tag7,tag8,tag9,Start1,Start2,Fin1,Fin2,HoldNo\n',
-            config.get('PATHS', 'PROJECTSPATH'):
-                'Username,ProblemName\n',
-        }
-        for path, header in csv_defaults.items():
+        for key, kind in (('USERSPATH', 'USERS'), ('LOGPATH', 'LOGS'),
+                          ('PROBPATH', 'PROBLEMS'), ('PROJECTSPATH', 'PROJECTS')):
+            path = config.get('PATHS', key)
+            folder = os.path.dirname(path)
+            if folder and not os.path.isdir(folder):
+                os.makedirs(folder)
             if not os.path.exists(path):
                 with open(path, 'w', newline='') as f:
-                    f.write(header)
+                    f.write(const.defaultCsvText(kind))
+
+    def defaultCsvText(kind):
+        #default contents for a new data file of the given kind
+        import datetime
+        today = datetime.date.today().strftime('%d/%m/%Y')
+        return {
+            'USERS': 'Username,Password,Date Reg, Real name, Email\nJames,123,%s,,\n' % today,
+            'LOGS': 'Username,Problem,Grade,Stars,Ascent Date,Comments,Attempts\n',
+            'PROBLEMS': 'Name,Grade,Stars,Added,User,Comments,Foothold,tag0,tag1,tag2,tag3,tag4,tag5,tag6,tag7,tag8,tag9,Start1,Start2,Fin1,Fin2,HoldNo\n',
+            'PROJECTS': 'Username,ProblemName\n',
+        }[kind]
 
     def initConfigVariables():
         const.ensureDefaultFiles()
