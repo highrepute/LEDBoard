@@ -252,8 +252,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         countdownFlashCount = 0
         projectFilter = 0
 
-        #default message, or a summary of any data file repairs
-        self.showDataCheckMessages(dataCheckMessages)
         self.pbProject.setEnabled(False)
 
         #show web app address
@@ -287,7 +285,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.performAutoLogin()
         self.initProbInfo()
         self.setThemeColour()
-        
+
+        #default message, or a summary of any data file repairs
+        #(run last so initialiseAddProblemTab's 'no board' text can't clobber it)
+        self.showDataCheckMessages(dataCheckMessages)
+
         #dispaly full screen
         self.showFullScreen()
         
@@ -1415,6 +1417,14 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #show what the startup data check fixed, otherwise the default message
         if messages:
             self.lblInfo.setText("Config/data files repaired - see logfile.txt:  " + ";  ".join(messages))
+            logPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logfile.txt')
+            stamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            try:
+                with open(logPath, 'a') as f:
+                    for m in messages:
+                        f.write('{} Repair - {}\n'.format(stamp, m))
+            except OSError:
+                pass
         else:
             self.lblInfo.setText(const.DEFAULTMSG)
 
