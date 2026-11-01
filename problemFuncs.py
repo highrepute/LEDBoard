@@ -18,7 +18,7 @@ class problemClass:#funcs that access information in the problem file
         #this gets the contents of the csv file into a list
         with open(const.PROBPATH, newline='') as csvfile:
             filereader = csv.reader(csvfile, dialect='excel')
-            problems = list(filereader)
+            problems = [row for row in filereader if row]  # skip blank lines
 
         # Detect old format (no tag columns) and migrate the file
         if problems and len(problems[0]) < 17:
@@ -73,13 +73,11 @@ class problemClass:#funcs that access information in the problem file
     
     def getUniqueTags():#returns all unique tags
         problems = problemClass.readProblemFile()
-        #extracts just the tags
-        tagList = [[i[const.TAGSCOL],i[const.TAGSCOL+1],i[const.TAGSCOL+2],i[const.TAGSCOL+3],i[const.TAGSCOL+4],i[const.TAGSCOL+5],i[const.TAGSCOL+6],i[const.TAGSCOL+7],i[const.TAGSCOL+8],i[const.TAGSCOL+9]] for i in problems]
-        del tagList[0]
-        #gets unique items from the list of tags
-        newList = list(set(x for l in tagList for x in l))
-        newList = list(filter(None, newList))
-        return sorted(newList)
+        tags = set()
+        for row in problems[1:]:  # skip header
+            # slicing never raises, so short rows are safe
+            tags.update(row[const.TAGSCOL:const.TAGSCOL+10])
+        return sorted(filter(None, tags))
     
     def getUser(problemNumber):
         problems = problemClass.readProblemFile()
